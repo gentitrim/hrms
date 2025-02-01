@@ -1,16 +1,9 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang='en'>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Managemet System</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    </head>
-    <body>
-        <button>Keychain management</button>
-        <script src="" async defer></script>
-    </body>
-</html>
+{% extends "base_template.html" %}
+
+{% block title %}
+    Management System
+{% endblock %}
+
+{% block content %}
+    <button>Restaurant button</button>
+{% endblock content %}
