@@ -17,3 +17,6 @@ def shifts(request):
 def login(request):
     return render(request,'restaurant/login.html')
 
+def create_menu(request):
+    return render(request,'restaurant/create_menu.html')
+
