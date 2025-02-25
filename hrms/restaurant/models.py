@@ -24,6 +24,7 @@ class Products(models.Model):
     name = models.CharField(max_length=128) 
     ingredients = models.TextField()
     price = models.IntegerField()
+    # image = models.ImageField()
 
     def __str__(self):
         return self.name
