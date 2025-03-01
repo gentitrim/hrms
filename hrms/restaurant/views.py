@@ -2,6 +2,8 @@ from django.shortcuts import render,get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView,FormView,ListView
 from .models import Products,Categories
+from .forms import CategoryCreateForm
+from django.urls import reverse_lazy
 
 # Create your views here.
 # def restaurant(request):
@@ -19,6 +21,19 @@ def order_menu(request):
         
     return render(request,'restaurant/order_menu.html',context)
 
+
+class CreateCategoryView(FormView):
+    template_name ='create_menu.html'
+    form_class = CategoryCreateForm
+    success_url = reverse_lazy('create_menu')
+    def form_valid(self, form):
+        cleaned_data = form.cleaned_data
+        Categories.objects.create(
+            name=cleaned_data["name"],
+        )
+        return super().form_valid(form)
+
+
 def info(request):
     return render(request,'restaurant/info.html')
 
@@ -27,9 +42,6 @@ def shifts(request):
 
 def login(request):
     return render(request,'restaurant/login.html')
-
-def create_menu(request):
-    return render(request,'restaurant/create_menu.html')
 
 
 class IndexPage(TemplateView):

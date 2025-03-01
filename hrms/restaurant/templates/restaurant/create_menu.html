@@ -2,5 +2,9 @@
 {% block create_menu_active %}active{% endblock create_menu_active %}
 {% block title %}Create Menu{% endblock title %}
 {% block content %}
-
+<form method="post" action="">
+    {% csrf_token %}
+    <table>{{ form }}</table>
+    <input type="submit" value="Submit" class="btn btn-primary">
+</form>
 {% endblock content %}
