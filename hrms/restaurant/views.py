@@ -23,7 +23,7 @@ def order_menu(request):
 
 
 class CreateCategoryView(FormView):
-    template_name ='create_menu.html'
+    template_name = "restaurant/create_menu.html"
     form_class = CategoryCreateForm
     success_url = reverse_lazy('create_menu')
     def form_valid(self, form):
