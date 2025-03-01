@@ -16,7 +16,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(r"C:\Users\HP\Desktop\Projekte\HRMS\.env")
+load_dotenv(r"C:\Users\ritif\OneDrive\Desktop\bar-restorant\env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
