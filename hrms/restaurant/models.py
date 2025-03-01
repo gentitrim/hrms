@@ -20,7 +20,7 @@ class Categories(models.Model):
     
 
 class Products(models.Model):
-    category_id = models.ForeignKey("Categories",on_delete=models.CASCADE)
+    category = models.ForeignKey("Categories",on_delete=models.CASCADE)
     name = models.CharField(max_length=128) 
     ingredients = models.TextField()
     price = models.IntegerField()
@@ -32,7 +32,7 @@ class Products(models.Model):
 class Order_item(models.Model):
     product_id = models.ForeignKey('Products',on_delete=models.CASCADE)
     order_id = models.ForeignKey('Order',on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=1)
     price = models.IntegerField()
 
 class Order(models.Model):
