@@ -33,7 +33,16 @@ class CreateCategoryView(FormView):
         )
         return super().form_valid(form)
 
-
+class CreateProductsView(FormView):
+    template_name = "restaurant/create_menu.html"
+    form_class = CategoryCreateForm
+    success_url = reverse_lazy('create_menu')
+    def form_valid(self, form):
+        cleaned_data = form.cleaned_data
+        Categories.objects.create(
+            name=cleaned_data["name"],
+        )
+        return super().form_valid(form)
 def info(request):
     return render(request,'restaurant/info.html')
 
