@@ -4,22 +4,22 @@ from django.views.generic import TemplateView,FormView,ListView
 from .models import Products,Categories
 from .forms import CategoryCreateForm
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 
 # Create your views here.
 # def restaurant(request):
 #     return render(request,'restaurant/index.html')
 
-def order_menu(request):
-    
-    category_menu = Categories.objects.all()
-    products = Products.objects.all()
+def order_menu(request):     
+    categories = Categories.objects.all() 
+    return render(request,'restaurant/order_menu.html',context={"categories":categories})
 
+def get_products(request,pk):
+    product = Products.objects.filter(category_id = pk)
     context = {
-        "categories":category_menu,
-        "products":products,
+        "category":product
     }
-        
-    return render(request,'restaurant/order_menu.html',context)
+    return JsonResponse(context)
 
 
 class CreateCategoryView(FormView):
