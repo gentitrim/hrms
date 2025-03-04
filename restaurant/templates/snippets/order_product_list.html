@@ -4,7 +4,7 @@
                 hx-get="{% url 'get_order_items' product.id %}"
                 hx-target="#result_order_items"
                 hx-triger="click"
-                hx-swap="innerHTML"
+                hx-swap="beforeend"
     >
                 {{ product.name }} - {{ product.price }} ALL
                 </button>
