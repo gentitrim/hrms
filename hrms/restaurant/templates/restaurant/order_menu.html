@@ -9,13 +9,14 @@
     <div class="list-group col-3  mt-5 text-align-center ps-5 pe-5" >
         <p class="fs-5">Category</p>
         {% for category in categories %}
-            <button type="button" class="list-group-item list-group-item-action" id="category_fetch" data-foreign-key={{ category.id }}>{{ category.name }}</button>
+            <button type="button" class="list-group-item list-group-item-action" id="category_fetch" data-foreign-key=1>{{ category.name }}</button>
         {% endfor %}
     </div>
 
     <div class="products col mt-5">
         <p class="fs-5">Category</p>
         <div class="list-group col" id="result" >
+            <p></p>
             {% comment %} {% for product in products %}
             <button type="button" class="list-group-item list-group-item-action">{{ product.name }} - {{product.price}} ALL</button>
             {% empty %}

@@ -14,12 +14,9 @@ def order_menu(request):
     categories = Categories.objects.all() 
     return render(request,'restaurant/order_menu.html',context={"categories":categories})
 
-def get_products(request,pk):
-    product = Products.objects.filter(category_id = pk)
-    context = {
-        "category":product
-    }
-    return JsonResponse(context)
+def get_products(request,category_id):
+    product = Products.objects.filter(category_id = category_id).values()
+    return JsonResponse(list(product), safe=False)
 
 
 class CreateCategoryView(FormView):
