@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant POS - Orders</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+            <span>Restaurant POS</span>
+        </div>
+        <nav id="nav">
+            <button class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="orders.html" class="active">Orders</a></li>
+                <li><a href="shifts.html">Shifts</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Menu Section -->
+        <div class="container card">
+            <h1>Menu</h1>
+            <table id="menuTable">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Pizzas</td>
+                        <td>Margherita</td>
+                        <td>8.00 €</td>
+                        <td><button class="add-to-order" data-product="Margherita" data-price="8.00">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>Pizzas</td>
+                        <td>Pepperoni</td>
+                        <td>9.50 €</td>
+                        <td><button class="add-to-order" data-product="Pepperoni" data-price="9.50">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>Beverages</td>
+                        <td>Still Water</td>
+                        <td>1.50 €</td>
+                        <td><button class="add-to-order" data-product="Still Water" data-price="1.50">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>Beverages</td>
+                        <td>Cola</td>
+                        <td>2.50 €</td>
+                        <td><button class="add-to-order" data-product="Cola" data-price="2.50">Add</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Order Section -->
+        <div class="selected-products card">
+            <h2>Current Order</h2>
+            <button id="clearSelection">Clear Order</button>
+            <button id="printInvoice">Print Invoice</button>
+            <table id="selectedProductsTable">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Selected products will be added here dynamically -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="total-price">Total Price</td>
+                        <td id="totalPrice">0.00 €</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Restaurant POS. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // JavaScript for POS functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const orderTableBody = document.querySelector('#selectedProductsTable tbody');
+            const totalPriceElement = document.getElementById('totalPrice');
+            const clearSelectionButton = document.getElementById('clearSelection');
+            const printInvoiceButton = document.getElementById('printInvoice');
+            let totalPrice = 0;
+
+            // Add product to order
+            document.querySelectorAll('.add-to-order').forEach(button => {
+                button.addEventListener('click', () => {
+                    const product = button.getAttribute('data-product');
+                    const price = parseFloat(button.getAttribute('data-price'));
+
+                    // Check if product already exists in the order
+                    const existingRow = Array.from(orderTableBody.querySelectorAll('tr')).find(row => {
+                        return row.querySelector('td').textContent === product;
+                    });
+
+                    if (existingRow) {
+                        // Update quantity and total
+                        const quantityCell = existingRow.querySelector('td:nth-child(2)');
+                        const totalCell = existingRow.querySelector('td:nth-child(4)');
+                        const quantity = parseInt(quantityCell.textContent) + 1;
+                        quantityCell.textContent = quantity;
+                        totalCell.textContent = (quantity * price).toFixed(2) + ' €';
+                    } else {
+                        // Add new row for the product
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td>${product}</td>
+                            <td>1</td>
+                            <td>${price.toFixed(2)} €</td>
+                            <td>${price.toFixed(2)} €</td>
+                            <td><button class="remove-item">Remove</button></td>
+                        `;
+                        orderTableBody.appendChild(newRow);
+                    }
+
+                    // Update total price
+                    totalPrice += price;
+                    totalPriceElement.textContent = totalPrice.toFixed(2) + ' €';
+                });
+            });
+
+            // Remove product from order
+            orderTableBody.addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-item')) {
+                    const row = event.target.closest('tr');
+                    const price = parseFloat(row.querySelector('td:nth-child(4)').textContent);
+                    totalPrice -= price;
+                    totalPriceElement.textContent = totalPrice.toFixed(2) + ' €';
+                    row.remove();
+                }
+            });
+
+            // Clear order
+            clearSelectionButton.addEventListener('click', () => {
+                orderTableBody.innerHTML = '';
+                totalPrice = 0;
+                totalPriceElement.textContent = '0.00 €';
+            });
+
+            // Print invoice
+            printInvoiceButton.addEventListener('click', () => {
+                alert('Invoice printed!'); // Replace with actual print functionality
+            });
+        });
+    </script>
+</body>
+</html>
