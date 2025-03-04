@@ -9,5 +9,4 @@ urlpatterns = [
     path('shifts/',views.shifts,name="shifts"),
     path('login/',views.login,name='login'),
     path('create_menu/',views.CreateCategoryView.as_view(),name='create_menu'),
-    path('get_products/<int:pk>/',views.ProductsView.as_view(),name='get_products')
 ]
