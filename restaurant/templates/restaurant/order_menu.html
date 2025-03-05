@@ -26,8 +26,15 @@
             </div>
         </div>
 
-        <div class="col mt-5" id="order_reciept">
+        <div class="col mt-5 ps-5" id="order_reciept">
             <p class="fs-5">Order Items</p>
+            <ul class="list-group" id="result_order_items">
+                {% include 'snippets/order_items.html'%}
+            </ul>
+            <div class="d-flex justify-content-around mt-3">
+                <button class="btn btn-success">Confirm</button>
+                <button class="btn btn-danger">Cancel</button>
+            </div>
         </div>
 </div>
 </div>

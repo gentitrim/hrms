@@ -14,11 +14,6 @@ def order_menu(request):
     categories = Categories.objects.all() 
     return render(request,'restaurant/order_menu.html',context={"categories":categories})
 
-class ProductsView(ListView):
-    def get_queryset(self):
-        return Products.objects.filter(category_id=self.kwargs['pk'])
-    template_name = "snippets/order_product_list.html"
-
 
 class CreateCategoryView(FormView):
     template_name = "restaurant/create_menu.html"
