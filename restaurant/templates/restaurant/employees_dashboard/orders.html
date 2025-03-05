@@ -28,12 +28,25 @@
 
     <main>
         <!-- Menu Section -->
+        <h1 style="text-align: center;">Menu</h1>
         <div class="container card">
-            <h1>Menu</h1>
+            <!-- <h1>Menu</h1> -->
+            <div style="margin-right: 10px;width:30%">
+                <h4 style="height:42px;background-color: #1E50A2;min-width:112px;color:white;padding-left: 10px;padding-top:11px;margin-bottom:0px;margin-top: 20px;">Category</h4>
+                <ul id="categorylist">
+                        <li>
+                            <input type="button" class="categoryButton" value="Pizza"/>
+                        </li>
+                        <li>
+                            <input type="button" class="categoryButton" value="Food"/>
+                        </li>
+                </ul>
+                
+        </div>
             <table id="menuTable">
                 <thead>
                     <tr>
-                        <th>Category</th>
+                        <!-- <th>Category</th> -->
                         <th>Product</th>
                         <th>Price</th>
                         <th>Action</th>
@@ -41,28 +54,22 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Pizzas</td>
+                        <!-- <td>Pizzas</td> -->
                         <td>Margherita</td>
                         <td>8.00 €</td>
                         <td><button class="add-to-order" data-product="Margherita" data-price="8.00">Add</button></td>
                     </tr>
                     <tr>
-                        <td>Pizzas</td>
+                        <!-- <td>Pizzas</td> -->
                         <td>Pepperoni</td>
                         <td>9.50 €</td>
                         <td><button class="add-to-order" data-product="Pepperoni" data-price="9.50">Add</button></td>
                     </tr>
                     <tr>
-                        <td>Beverages</td>
+                        <!-- <td>Beverages</td> -->
                         <td>Still Water</td>
                         <td>1.50 €</td>
                         <td><button class="add-to-order" data-product="Still Water" data-price="1.50">Add</button></td>
-                    </tr>
-                    <tr>
-                        <td>Beverages</td>
-                        <td>Cola</td>
-                        <td>2.50 €</td>
-                        <td><button class="add-to-order" data-product="Cola" data-price="2.50">Add</button></td>
                     </tr>
                 </tbody>
             </table>
