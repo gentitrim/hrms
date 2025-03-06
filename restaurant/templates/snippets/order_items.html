@@ -1,9 +1,10 @@
 <div id="result">
     {% for product in object_list %}
+    {% if product.name exists %}
     <div class="d-flex justify-content-between mt-1">
         <div class="row"></div>
                 <li class="list-group-item border-0 col-3">
-                    <span class="align-middle">{{ product.name }} - {{ product.price }} ALL</span>
+                    <span class="align-middle">{{ product.name }} - {{ product.price }} </span>
                 </li>
                 <span style="margin-top:auto;margin-bottom:auto" class="col-6">
                     <label for="item" >Quantity:</label>

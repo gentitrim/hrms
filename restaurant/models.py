@@ -26,6 +26,10 @@ class Products(models.Model):
     price = models.IntegerField()
     # image = models.ImageField()
 
+    
+    def get_price_as_float(self):
+        return f'{self.price:.2f}'
+
     def __str__(self):
         return self.name
 

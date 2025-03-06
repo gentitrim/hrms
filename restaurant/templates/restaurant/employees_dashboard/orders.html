@@ -1,181 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant POS - Orders</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <div class="logo">
-            <img src="logo.png" alt="Logo">
-            <span>Restaurant POS</span>
-        </div>
-        <nav id="nav">
-            <button class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul>
-                <li><a href="index.html">Dashboard</a></li>
-                <li><a href="orders.html" class="active">Orders</a></li>
-                <li><a href="shifts.html">Shifts</a></li>
-            </ul>
-        </nav>
-    </header>
+{% extends "restaurant/employees_dashboard/base_template.html" %}
+{% block content %}
 
     <main>
         <!-- Menu Section -->
         <h1 style="text-align: center;">Menu</h1>
         <div class="container card">
             <!-- <h1>Menu</h1> -->
-            <div style="margin-right: 10px;width:30%">
-                <h4 style="height:42px;background-color: #1E50A2;min-width:112px;color:white;padding-left: 10px;padding-top:11px;margin-bottom:0px;margin-top: 20px;">Category</h4>
+            <div style="margin-right: 10px;width:15%">
+                <h4 style="height:42.8px;background-color: #1E50A2;min-width:112px;color:white;padding-left: 10px;padding-top:11px;margin-bottom:0px;margin-top: 20px;">Category</h4>
                 <ul id="categorylist">
+                    {% for category in categories%}
                         <li>
-                            <input type="button" class="categoryButton" value="Pizza"/>
+                            <input type="button" class="categoryButton" value="{{category.name}}" id="{{category.name}}"
+                            hx-get="{% url 'get_products' category.id %}"
+                            hx-target="#productResult"
+                            hx-triger="click"
+                            hx-swap="innerHtml ">
                         </li>
-                        <li>
-                            <input type="button" class="categoryButton" value="Food"/>
-                        </li>
+                    {% endfor %}
                 </ul>
                 
         </div>
-            <table id="menuTable">
-                <thead>
+        <table id="menuTable">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="productResult">
+                <tr style="height:70px">
+                    <td></td>
+                    <td>No Product</td>
+                    <td></td>
                     <tr>
-                        <!-- <th>Category</th> -->
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Action</th>
+                        <td>test</td>
+                        <td>2</td>
+                        <td><button class="add-to-order" data-product="test" data-price="2.00">Add</button></td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <!-- <td>Pizzas</td> -->
-                        <td>Margherita</td>
-                        <td>8.00 €</td>
-                        <td><button class="add-to-order" data-product="Margherita" data-price="8.00">Add</button></td>
-                    </tr>
-                    <tr>
-                        <!-- <td>Pizzas</td> -->
-                        <td>Pepperoni</td>
-                        <td>9.50 €</td>
-                        <td><button class="add-to-order" data-product="Pepperoni" data-price="9.50">Add</button></td>
-                    </tr>
-                    <tr>
-                        <!-- <td>Beverages</td> -->
-                        <td>Still Water</td>
-                        <td>1.50 €</td>
-                        <td><button class="add-to-order" data-product="Still Water" data-price="1.50">Add</button></td>
-                    </tr>
-                </tbody>
+                </tr>
+                    {% include 'snippets/order_product_list.html'%}
+            </tbody>
             </table>
+
+
+            <div class="selected-products">
+                <h2>Current Order</h2>
+                <button id="clearSelection">Clear Order</button>
+                <button id="printInvoice">Print Invoice</button>
+                <table id="selectedProductsTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id = "orderItemList">
+                        <!-- Selected products will be added here dynamically -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="total-price">Total Price</td>
+                            <td id="totalPrice">0.00 €</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
 
         <!-- Order Section -->
-        <div class="selected-products card">
-            <h2>Current Order</h2>
-            <button id="clearSelection">Clear Order</button>
-            <button id="printInvoice">Print Invoice</button>
-            <table id="selectedProductsTable">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Total</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Selected products will be added here dynamically -->
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3" class="total-price">Total Price</td>
-                        <td id="totalPrice">0.00 €</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+        
     </main>
 
-    <footer>
-        <p>&copy; 2023 Restaurant POS. All rights reserved.</p>
-    </footer>
+    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+    {% comment %} <script src="{% static 'js/main.js'%}" async defer></script> {% endcomment %}
 
-    <script>
-        // JavaScript for POS functionality
-        document.addEventListener('DOMContentLoaded', function () {
-            const orderTableBody = document.querySelector('#selectedProductsTable tbody');
-            const totalPriceElement = document.getElementById('totalPrice');
-            const clearSelectionButton = document.getElementById('clearSelection');
-            const printInvoiceButton = document.getElementById('printInvoice');
-            let totalPrice = 0;
-
-            // Add product to order
-            document.querySelectorAll('.add-to-order').forEach(button => {
-                button.addEventListener('click', () => {
-                    const product = button.getAttribute('data-product');
-                    const price = parseFloat(button.getAttribute('data-price'));
-
-                    // Check if product already exists in the order
-                    const existingRow = Array.from(orderTableBody.querySelectorAll('tr')).find(row => {
-                        return row.querySelector('td').textContent === product;
-                    });
-
-                    if (existingRow) {
-                        // Update quantity and total
-                        const quantityCell = existingRow.querySelector('td:nth-child(2)');
-                        const totalCell = existingRow.querySelector('td:nth-child(4)');
-                        const quantity = parseInt(quantityCell.textContent) + 1;
-                        quantityCell.textContent = quantity;
-                        totalCell.textContent = (quantity * price).toFixed(2) + ' €';
-                    } else {
-                        // Add new row for the product
-                        const newRow = document.createElement('tr');
-                        newRow.innerHTML = `
-                            <td>${product}</td>
-                            <td>1</td>
-                            <td>${price.toFixed(2)} €</td>
-                            <td>${price.toFixed(2)} €</td>
-                            <td><button class="remove-item">Remove</button></td>
-                        `;
-                        orderTableBody.appendChild(newRow);
-                    }
-
-                    // Update total price
-                    totalPrice += price;
-                    totalPriceElement.textContent = totalPrice.toFixed(2) + ' €';
-                });
-            });
-
-            // Remove product from order
-            orderTableBody.addEventListener('click', (event) => {
-                if (event.target.classList.contains('remove-item')) {
-                    const row = event.target.closest('tr');
-                    const price = parseFloat(row.querySelector('td:nth-child(4)').textContent);
-                    totalPrice -= price;
-                    totalPriceElement.textContent = totalPrice.toFixed(2) + ' €';
-                    row.remove();
-                }
-            });
-
-            // Clear order
-            clearSelectionButton.addEventListener('click', () => {
-                orderTableBody.innerHTML = '';
-                totalPrice = 0;
-                totalPriceElement.textContent = '0.00 €';
-            });
-
-            // Print invoice
-            printInvoiceButton.addEventListener('click', () => {
-                alert('Invoice printed!'); // Replace with actual print functionality
-            });
-        });
-    </script>
 </body>
 </html>
+    {% endblock content %}

@@ -10,9 +10,12 @@ from django.http import JsonResponse
 # def restaurant(request):
 #     return render(request,'restaurant/index.html')
 
-def order_menu(request):     
-    categories = Categories.objects.all() 
-    return render(request,'restaurant/order_menu.html',context={"categories":categories})
+
+
+class OrderMenuView(ListView):
+    template_name = 'restaurant/employees_dashboard/orders.html'
+    model = Categories
+    context_object_name = "categories"
 
 
 class CreateCategoryView(FormView):
@@ -36,8 +39,10 @@ class CreateProductsView(FormView):
             name=cleaned_data["name"],
         )
         return super().form_valid(form)
-def info(request):
-    return render(request,'restaurant/info.html')
+    
+
+def employ_dashboard(request):
+    return render(request,'restaurant/employees_dashboard/dashboard.html')
 
 def shifts(request):
     return render(request,'restaurant/shifts.html')
