@@ -4,26 +4,22 @@ from django.views.generic import TemplateView,FormView,ListView
 from .models import Products,Categories
 from .forms import CategoryCreateForm
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 
 # Create your views here.
 # def restaurant(request):
 #     return render(request,'restaurant/index.html')
 
-def order_menu(request):
-    
-    category_menu = Categories.objects.all()
-    products = Products.objects.all()
 
-    context = {
-        "categories":category_menu,
-        "products":products,
-    }
-        
-    return render(request,'restaurant/order_menu.html',context)
+
+class OrderMenuView(ListView):
+    template_name = 'restaurant/employees_dashboard/orders.html'
+    model = Categories
+    context_object_name = "categories"
 
 
 class CreateCategoryView(FormView):
-    template_name ='create_menu.html'
+    template_name = "restaurant/create_menu.html"
     form_class = CategoryCreateForm
     success_url = reverse_lazy('create_menu')
     def form_valid(self, form):
@@ -33,9 +29,20 @@ class CreateCategoryView(FormView):
         )
         return super().form_valid(form)
 
+class CreateProductsView(FormView):
+    template_name = "restaurant/create_menu.html"
+    form_class = CategoryCreateForm
+    success_url = reverse_lazy('create_menu')
+    def form_valid(self, form):
+        cleaned_data = form.cleaned_data
+        Categories.objects.create(
+            name=cleaned_data["name"],
+        )
+        return super().form_valid(form)
+    
 
-def info(request):
-    return render(request,'restaurant/info.html')
+def employ_dashboard(request):
+    return render(request,'restaurant/employees_dashboard/dashboard.html')
 
 def shifts(request):
     return render(request,'restaurant/shifts.html')

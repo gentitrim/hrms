@@ -1,0 +1,14 @@
+{% extends "restaurant/base.html" %}
+{% block create_menu_active %}active{% endblock create_menu_active %}
+{% block title %}Create Menu{% endblock title %}
+{% block content %}
+<div style="display:flex;justify-content:space-between">
+    <form method="post" action="">
+        {% csrf_token %}
+        <table>{{ form }}</table>
+        <input type="submit" value="Add New Categorie" class="btn btn-primary">
+    </form>
+
+
+</div>
+{% endblock content %}

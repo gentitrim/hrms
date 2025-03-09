@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="prob.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="logo.png" alt="Logo">
+      <span>Admin Dashboard</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="shifts.html" class="active">Shifts</a></li>
+        <li><a href="employees.html">Employees</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="orders.html">Orders</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Welcome to the Dashboard</h2>
+      <p>Select a section from the menu to get started.</p>
+    </section>
+  </main>
+  <section class="card">
+    <h2>Summary</h2>
+    <div class="metrics">
+      <div class="metric">
+        <span class="value">25</span>
+        <span class="label">Active Employees</span>
+      </div>
+      <div class="metric">
+        <span class="value">120</span>
+        <span class="label">Weekly Shifts</span>
+      </div>
+      <div class="metric">
+        <span class="value">15</span>
+        <span class="label">Ongoing Orders</span>
+      </div>
+      <div class="metric">
+        <span class="value">€1,200</span>
+        <span class="label">Today's Revenue</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2023 Admin Dashboard. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

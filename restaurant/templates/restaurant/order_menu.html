@@ -1,0 +1,42 @@
+{% extends "restaurant/base.html" %}
+{% block home_active %}active{% endblock home_active %}
+{% block title %}Order Menu{% endblock title %}
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="row text-center">
+        <div class="list-group col-3 mt-5 ps-5 pe-5 border-end" >
+            <p class="fs-5">Category</p>
+            {% for category in categories %}
+                <button type="button" class="list-group-item list-group-item-action" id="order_{{ category.name }}" 
+                hx-get="{% url 'get_products' category.id %}"
+                hx-target="#result"
+                hx-triger="click"
+                hx-swap="outerHTML">
+                {{ category.name }}
+                </button>
+            {% endfor %}
+        </div>
+
+        <div class="col mt-5" id="order_products">
+            <p class="fs-5">Products</p>
+            <div class="list-group col"  >
+                {% include 'snippets/order_product_list.html'%}
+            </div>
+        </div>
+
+        <div class="col mt-5 ps-5" id="order_reciept">
+            <p class="fs-5">Order Items</p>
+            <ul class="list-group" id="result_order_items">
+                {% include 'snippets/order_items.html'%}
+            </ul>
+            <div class="d-flex justify-content-around mt-3">
+                <button class="btn btn-success">Confirm</button>
+                <button class="btn btn-danger">Cancel</button>
+            </div>
+        </div>
+</div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shifts</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="Logo">
+            <span>Shift Management</span>
+        </div>
+        <nav id="nav">
+            <button class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="orders.html">Orders</a></li>
+                <li><a href="shifts.html" class="active">Shifts</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Your Shifts</h1>
+            <!-- Shifts from Monday to Sunday -->
+            <div class="shift-card">
+                <div class="shift-info">
+                    <h3>Monday - Morning (AM)</h3>
+                    <p>Time: 08:00 - 12:00</p>
+                </div>
+                <div class="shift-status">
+                    <span class="status confirmed">Confirmed</span>
+                </div>
+            </div>
+            <div class="shift-card">
+                <div class="shift-info">
+                    <h3>Tuesday - Afternoon (PM)</h3>
+                    <p>Time: 14:00 - 18:00</p>
+                </div>
+                <div class="shift-status">
+                    <span class="status confirmed">Confirmed</span>
+                </div>
+            </div>
+            <div class="shift-card">
+                <div class="shift-info">
+                    <h3>Wednesday - Morning (AM)</h3>
+                    <p>Time: 08:00 - 12:00</p>
+                </div>
+                <div class="shift-status">
+                    <span class="status pending">Pending</span>
+                </div>
+            </div>
+            <div class="shift-card">
+                <div class="shift-info">
+                    <h3>Thursday - Afternoon (PM)</h3>
+                    <p>Time: 14:00 - 18:00</p>
+                </div>
+                <div class="shift-status">
+                    <span class="status confirmed">Confirmed</span>
+                </div>
+            </div>
+            <div class="shift-card">
+                <div class="shift-info">
+                    <h3>Friday - Morning (AM)</h3>
+                    <p>Time: 08:00 - 12:00</p>
+                </div>
+                <div class="shift-status">
+                    <span class="status confirmed">Confirmed</span>
+                </div>
+            </div>
+            <div class="shift-card">
+                <div class="shift-info">
+                    <h3>Saturday - Afternoon (PM)</h3>
+                    <p>Time: 14:00 - 18:00</p>
+                </div>
+                <div class="shift-status">
+                    <span class="status cancelled">Cancelled</span>
+                </div>
+            </div>
+            <div class="shift-card">
+                <div class="shift-info">
+                    <h3>Sunday - Morning (AM)</h3>
+                    <p>Time: 08:00 - 12:00</p>
+                </div>
+                <div class="shift-status">
+                    <span class="status confirmed">Confirmed</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Shift Management. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
