@@ -1,0 +1,32 @@
+{% extends "restaurant/base.html" %}
+
+{% block content %}
+
+    <h1>Users</h1>
+    {% for user in users %}
+
+        <p>{{user}}
+            <button>
+                <a href="{% url 'update-user' user.pk %}">
+                    Edit
+                </a>
+            </button>
+            <button>
+
+                <a href="{% url 'delete-user' user.pk %}">
+                    Delete
+                </a>
+            </button>
+
+
+        </p>
+
+    {% endfor %}
+    <button style="background-color: #4da6ff; color: white; font-weight: bold; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+        <a href={% url 'user-register' %}>
+        Add User
+        </a>
+
+    </button>
+
+{% endblock %}

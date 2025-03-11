@@ -1,9 +1,26 @@
 {% extends "restaurant/base.html" %}
 
 {% block content %}
-<form method="post" >
-    {% csrf_token %}
-    <table>{{ form.as_p }}</table>
-    <input type="submit" value="Submit" class="btn btn-primary">
-</form>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+       
+        <h2 class="mb-4">Restaurant POS</h2>
+
+        <div class="card shadow-lg p-4" style="width: 350px;">
+            <h3 class="text-center mb-3">Login</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                </div>
+                <div class="mb-3">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

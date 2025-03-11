@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rosarivo:ital@0;1&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
+  {% if request.resolver_match.url_name != "user-login" %}
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Navbar</a>
@@ -48,6 +48,7 @@
     </div>
   </div>
 </nav>
+{% endif %}
 
 
         {% block content %}
