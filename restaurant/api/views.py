@@ -13,20 +13,20 @@ class ProductsView(ListView):
     template_name = "snippets/order_product_list.html"
     context_object_name = "all_products"
 
-def session_item_in_order(request):
+def session_item_in_order(request,pk):
     
     if 'order' not in request.session:
         request.session['order'] = {}
     order = request.session['order']
 
-    if str(Products.id) in order:
-        order[str(Products.id)] += 1
+    if str(pk) in order:
+        order[str(pk)] += 1
     
     else:
-        order[str(Products.id)] = 1
+        order[str(pk)] = 1
 
     request.session['order'] = order
 
     request.session.modified = True
 
-    return JsonResponse({"success": True, "quantity": order[str(product_id)]})
+    return JsonResponse({"success": True, "quantity": order[str(pk)]})
