@@ -2,9 +2,9 @@ from django.shortcuts import render,get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView,FormView,ListView
 from .models import Products,Categories
-from .forms import CategoryCreateForm
+from .forms import CategoryCreateForm,ConfirmOrderForm
 from django.urls import reverse_lazy
-from django.http import JsonResponse
+from django.contrib import messages
 
 # Create your views here.
 # def restaurant(request):
@@ -51,7 +51,9 @@ def login(request):
     return render(request,'restaurant/login.html')
 
 
-class IndexPage(TemplateView):
-    template_name = "restaurant/index.html"
-
+def confirm_order(request):
+    if request.POST:
+        confirm_order_form = ConfirmOrderForm(request.POST or None)
+    else:
+        messages.success("Can't procede with the order!!")
     

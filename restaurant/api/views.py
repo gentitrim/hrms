@@ -13,7 +13,20 @@ class ProductsView(ListView):
     template_name = "snippets/order_product_list.html"
     context_object_name = "all_products"
 
-class OrderItemVIew(ListView):
-    def get_queryset(self):
-        return Products.objects.filter(id =self.kwargs['pk'])
-    template_name = "snippets/order_items.html"
+def session_item_in_order(request):
+    
+    if 'order' not in request.session:
+        request.session['order'] = {}
+    order = request.session['order']
+
+    if str(Products.id) in order:
+        order[str(Products.id)] += 1
+    
+    else:
+        order[str(Products.id)] = 1
+
+    request.session['order'] = order
+
+    request.session.modified = True
+
+    return JsonResponse({"success": True, "quantity": order[str(product_id)]})

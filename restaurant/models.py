@@ -12,6 +12,8 @@ class BranchStaff(models.Model):
     def __str__(self):
         return f"{self.name} {self.surname}"
 
+
+
 class Categories(models.Model):
     name = models.CharField(max_length=128)
 
@@ -24,20 +26,22 @@ class Products(models.Model):
     name = models.CharField(max_length=128) 
     quantity = models.IntegerField(default=1)
     price = models.IntegerField()
+    description = models.CharField(max_length=250,blank=True,default="")
     # image = models.ImageField()
 
-    
     def get_price_as_float(self):
         return f'{self.price:.2f}'
 
     def __str__(self):
         return self.name
+    
 
 class Order_item(models.Model):
     product_id = models.ForeignKey('Products',on_delete=models.CASCADE)
     order_id = models.ForeignKey('Order',on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     price = models.IntegerField()
+
 
 class Order(models.Model):
     staff_id = models.ForeignKey('BranchStaff',on_delete=models.DO_NOTHING)

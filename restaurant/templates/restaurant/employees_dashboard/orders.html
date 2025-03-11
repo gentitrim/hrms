@@ -1,6 +1,6 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
 {% block content %}
-
+    <body>
     <main>
         <!-- Menu Section -->
         <h1 style="text-align: center;">Menu</h1>
@@ -8,7 +8,7 @@
             <!-- <h1>Menu</h1> -->
             <div style="margin-right: 10px;width:15%">
                 <h4 style="height:42.8px;background-color: #1E50A2;min-width:112px;color:white;padding-left: 10px;padding-top:11px;margin-bottom:0px;margin-top: 20px;">Category</h4>
-                <ul id="categorylist">
+                <ul class="categorylist">
                     {% for category in categories%}
                         <li>
                             <input type="button" class="categoryButton" value="{{category.name}}" id="{{category.name}}"
@@ -30,16 +30,6 @@
                 </tr>
             </thead>
             <tbody id="productResult">
-                <tr style="height:70px">
-                    <td></td>
-                    <td>No Product</td>
-                    <td></td>
-                    <tr>
-                        <td>test</td>
-                        <td>2</td>
-                        <td><button class="add-to-order" data-product="test" data-price="2.00">Add</button></td>
-                    </tr>
-                </tr>
                     {% include 'snippets/order_product_list.html'%}
             </tbody>
             </table>
@@ -47,7 +37,10 @@
 
             <div class="selected-products">
                 <h2>Current Order</h2>
+                <form action="" method="POST">
+                {% csrf_token %}
                 <button id="clearSelection">Clear Order</button>
+                
                 <button id="printInvoice">Print Invoice</button>
                 <table id="selectedProductsTable">
                     <thead>
@@ -59,9 +52,11 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id = "orderItemList">
-                        <!-- Selected products will be added here dynamically -->
+                    <tbody id = "orderItemList" style="font-size:14px">
+                        {% include 'snippets/order_product_list.html'%}
+
                     </tbody>
+                </form>
                     <tfoot>
                         <tr>
                             <td colspan="3" class="total-price">Total Price</td>
@@ -76,9 +71,5 @@
         
     </main>
 
-    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
-    {% comment %} <script src="{% static 'js/main.js'%}" async defer></script> {% endcomment %}
 
-</body>
-</html>
     {% endblock content %}
