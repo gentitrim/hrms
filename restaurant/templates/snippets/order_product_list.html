@@ -6,9 +6,6 @@
                     <td>{{ product.name }}</td>
                     <td>{{ product.get_price_as_float }}</td>
                     <td><button class="add-to-order" data-product="{{ product.name }}" data-price="{{ product.get_price_as_float }}"
-                        hx-post="add-to-order/{{product.id}}/"
-                        hx-target:"orderItemList"
-                        hx-triger:"click"
                         >Add</button></td>
                 </tr>
                 {%empty%}
