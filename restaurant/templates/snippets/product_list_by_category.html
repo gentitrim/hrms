@@ -1,0 +1,56 @@
+{% load static %}
+
+    {% for product in all_products %}
+  
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.get_price_as_float }}</td>
+                    <td>
+                            <button class="add-to-order" 
+                            data-product-id = "{{ product.id }}"
+                            data-product="{{ product.name }}" 
+                            data-price="{{ product.get_price_as_float }}" 
+                            value="{{ product.id }}" id = 'add_order'
+                            hx-post: '{% url "add_order" %}'
+                            hx-target: 'order_result'
+                            hx-swap: "outerHTML">
+                            Add
+                            </button>
+                    </td>
+                </tr>
+                {%empty%}
+                <tr>
+                    <td></td>
+                    <td>No Product</td>
+                    <td></td>
+                </tr>
+
+
+                {% comment %} <script>
+                    $(document).on('click', '#add_order', function(e) {
+                        e.preventDefault();
+                        $.ajax({
+                            type:'POST',
+                            url: '{% url "add_order" %}',
+                            data:{
+                                product_id: $('#{{ product.id }}').val()
+                                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                                action: 'post',
+                            },
+
+                            success: function(json){
+                                console.log(json)
+                            },
+
+                            error: function(xhr,errmsg, err){
+
+                            }
+
+
+                        });
+
+                    })
+                </script> {% endcomment %}
+    {% endfor %}
+
+    

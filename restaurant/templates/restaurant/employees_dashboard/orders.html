@@ -1,6 +1,6 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
 {% block content %}
-    <body>
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <main>
         <!-- Menu Section -->
         <h1 style="text-align: center;">Menu</h1>
@@ -30,18 +30,16 @@
                 </tr>
             </thead>
             <tbody id="productResult">
-                    {% include 'snippets/order_product_list.html'%}
+                    {% include 'snippets/product_list_by_category.html' %}
             </tbody>
             </table>
 
 
             <div class="selected-products">
                 <h2>Current Order</h2>
-                <form action="" method="POST">
-                {% csrf_token %}
-                <button id="clearSelection">Clear Order</button>
                 
-                <button id="printInvoice">Print Invoice</button>
+                
+                
                 <table id="selectedProductsTable">
                     <thead>
                         <tr>
@@ -53,7 +51,7 @@
                         </tr>
                     </thead>
                     <tbody id = "orderItemList" style="font-size:14px">
-                        {% include 'snippets/order_product_list.html'%}
+                        {% comment %} {% include 'order_confirm.html' %} {% endcomment %}
 
                     </tbody>
                 </form>
@@ -64,8 +62,25 @@
                         </tr>
                     </tfoot>
                 </table>
-            </div>
+                <button id="clearSelection">Clear Order</button>
+
+
+
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+                <button id="printInvoice">
+                    Print Invoice
+                </button>
+
+                <dialog id="confirmationDialog">
+                    <p>Are you sure you want to proceed with this order?</p>
+                    <button id="confirmOrder">Confirm</button>
+                    <button id="cancelOrder">Cancel</button>
+                </dialog>
+
+                <div id="response"></div>
         </div>
+
 
         <!-- Order Section -->
         

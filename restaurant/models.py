@@ -42,6 +42,9 @@ class Order_item(models.Model):
     quantity = models.IntegerField(default=1)
     price = models.IntegerField()
 
+    def __str__(self):
+        return self.product_id.name
+
 
 class Order(models.Model):
     staff_id = models.ForeignKey('BranchStaff',on_delete=models.DO_NOTHING)
