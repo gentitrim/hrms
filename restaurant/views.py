@@ -58,11 +58,9 @@ def login(request):
 
 def confirm_order(request):
     try:
-        # Log the raw request body for debugging
         raw_body = request.body.decode('utf-8')
         logger.debug(f"Raw request body: {raw_body}")
 
-        # Attempt to parse the JSON
         data = json.loads(raw_body)
         logger.debug(f"Parsed JSON data: {data}")
 
