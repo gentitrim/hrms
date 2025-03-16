@@ -14,7 +14,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-genti = BranchStaff()
 
 
 class OrderMenuView(ListView):
@@ -78,7 +77,7 @@ def confirm_order(request):
 
         for item in items:
             product = Products.objects.get(pk=item['product_id'])
-            Order_item.objects.create(order_id = order,product_id=product,quantity = item['quantity'],price = item['total_price'] )
+            Order_item.objects.create(order_id = order,product_id=product,quantity = item['quantity'],price = item['price']*item["quantity"] )
 
         return JsonResponse({'status': 'success', 'message': 'Order confirmed', 'data': items})
 
