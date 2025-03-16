@@ -64,7 +64,7 @@ def confirm_order(request):
         data = json.loads(raw_body)
         logger.debug(f"Parsed JSON data: {data}")
 
-        if 'items' not in data:
+        if 'items' not in data or not data['items']:
             return JsonResponse({'status': 'error', 'message': 'No items provided'}, status=400)
 
         items = data['items']
@@ -72,10 +72,13 @@ def confirm_order(request):
 
         total_price = sum(item['total_price'] for item in items)
 
-        order = Order.objects.create(total_price=total_price,staff_id = BranchStaff.objects.get(pk = 1))
+        #per test deri sa te lidhet user 
+        staff = BranchStaff.objects.get(pk=1)
+        order = Order.objects.create(total_price=total_price,staff_id = staff)
 
         for item in items:
-            Order_item.objects.create(order_id = order,product_id=Products.objects.get(pk=item['product_id']),quantity = item['quantity'],price = item['total_price'] )
+            product = Products.objects.get(pk=item['product_id'])
+            Order_item.objects.create(order_id = order,product_id=product,quantity = item['quantity'],price = item['total_price'] )
 
         return JsonResponse({'status': 'success', 'message': 'Order confirmed', 'data': items})
 
