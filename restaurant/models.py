@@ -1,8 +1,9 @@
 from django.db import models
+from user_authentication.models import User
 
 # Create your models here.
 class BranchStaff(models.Model):
-    # user_id = models.ForeignKey('user',on_delete=models.CASCADE)
+    # user_id = models.OneToOneField('User',on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
     role = models.CharField(max_length=128)
