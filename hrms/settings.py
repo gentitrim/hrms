@@ -27,7 +27,7 @@ load_dotenv(r"C:\Users\ritif\OneDrive\Desktop\bar-restorant\env")
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("django_key")
+SECRET_KEY = '1234'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
