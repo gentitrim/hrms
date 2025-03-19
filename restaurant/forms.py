@@ -1,12 +1,11 @@
-from django.forms import ModelForm
-from .models import Categories,Products
+from django.forms import ModelForm,Form
+from .models import Categories,Products,Order
 
 
 class CategoryCreateForm(ModelForm):
     class Meta:
         model = Categories
         fields = '__all__'
-
     
 
 

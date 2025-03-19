@@ -145,7 +145,7 @@ button {
 
 /* Table Styling */
 
-#categorylist{
+.categorylist{
     list-style: none;
     width:auto;
     margin-top:0px;
@@ -153,7 +153,7 @@ button {
     padding-left: 0px;
     }
 
-#categorylist li {
+.categorylist li {
     height:100%;
     border-bottom: 1px solid #ddd;
     display: block;
@@ -175,7 +175,7 @@ button {
     font-size: medium;
 }
 
-#categorylist li:nth-child(even) {
+.categorylist li:nth-child(even) {
     background-color: #f9f9f9;
 }
 
@@ -270,6 +270,55 @@ table tbody tr:hover {
 .shift-card .shift-status .status.cancelled {
     background-color: #f8d7da;
     color: #721c24;
+}
+
+/* Style the dialog */
+dialog {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: center;
+}
+
+/* Style the buttons */
+dialog button {
+    margin: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#confirmOrder {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#cancelOrder {
+    background-color: #f44336;
+    color: white;
+}
+
+#response {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Success message style */
+#response.success {
+    background-color: #d4edda; /* Light green */
+    color: #155724; /* Dark green */
+}
+
+/* Error message style */
+#response.error {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24; /* Dark red */
 }
 
 /* Footer Styling */

@@ -140,6 +140,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user_authentication.CustomUser"
 
 
-LOGIN_REDIRECT_URL = 'order_menu'
+LOGIN_REDIRECT_URL = 'restaurant/order_menu/'
 
 LOGOUT_REDIRECT_URL = reverse_lazy('user-login')
