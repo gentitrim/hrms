@@ -3,6 +3,7 @@ from user_authentication.models import CustomUser
 from user_authentication.forms import CustomUserRegisterForm,CustomLoginForm,CustomLogoutForm
 from django.contrib.auth.views import LoginView
 from django.views.generic import CreateView,View,UpdateView,ListView,DeleteView
+from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth import logout
 
@@ -32,23 +33,15 @@ class UserDeleteView(DeleteView):
     success_url = reverse_lazy('users')
     
 
-
-
-
-
-
 class CustomUserLoginView(LoginView):
     form_class = CustomLoginForm
     template_name = 'user_login.html'
     success_url = reverse_lazy('restaurant')
 
-class LogoutView(View):
-    def get(self,request):
-        form = CustomLogoutForm
-        return render(request, 'user_login.html', {'form': form})
 
-    def post(self, request):
-        logout(request)  # Mbyll sesionin e përdoruesit
-        return redirect('user-login')
 
+class ConfirmLogoutView(LogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        logout(request)
+        return redirect('login')
 

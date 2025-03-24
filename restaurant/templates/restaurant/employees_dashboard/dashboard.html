@@ -1,34 +1,27 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
 {% block content %}
 
-    <main>
-        <div class="container card">
-            <h1>Dashboard</h1>
-            <p>Welcome to your dashboard. Here you can manage orders and shifts.</p>
-        </div>
+    <div class="container mt-5 justify-content-center">
 
-        <div class="content card">
-            <div><ul class="categorylist">
-                <ul>
-                    <li><button id='my_order'
-                         hx-get="{% url 'my_orders'%}"
-                            hx-target="#my_order_result"
+            <div class="btn-group btn-group-lg d-grid d-md-flex justify-content-md-center" role="group" aria-label="Large button group">
+                <button type="button" class="btn btn-outline-primary"
+                hx-get="{% url 'my_orders'%}"
+                            hx-target="#dash_result"
                             hx-triger="click"
-                            hx-swap="innerHtml "
-                        >My orders</button></li>
-                    <li><button>My shifts</button></li>
-                    <li><button>My profile</button></li>
-                </ul>
-                <ul id="my_order_result">
-                    {% comment %} insert orders here {% endcomment %}
-                    {% include 'snippets/my_order_list.html' %}
-                </ul>
-        </div>
-    </main>
+                            hx-swap="innerHtml"
+                >My Orders</button>
+                <button type="button" class="btn btn-outline-primary">Profile</button>
+                <button type="button" class="btn btn-outline-primary">Manage Account</button>
+            </div>
 
-    <footer>
-        <p>&copy; 2023 Shift Management. All rights reserved.</p>
-    </footer>
+            <div >
+                <ul class="list-group mt-3" id='dash_result'>
+                {% include 'snippets/my_order_list.html' %}
+                </ul>
+            </div>
+          
+        
+    </div>
 
-    <script src="script.js"></script>
-    {% endblock content %}
+
+{% endblock content %}

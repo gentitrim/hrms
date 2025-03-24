@@ -1,24 +1,32 @@
 {% load static %}
 
     {% for order in orders %}
-  
-                <li>
-                    <h3>{{ order.staf_id.name }}</h3>
-                    <p>{{ order.order_time }}</p>
-                    <p>{{ order.total_price }} $</p>
-                    <button class="view-order" 
-                    data-order-id = "{{ order.id }}"
-                    data-order="{{ order.id }}" 
-                    data-price="{{ order.total_price }}" 
-                    value="{{ order.id }}" id = 'view_order'
-                    hx-target: 'order_result'
-                    hx-swap: "INNERHTML">
-                    View
-                    </button>
-                </li>
-                {%empty%}
-                <li>
-                    <h3>No Orders</h3>
-                </li>
+        
+            <li class="list-group-item">
+                <ul class="list-group list-group-horizontal"  style="width: 100%;">
+                    <li class="list-group-item border border-0"  style="width: 100%;">{{ order.id }}</li>
+                    <li class="list-group-item border border-0"  style="width: 100%;">{{ order.order_time }}</li>
+                    <li class="list-group-item border border-0"  style="width: 100%;">{{ order.get_price_as_float }} €</li>
+                    <li class="list-group-item border border-0"  style="width: 100%;">{{ order.status }} </li>
+                    <li class="list-group-item border border-0"  style="width: 100%;"><button type="button" class="btn btn-outline-danger">Cancel</button></li>
+                    <li class="list-group-item border border-0"  style="width: 100%;"><button type="button" class="btn btn-outline-secondary">View Details</button></li>
+                    
+                 </ul>
+            </li>
+                  
+                
+
+      
+                
+    {%empty%}
+
+            <li class="list-group-item">No Orders </li>
 
     {% endfor %}
+
+    <li class="list-group-item">
+        <ul class="list-group list-group-horizontal"  style="width: 100%;">
+            <li class="list-group-item border border-0"  style="width: 100%;">Total</li>
+            <li class="list-group-item border border-0"  style="width: 100%;">{{ total_amount }}</li>
+         </ul>
+    </li>

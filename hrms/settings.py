@@ -142,4 +142,4 @@ AUTH_USER_MODEL = "user_authentication.CustomUser"
 
 LOGIN_REDIRECT_URL = 'restaurant/order_menu/'
 
-LOGOUT_REDIRECT_URL = reverse_lazy('user-login')
+LOGOUT_REDIRECT_URL = reverse_lazy('login')

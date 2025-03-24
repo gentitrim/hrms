@@ -34,7 +34,7 @@ document.body.addEventListener("click", (event) => {
                 <td>1</td>
                 <td>${price.toFixed(2)} €</td>
                 <td>${price.toFixed(2)} €</td>
-                <td><button class="remove-item">Remove</button></td>
+                <td><button class="btn btn-outline-danger remove-item "><i class="bi bi-x"></i>Remove</button></td>
             `;
             orderTableBody.appendChild(newRow);
         }

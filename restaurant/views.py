@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.views import View
-from django.views.generic import TemplateView,FormView,ListView
+from django.views.generic import TemplateView,FormView,ListView,View
 from .models import Products,Categories,Order,Order_item,BranchStaff
 from user_authentication.models import CustomUser
 from .forms import CategoryCreateForm
@@ -8,6 +8,8 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 import json
 import logging
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 # def restaurant(request):
@@ -17,22 +19,26 @@ logger = logging.getLogger(__name__)
 
 
 
-class OrderMenuView(ListView):
+class OrderMenuView(LoginRequiredMixin,ListView):
     template_name = 'restaurant/employees_dashboard/orders.html'
     model = Categories
     context_object_name = "categories"
+    login_url = reverse_lazy('login')
+    redirect_field_name = "next"
     
 
-def employ_dashboard(request):
-    return render(request,'restaurant/employees_dashboard/dashboard.html')
+class DashboardView(LoginRequiredMixin,TemplateView):
+    template_name = 'restaurant/employees_dashboard/dashboard.html'
+    login_url = reverse_lazy('login')
+    redirect_field_name = "next"
 
-def shifts(request):
-    return render(request,'restaurant/employees_dashboard/shifts.html')
+class ShiftsView(LoginRequiredMixin,TemplateView):
+    template_name = 'restaurant/employees_dashboard/shifts.html'
+    login_url = reverse_lazy('login')
+    redirect_field_name = "next"
 
-def login(request):
-    return render(request,'restaurant/login.html')
 
-
+@login_required
 def confirm_order(request):
     try:
         raw_body = request.body.decode('utf-8')
@@ -48,7 +54,7 @@ def confirm_order(request):
         items = data['items']
         logger.debug(f"Received items: {items}")
 
-        total_price = sum(item['total_price'] for item in items)
+        total_price = sum(item['total_price'] for item in items) * 100
 
         #per test deri sa te lidhet user 
         # staff = BranchStaff.objects.get(pk=request.user.id)
@@ -57,7 +63,7 @@ def confirm_order(request):
 
         for item in items:
             product = Products.objects.get(pk=item['product_id'])
-            Order_item.objects.create(order_id = order,product_id=product,quantity = item['quantity'],price = item['price']*item["quantity"] )
+            Order_item.objects.create(order_id = order,product_id=product,quantity = item['quantity'],price = item['price']*item["quantity"]*100) 
 
         return JsonResponse({'status': 'success', 'message': 'Order confirmed', 'data': items})
 
@@ -71,22 +77,7 @@ def confirm_order(request):
 
 
 
-class UserOrderListView(ListView):
-    model = Order
-    template_name = 'restaurant/employees_dashboard/dashboard.html'
-    context_object_name = 'orders'
-
-    def get_queryset(self):
-        return Order.objects.filter(staff_id=self.request.user.id)
-    
-
-class UserOrderDetailView(View):
-    def get(self,request,pk):
-        order = get_object_or_404(Order,pk=pk)
-        return render(request,'restaurant/employees_dashboard/order_detail.html',{'order':order})
-
-
-class CreateCategoryView(FormView):
+class CreateCategoryView(LoginRequiredMixin,FormView):
     template_name = "restaurant/create_menu.html"
     form_class = CategoryCreateForm
     success_url = reverse_lazy('create_menu')
@@ -97,7 +88,7 @@ class CreateCategoryView(FormView):
         )
         return super().form_valid(form)
 
-class CreateProductsView(FormView):
+class CreateProductsView(LoginRequiredMixin,FormView):
     template_name = "restaurant/create_menu.html"
     form_class = CategoryCreateForm
     success_url = reverse_lazy('create_menu')
