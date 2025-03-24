@@ -49,7 +49,7 @@ def employ_dashboard(request):
     return render(request,'restaurant/employees_dashboard/dashboard.html')
 
 def shifts(request):
-    return render(request,'restaurant/shifts.html')
+    return render(request,'restaurant/employees_dashboard/shifts.html')
 
 def login(request):
     return render(request,'restaurant/login.html')
