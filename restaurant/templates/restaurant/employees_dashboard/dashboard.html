@@ -7,18 +7,22 @@
             <p>Welcome to your dashboard. Here you can manage orders and shifts.</p>
         </div>
 
-        <div class="container card">
+        <div class="content card">
             <div><ul class="categorylist">
-                <nav id="nav">
-                    <ul>
-                        <li><a href="{% url "dashboard" %}">Dashboard</a></li>
-                        <li><a href="{% url "order_menu" %}" class="active">Orders</a></li>
-                        <li><a href="shifts.html">Shifts</a></li>
-                    </ul>
-                </nav>
-            </header>
-            </ul></div>
-
+                <ul>
+                    <li><button id='my_order'
+                         hx-get="{% url 'my_orders'%}"
+                            hx-target="#my_order_result"
+                            hx-triger="click"
+                            hx-swap="innerHtml "
+                        >My orders</button></li>
+                    <li><button>My shifts</button></li>
+                    <li><button>My profile</button></li>
+                </ul>
+                <ul id="my_order_result">
+                    {% comment %} insert orders here {% endcomment %}
+                    {% include 'snippets/my_order_list.html' %}
+                </ul>
         </div>
     </main>
 

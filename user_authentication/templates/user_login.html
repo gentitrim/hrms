@@ -1,4 +1,4 @@
-{% extends "restaurant/base.html" %}
+{% extends "restaurant/employees_dashboard/base_template.html" %}
 
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center vh-100">
@@ -14,10 +14,12 @@
                     {{ form.username.label_tag }}
                     {{ form.username }}
                 </div>
+                <br>
                 <div class="mb-3">
                     {{ form.password.label_tag }}
                     {{ form.password }}
                 </div>
+                <br>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
         </div>

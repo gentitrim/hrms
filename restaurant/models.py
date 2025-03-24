@@ -48,7 +48,7 @@ class Order_item(models.Model):
 
 
 class Order(models.Model):
-    staff_id = models.ForeignKey('BranchStaff',on_delete=models.DO_NOTHING)
+    staff_id = models.ForeignKey(CustomUser,on_delete=models.DO_NOTHING)
     order_time = models.DateTimeField(auto_now_add=True)
     total_price = models.IntegerField()
 

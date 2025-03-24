@@ -49,6 +49,11 @@ nav ul {
     gap: 20px;
 }
 
+nav ul li {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
 nav a {
     color: red;
     font-weight: bold;
@@ -331,7 +336,7 @@ footer {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     nav ul {
         flex-direction: column;
         gap: 10px;
@@ -382,4 +387,4 @@ footer {
         justify-content: flex-end;
         margin-top: 10px;
     }
-}
+} */

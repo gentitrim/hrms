@@ -1,0 +1,24 @@
+{% load static %}
+
+    {% for order in orders %}
+  
+                <li>
+                    <h3>{{ order.staf_id.name }}</h3>
+                    <p>{{ order.order_time }}</p>
+                    <p>{{ order.total_price }} $</p>
+                    <button class="view-order" 
+                    data-order-id = "{{ order.id }}"
+                    data-order="{{ order.id }}" 
+                    data-price="{{ order.total_price }}" 
+                    value="{{ order.id }}" id = 'view_order'
+                    hx-target: 'order_result'
+                    hx-swap: "INNERHTML">
+                    View
+                    </button>
+                </li>
+                {%empty%}
+                <li>
+                    <h3>No Orders</h3>
+                </li>
+
+    {% endfor %}

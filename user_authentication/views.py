@@ -12,7 +12,7 @@ class UserRegistrationView(CreateView):
     form_class = CustomUserRegisterForm
     model = CustomUser
     template_name = 'user_registration.html'
-    success_url = reverse_lazy('restaurant/order_menu')
+    success_url = reverse_lazy('restaurant/employees_dashboard/order_menu')
 
 class UserListView(ListView):
     model = CustomUser
