@@ -12,6 +12,11 @@
         <div class="logo">
             {% comment %} <img src="logo.png" alt="Logo"> {% endcomment %}
             <span>Restaurant POS</span>
+
+            <a class="nav-item nav-link active" style="color: rgb(0, 0, 0)">
+                {{user}}
+        
+            </a>
         </div>
         <nav id="nav">
             <button class="hamburger">
@@ -19,10 +24,19 @@
                 <span></span>
                 <span></span>
             </button>
+            
             <ul>
+                
                 <li><a href="{% url "dashboard" %}">Dashboard</a></li>
                 <li><a href="{% url "order_menu" %}" class="active">Orders</a></li>
-                <li><a href="{% url "shifts" %}">Shifts</a></li>
+                <li><a href="shifts.html">Shifts</a></li>
+                <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger ms-3">Logout</button>
+                </form>
+                
+                
+                
             </ul>
         </nav>
     </header>

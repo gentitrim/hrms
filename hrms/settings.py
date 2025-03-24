@@ -12,20 +12,23 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
-import os
+import  os 
+from django.urls import reverse_lazy
 
-# load_dotenv()
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# load_dotenv(r"C:\Users\lalage\Desktop\PY\New shopweb\hrms\.env")
+
+load_dotenv(r"C:\Users\ritif\OneDrive\Desktop\bar-restorant\env")
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ.get("django_key")
+SECRET_KEY = '1234'
 
-SECRET_KEY = "1234"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "django_htmx",
     'restaurant',
+    'user_authentication',
 ]
 
 MIDDLEWARE = [
@@ -123,12 +127,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'static')
-]
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR,"static")]
+    
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "user_authentication.CustomUser"
+
+
+LOGIN_REDIRECT_URL = 'restaurant/order_menu/'
+
+LOGOUT_REDIRECT_URL = reverse_lazy('user-login')

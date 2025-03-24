@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView,FormView,ListView
 from .models import Products,Categories,Order,Order_item,BranchStaff
-from .forms import CategoryCreateForm,ConfirmOrderForm
+from .forms import CategoryCreateForm
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 import json
@@ -72,8 +72,8 @@ def confirm_order(request):
         total_price = sum(item['total_price'] for item in items)
 
         #per test deri sa te lidhet user 
-        staff = BranchStaff.objects.get(pk=1)
-        order = Order.objects.create(total_price=total_price,staff_id = staff)
+        staff = BranchStaff.objects.get(pk=request.user.id)
+        order = Order.objects.create(total_price=total_price,staff_id = staff )
 
         for item in items:
             product = Products.objects.get(pk=item['product_id'])
