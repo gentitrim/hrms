@@ -3,9 +3,9 @@ from django.views import View
 from django.views.generic import TemplateView,FormView,ListView,View
 from .models import Products,Categories,Order,Order_item,BranchStaff
 from user_authentication.models import CustomUser
-from .forms import CategoryCreateForm
+from .forms import CategoryCreateForm,CancelOrderForm
 from django.urls import reverse_lazy
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 import json
 import logging
 from django.contrib.auth.decorators import login_required
@@ -31,6 +31,29 @@ class DashboardView(LoginRequiredMixin,TemplateView):
     template_name = 'restaurant/employees_dashboard/dashboard.html'
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
+
+
+class CancelOrderView(LoginRequiredMixin, TemplateView):
+    template_name = 'restaurant/employees_dashboard/cancel_order.html'
+    login_url = reverse_lazy('login')
+    redirect_field_name = "next"
+
+    def post(self, request, *args, **kwargs):
+        try:
+            order = Order.objects.get(pk=self.kwargs['pk'])
+            order.status = 'CANCELED'
+            order.save()
+            return JsonResponse({'status': 'success', 'message': 'Order cancelled successfully'}, status=200)
+        except Order.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Order not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order'] = Order.objects.get(pk=self.kwargs['pk'])
+        return context
+
 
 class ShiftsView(LoginRequiredMixin,TemplateView):
     template_name = 'restaurant/employees_dashboard/shifts.html'

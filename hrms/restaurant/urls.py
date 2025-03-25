@@ -11,5 +11,5 @@ urlpatterns = [
     # path('login/',views.login,name='login'),
     path('create_menu/',views.CreateCategoryView.as_view(),name='create_menu'),
     path('confirm_order/',views.confirm_order,name='confirm_order'),
-    
+    path('cancel_order/<int:pk>/',views.CancelOrderView.as_view(),name='cancel_order'),
 ]

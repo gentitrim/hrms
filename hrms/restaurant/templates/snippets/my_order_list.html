@@ -2,22 +2,26 @@
 
     {% for order in orders %}
         
-            <li class="list-group-item">
+            <li class="list-group-item" >
+                
                 <ul class="list-group list-group-horizontal"  style="width: 100%;">
                     <li class="list-group-item border border-0"  style="width: 100%;">{{ order.id }}</li>
                     <li class="list-group-item border border-0"  style="width: 100%;">{{ order.order_time }}</li>
                     <li class="list-group-item border border-0"  style="width: 100%;">{{ order.get_price_as_float }} €</li>
                     <li class="list-group-item border border-0"  style="width: 100%;">{{ order.status }} </li>
-                    <li class="list-group-item border border-0"  style="width: 100%;"><button type="button" class="btn btn-outline-danger">Cancel</button></li>
+                    {% if order.status == "CANCELED" %}
+                    <li class="list-group-item border border-0"  style="width: 100%;"><button type="button" class="btn btn-outline-danger disabled" style="display:none">Cancel</button></li>
+                    {% else %}
+                    <li class="list-group-item border border-0"  style="width: 100%;"> 
+                        <button type="submit" class="btn btn-outline-danger" hx-post="{% url 'cancel_order' order.id %}">Cancel</button>
+                    </li>
+                        {% endif %}
                     <li class="list-group-item border border-0"  style="width: 100%;"><button type="button" class="btn btn-outline-secondary">View Details</button></li>
+                
                     
                  </ul>
             </li>
-                  
-                
-
-      
-                
+           
     {%empty%}
 
             <li class="list-group-item">No Orders </li>
@@ -27,6 +31,6 @@
     <li class="list-group-item">
         <ul class="list-group list-group-horizontal"  style="width: 100%;">
             <li class="list-group-item border border-0"  style="width: 100%;">Total</li>
-            <li class="list-group-item border border-0"  style="width: 100%;">{{ total_amount }}</li>
+            <li class="list-group-item border border-0"  style="width: 100%;">{{ total_amount }} €</li>
          </ul>
     </li>

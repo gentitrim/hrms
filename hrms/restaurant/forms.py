@@ -15,6 +15,11 @@ class ProductCreateForm(ModelForm):
         model = Products
         fields = '__all__'
 
+class CancelOrderForm(ModelForm):
+    class Meta:
+        model = Order
+        fields = ['status']
+ 
     
 
 

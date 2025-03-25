@@ -23,7 +23,7 @@ class UserOrderListView(LoginRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         total_amount = self.get_queryset().aggregate(Sum('total_price'))['total_price__sum'] or 0
-        context['total_amount'] = total_amount
+        context['total_amount'] = total_amount/100
 
         return context
     
