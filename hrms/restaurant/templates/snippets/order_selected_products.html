@@ -1,0 +1,12 @@
+{% load static %}
+<div id="result">
+    {% for product in object_list %}
+    <tr>
+        <td>{{ product.name }}</td>
+        <td>1</td>
+        <td>{{ product.price }}</td>
+        <td>150.00 €</td>
+        <td><button class="remove-item">Remove</button></td>
+    </tr>
+    {% endfor %}
+</div>

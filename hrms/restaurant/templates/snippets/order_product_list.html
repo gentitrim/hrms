@@ -1,0 +1,26 @@
+{% load static %}
+
+    {% for product in all_products %}
+  
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.get_price_as_float }}</td>
+                    <td>
+                        <button class="add-to-order" data-product="{{ product.name }}" 
+                        data-price="{{ product.get_price_as_float }}" 
+                        value="{{ product.id }}"
+                        id = "add_order"
+                             >
+                            Add
+                        </button>
+                    </td>
+                </tr>
+                {%empty%}
+                <tr>
+                    <td></td>
+                    <td>No Product</td>
+                    <td></td>
+                </tr>
+    {% endfor %}
+
+    
