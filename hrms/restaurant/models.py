@@ -1,8 +1,9 @@
 from django.db import models
+from user_authentication.models import CustomUser
 
 # Create your models here.
 class BranchStaff(models.Model):
-    # user_id = models.ForeignKey('user',on_delete=models.CASCADE)
+    user_id = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
     role = models.CharField(max_length=128)
@@ -30,23 +31,35 @@ class Products(models.Model):
     # image = models.ImageField()
 
     def get_price_as_float(self):
-        return f'{self.price:.2f}'
+        return f'{self.price/100}'
 
     def __str__(self):
         return self.name
     
 
 class Order_item(models.Model):
+    
     product_id = models.ForeignKey('Products',on_delete=models.CASCADE)
     order_id = models.ForeignKey('Order',on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
+    
     price = models.IntegerField()
+
+    def __str__(self):
+        return self.product_id.name
 
 
 class Order(models.Model):
-    staff_id = models.ForeignKey('BranchStaff',on_delete=models.DO_NOTHING)
+    class OrderStatusChoices(models.TextChoices):
+        CONFIRMED = 'CONFIRMED'
+        CANCELED = 'CANCELED'
+    staff_id = models.ForeignKey(CustomUser,on_delete=models.DO_NOTHING)
     order_time = models.DateTimeField(auto_now_add=True)
     total_price = models.IntegerField()
+    status = models.CharField(max_length=128,choices= OrderStatusChoices,default=OrderStatusChoices.CONFIRMED)
+
+    def get_price_as_float(self):
+        return f'{self.total_price/100}'
 
 class Shift(models.Model):
     pass

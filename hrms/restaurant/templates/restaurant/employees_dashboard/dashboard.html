@@ -1,30 +1,27 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
 {% block content %}
 
-    <main>
-        <div class="container card">
-            <h1>Dashboard</h1>
-            <p>Welcome to your dashboard. Here you can manage orders and shifts.</p>
-        </div>
+    <div class="container mt-5 justify-content-center">
 
-        <div class="container card">
-            <div><ul class="categorylist">
-                <nav id="nav">
-                    <ul>
-                        <li><a href="{% url "dashboard" %}">Dashboard</a></li>
-                        <li><a href="{% url "order_menu" %}" class="active">Orders</a></li>
-                        <li><a href="shifts.html">Shifts</a></li>
-                    </ul>
-                </nav>
-            </header>
-            </ul></div>
+            <div class="btn-group btn-group-lg d-grid d-md-flex justify-content-md-center" role="group" aria-label="Large button group">
+                <button type="button" class="btn btn-outline-primary"
+                hx-get="{% url 'my_orders'%}"
+                            hx-target="#dash_result"
+                            hx-triger="click"
+                            hx-swap="innerHtml"
+                >My Orders</button>
+                <button type="button" class="btn btn-outline-primary">Profile</button>
+                <button type="button" class="btn btn-outline-primary">Manage Account</button>
+            </div>
 
-        </div>
-    </main>
+            <div >
+                <ul class="list-group mt-3" id='dash_result'>
+                {% include 'snippets/my_order_list.html' %}
+                </ul>
+            </div>
+          
+        
+    </div>
 
-    <footer>
-        <p>&copy; 2023 Shift Management. All rights reserved.</p>
-    </footer>
 
-    <script src="script.js"></script>
-    {% endblock content %}
+{% endblock content %}

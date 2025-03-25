@@ -22,5 +22,6 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('restaurant/',include('restaurant.urls')),
-    path('api/',include('restaurant.api.urls')),
+    path('restaurant/api/',include('restaurant.api.urls')),
+    path('',include('user_authentication.urls')),
 ]
