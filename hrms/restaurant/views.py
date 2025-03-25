@@ -43,11 +43,11 @@ class CancelOrderView(LoginRequiredMixin, TemplateView):
             order = Order.objects.get(pk=self.kwargs['pk'])
             order.status = 'CANCELED'
             order.save()
-            return JsonResponse({'status': 'success', 'message': 'Order cancelled successfully'}, status=200)
+            return HttpResponse('Order cancelled successfully', status=200)
         except Order.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Order not found'}, status=404)
+            return HttpResponse('Order not found', status=404)
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            return HttpResponse(str(e), status=500)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,4 +1,5 @@
 {% load static %}
+    
 
     {% for order in orders %}
         
@@ -13,7 +14,38 @@
                     <li class="list-group-item border border-0"  style="width: 100%;"><button type="button" class="btn btn-outline-danger disabled" style="display:none">Cancel</button></li>
                     {% else %}
                     <li class="list-group-item border border-0"  style="width: 100%;"> 
-                        <button type="submit" class="btn btn-outline-danger" hx-post="{% url 'cancel_order' order.id %}">Cancel</button>
+                        <button type="submit" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal" >Cancel</button>
+
+                        <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModal" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Order Cancellation</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" id="cancelOrderModalBody">
+                                  Are you sure you want to cancel this order?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                                    hx-get="{% url 'my_orders'%}"
+                                    hx-target="#dash_result"
+                                    hx-triger="click"
+                                    hx-swap="innerHtml"
+                                    >Close</button>
+
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                    hx-post="{% url 'cancel_order' order.id %}"
+                                    hx-target="#dash_result"
+                                    hx-swap="innerHtml"
+                                    hx-on="htmx:afterRequest: document.getElementById('dash_result').innerHTML = this.responseText"
+                                    >Confirm</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
                     </li>
                         {% endif %}
                     <li class="list-group-item border border-0"  style="width: 100%;"><button type="button" class="btn btn-outline-secondary">View Details</button></li>
@@ -34,3 +66,23 @@
             <li class="list-group-item border border-0"  style="width: 100%;">{{ total_amount }} €</li>
          </ul>
     </li>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="cancelOrderModal" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Order Cancellation</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to cancel this order?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
