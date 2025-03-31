@@ -1,7 +1,8 @@
-from django.db import models
+from django.db import models # type: ignore
 from user_authentication.models import CustomUser
 
-# Create your models here.
+
+# To transfere to manager app
 class BranchStaff(models.Model):
     user_id = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
@@ -14,14 +15,14 @@ class BranchStaff(models.Model):
         return f"{self.name} {self.surname}"
 
 
-
+# To transfere to manager app
 class Categories(models.Model):
     name = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
     
-
+# To transfere to manager app
 class Products(models.Model):
     category = models.ForeignKey("Categories",on_delete=models.CASCADE)
     name = models.CharField(max_length=128) 

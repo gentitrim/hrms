@@ -1,19 +1,13 @@
-from django.shortcuts import render,get_object_or_404
-from django.views import View
-from django.views.generic import TemplateView,FormView,ListView,View
-from .models import Products,Categories,Order,Order_item,BranchStaff
-from user_authentication.models import CustomUser
-from .forms import CategoryCreateForm,CancelOrderForm
-from django.urls import reverse_lazy
-from django.http import JsonResponse,HttpResponse
+from django.views.generic import TemplateView,ListView # type: ignore
+from .models import Products,Categories,Order,Order_item # type: ignore
+from django.urls import reverse_lazy # type: ignore
+from django.http import JsonResponse,HttpResponse # type: ignore
 import json
 import logging
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required # type: ignore
+from django.contrib.auth.mixins import LoginRequiredMixin# type: ignore
 
-# Create your views here.
-# def restaurant(request):
-#     return render(request,'restaurant/index.html')
+
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +73,7 @@ def confirm_order(request):
 
         total_price = sum(item['total_price'] for item in items) * 100
 
-        #per test deri sa te lidhet user 
+        #For test until branch staff is created
         # staff = BranchStaff.objects.get(pk=request.user.id)
         print(request.user.id)
         order = Order.objects.create(total_price=total_price,staff_id = request.user )
@@ -99,25 +93,28 @@ def confirm_order(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
+# To transfere to manager app
+# class CreateCategoryView(LoginRequiredMixin,FormView):
+#     template_name = "restaurant/create_menu.html"
+#     form_class = CategoryCreateForm
+#     success_url = reverse_lazy('create_menu')
+#     def form_valid(self, form):
+#         cleaned_data = form.cleaned_data
+#         Categories.objects.create(
+#             name=cleaned_data["name"],
+#         )
+#         return super().form_valid(form)
+    
 
-class CreateCategoryView(LoginRequiredMixin,FormView):
-    template_name = "restaurant/create_menu.html"
-    form_class = CategoryCreateForm
-    success_url = reverse_lazy('create_menu')
-    def form_valid(self, form):
-        cleaned_data = form.cleaned_data
-        Categories.objects.create(
-            name=cleaned_data["name"],
-        )
-        return super().form_valid(form)
 
-class CreateProductsView(LoginRequiredMixin,FormView):
-    template_name = "restaurant/create_menu.html"
-    form_class = CategoryCreateForm
-    success_url = reverse_lazy('create_menu')
-    def form_valid(self, form):
-        cleaned_data = form.cleaned_data
-        Categories.objects.create(
-            name=cleaned_data["name"],
-        )
-        return super().form_valid(form)
+# To transfere to manager app
+# class CreateProductsView(LoginRequiredMixin,FormView):
+#     template_name = "restaurant/create_menu.html"
+#     form_class = CategoryCreateForm
+#     success_url = reverse_lazy('create_menu')
+#     def form_valid(self, form):
+#         cleaned_data = form.cleaned_data
+#         Categories.objects.create(
+#             name=cleaned_data["name"],
+#         )
+#         return super().form_valid(form)

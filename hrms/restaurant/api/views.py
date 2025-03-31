@@ -1,10 +1,10 @@
-from django.shortcuts import render,get_object_or_404
-from django.views import View
-from django.views.generic import ListView
+from django.shortcuts import render,get_object_or_404 # type: ignore
+from django.views import View # type: ignore
+from django.views.generic import ListView # type: ignore
 from restaurant.models import Products,Order_item,Order
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
-from django.http import HttpResponseForbidden
+from django.contrib.auth.mixins import LoginRequiredMixin # type: ignore
+from django.db.models import Sum # type: ignore
+from django.http import HttpResponseForbidden # type: ignore
 import logging
 import datetime
 
