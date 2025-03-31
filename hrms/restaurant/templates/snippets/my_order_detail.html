@@ -1,0 +1,12 @@
+{% load static %}
+
+<ul class="list-group list-group-flush">
+    <li class="list-group-item d-flex justify-content-between"> <div class="p-2 ">Product</div>  <div class="p-2 ">Quantity</div>   <div class="p-2">Price</div></li>
+    {% for item in order_items %}
+    <li class="list-group-item d-flex justify-content-between"> <div class="p-2">{{ item.product_id }}</div>  <div class="p-2">{{ item.quantity }}</div>   <div class="p-2">{{ item.get_price_as_float }} €</div></li>
+
+    {% empty %}
+    <li class="list-group-item">No items in this order</li>
+    {% endfor %}
+    <li class="list-group-item d-flex justify-content-between"> <div class="p-2">Total:</div>  <div class="p-2"></div><div class="p-2">{{order.get_price_as_float}} €</div> </li>
+</ul>

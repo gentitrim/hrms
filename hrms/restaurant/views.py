@@ -43,7 +43,7 @@ class CancelOrderView(LoginRequiredMixin, TemplateView):
             order = Order.objects.get(pk=self.kwargs['pk'])
             order.status = 'CANCELED'
             order.save()
-            return HttpResponse('Order cancelled successfully', status=200)
+            return HttpResponse('Order canceled successfully', status=200)
         except Order.DoesNotExist:
             return HttpResponse('Order not found', status=404)
         except Exception as e:

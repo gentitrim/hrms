@@ -45,6 +45,9 @@ class Order_item(models.Model):
     
     price = models.IntegerField()
 
+    def get_price_as_float(self):
+        return f'{self.price/100}'
+
     def __str__(self):
         return self.product_id.name
 
