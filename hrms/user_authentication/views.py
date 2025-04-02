@@ -36,6 +36,8 @@ class UserDeleteView(DeleteView):
 class CustomUserLoginView(LoginView):
     form_class = CustomLoginForm
     template_name = 'user_login.html'
+
+    
     success_url = reverse_lazy('restaurant')
 
 

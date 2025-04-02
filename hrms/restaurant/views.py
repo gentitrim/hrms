@@ -1,5 +1,7 @@
 from django.views.generic import TemplateView,ListView # type: ignore
-from .models import Products,Categories,Order,Order_item # type: ignore
+from .models import Order,Order_item # type: ignore
+from branch_management.models import BranchStaff,Product,Categorie
+from django.shortcuts import render,get_object_or_404 # type: ignore
 from django.urls import reverse_lazy # type: ignore
 from django.http import JsonResponse,HttpResponse # type: ignore
 import json
@@ -8,14 +10,13 @@ from django.contrib.auth.decorators import login_required # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin# type: ignore
 
 
-
 logger = logging.getLogger(__name__)
 
 
 
 class OrderMenuView(LoginRequiredMixin,ListView):
     template_name = 'restaurant/employees_dashboard/orders.html'
-    model = Categories
+    model = Categorie
     context_object_name = "categories"
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
@@ -69,17 +70,16 @@ def confirm_order(request):
             return JsonResponse({'status': 'error', 'message': 'No items provided'}, status=400)
 
         items = data['items']
-        logger.debug(f"Received items: {items}")
+        # logger.debug(f"Received items: {items}")
 
         total_price = sum(item['total_price'] for item in items) * 100
 
         #For test until branch staff is created
-        # staff = BranchStaff.objects.get(pk=request.user.id)
-        print(request.user.id)
-        order = Order.objects.create(total_price=total_price,staff_id = request.user )
-
+        staff = get_object_or_404(BranchStaff,pk=request.user.id)
+        order = Order.objects.create(total_price=total_price,staff_id=staff )
+        print(staff)
         for item in items:
-            product = Products.objects.get(pk=item['product_id'])
+            product = Product.objects.get(pk=item['product_id'])
             Order_item.objects.create(order_id = order,product_id=product,quantity = item['quantity'],price = item['price']*item["quantity"]*100) 
 
         return JsonResponse({'status': 'success', 'message': 'Order confirmed', 'data': items})

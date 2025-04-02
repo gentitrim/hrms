@@ -1,7 +1,8 @@
 from django.shortcuts import render,get_object_or_404 # type: ignore
 from django.views import View # type: ignore
 from django.views.generic import ListView # type: ignore
-from restaurant.models import Products,Order_item,Order
+from restaurant.models import Order_item,Order
+from branch_management.models import Product,BranchStaff
 from django.contrib.auth.mixins import LoginRequiredMixin # type: ignore
 from django.db.models import Sum # type: ignore
 from django.http import HttpResponseForbidden # type: ignore
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class ProductsView(ListView):
     def get_queryset(self):
-        return Products.objects.filter(category_id=self.kwargs['pk'])
+        return Product.objects.filter(category_id=self.kwargs['pk'])
     template_name = "snippets/product_list_by_category.html"
     context_object_name = "all_products"
 
@@ -26,8 +27,9 @@ class UserOrderListView(LoginRequiredMixin,ListView):
     redirect_field_name = 'next'
     paginate_by = 10
     def get_queryset(self):
+        self.staff = get_object_or_404(BranchStaff,pk = self.request.user.id)
         self.date = self.request.GET.get('search_date') or datetime.date.today()
-        return Order.objects.filter(staff_id=self.request.user.id, order_time__date=self.date).order_by('-order_time')
+        return Order.objects.filter(staff_id=self.staff, order_time__date=self.date).order_by('-order_time')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -41,10 +43,11 @@ class UserOrderListView(LoginRequiredMixin,ListView):
 
 class UserOrderDetailView(LoginRequiredMixin,View):
     def get(self,request,pk):
+        staff = get_object_or_404(BranchStaff,pk = self.request.user.id)
         order = get_object_or_404(Order,pk=pk)
-        if order.staff_id != request.user:
+        if order.staff_id != staff:
             return HttpResponseForbidden("You are not allowed to view this order.")
-        order_items = Order_item.objects.filter(order_id=order.pk)
+        order_items = Order_item.objects.filter(order_id=self.order.pk)
         context = {
             'order': order,
             'order_items': order_items,
@@ -55,9 +58,10 @@ class UserOrderDetailView(LoginRequiredMixin,View):
 class SearchByDate(LoginRequiredMixin,View):
     def get(self,request):
         date = request.GET.get('search_date') or datetime.date.today()
+        staff = BranchStaff.objects.get(pk = request.user.id)
         print(f"Raw request body: {date}")
         logger.debug(f"Raw request body: {date}")
-        orders = Order.objects.filter(order_time__date=date,staff_id=request.user).order_by('-order_time')
+        orders = Order.objects.filter(order_time__date=date,staff_id=staff).order_by('-order_time')
         order_items = Order_item.objects.filter(order_id__in=orders)
         
         # Calculate total_amount for the selected date

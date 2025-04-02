@@ -4,7 +4,7 @@ from main_management.models import Branch
 
 # Create your models here.
 class BranchStaff(models.Model):
-    user_id = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    user_id = models.OneToOneField(CustomUser,on_delete=models.CASCADE,related_name='branchstaff')
     name = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
     role = models.CharField(max_length=128)
@@ -14,7 +14,7 @@ class BranchStaff(models.Model):
     def __str__(self):
         return f"{self.name} {self.surname}"
     
-class Categories(models.Model):
+class Categorie(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=250,blank=True,default="")
     branch = models.ForeignKey(Branch,on_delete=models.CASCADE,related_name='categories')
@@ -22,8 +22,8 @@ class Categories(models.Model):
         return self.name
 
     
-class Products(models.Model):
-    category = models.ForeignKey("Categories",on_delete=models.CASCADE)
+class Product(models.Model):
+    category = models.ForeignKey("Categorie",on_delete=models.CASCADE)
     name = models.CharField(max_length=128) 
     quantity = models.IntegerField(default=1)
     price = models.IntegerField()

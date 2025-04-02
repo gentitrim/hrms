@@ -1,12 +1,11 @@
 from django.db import models # type: ignore
-from user_authentication.models import CustomUser
-from branch_management.models import BranchStaff,Categories,Products
+from branch_management.models import BranchStaff,Product
 from main_management.models import Branch
 
 # Create your models here.
 class Order_item(models.Model):
     
-    product_id = models.ForeignKey(Products,on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product,on_delete=models.CASCADE)
     order_id = models.ForeignKey('Order',on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     

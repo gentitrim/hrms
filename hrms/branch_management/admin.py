@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import BranchStaff,Categorie,Product,Shift
 
-# Register your models here.
+admin.site.register(BranchStaff)
+admin.site.register(Categorie)
+admin.site.register(Product)
