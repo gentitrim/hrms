@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "django_htmx",
     'restaurant',
     'user_authentication',
+    'branch_management',
+    'main_management',
 ]
 
 MIDDLEWARE = [

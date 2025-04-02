@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import views
+
 
 
 urlpatterns = [
@@ -24,4 +24,6 @@ urlpatterns = [
     path('restaurant/',include('restaurant.urls')),
     path('restaurant/api/',include('restaurant.api.urls')),
     path('',include('user_authentication.urls')),
+    path('management/',include('main_management.urls')),
+    # path('manager',include('branch_management.urls')),
 ]
