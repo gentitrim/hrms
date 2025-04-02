@@ -47,7 +47,7 @@ class UserOrderDetailView(LoginRequiredMixin,View):
         order = get_object_or_404(Order,pk=pk)
         if order.staff_id != staff:
             return HttpResponseForbidden("You are not allowed to view this order.")
-        order_items = Order_item.objects.filter(order_id=self.order.pk)
+        order_items = Order_item.objects.filter(order_id=order)
         context = {
             'order': order,
             'order_items': order_items,
