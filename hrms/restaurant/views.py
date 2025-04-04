@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView,ListView # type: ignore
 from .models import Order,Order_item # type: ignore
 from branch_management.models import BranchStaff,Product,Categorie
-from django.shortcuts import render,get_object_or_404 # type: ignore
+from django.shortcuts import get_object_or_404 # type: ignore
 from django.urls import reverse_lazy # type: ignore
 from django.http import JsonResponse,HttpResponse # type: ignore
 import json

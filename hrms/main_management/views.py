@@ -10,9 +10,10 @@ class MainPage(TemplateView):
         return render(request,'management/main.html')
     
 class BranchListView(ListView):
+    paginate_by = 3
     model = Branch
     template_name = 'management/branches_list.html'
-    context_object_name = 'branches'
+    # context_object_name = 'branches'
 
 class CreateBranchView(FormView):
     template_name = 'management/create_manager.html'

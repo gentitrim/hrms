@@ -1,5 +1,59 @@
-{% extends "management/management_base.html"%}
+{% load static %}
 
 {% block content %}
+<ul class="list-group me-5">
+{% for branch in page_obj %}
 
+    <li class="list-group-item bg-body-tertiary border-bottom rounded-end" id = '{{ branch.id }}'>
+        <div class="row">
+            <div class="col-8">
+                <h5 class="card-title">{{ branch.name }}</h5>
+                <p class="card-text">Address: {{ branch.address }}</p>
+                <p class="card-text">Phone: {{ branch.phone_number }}</p>
+                <p class="card-text">Email: {{ branch.email }}</p>
+                <p class="card-text">Manager: {{ branch.manager }}</p>  
+            </div>
+            <div class="col-4 d-flex justify-content-end align-items-center">
+                <button class="btn btn-secondary" id="manage_branch" style="width: 200px;">Manage Branch</button>
+            </div>
+        </div>
+    </li>
+  
+{% endfor %}
+</ul>
+<div class="d-flex justify-content-center mt-3 mb-5 me-5">
+    <p class="text-secondary">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+</div> 
+<div class="d-flex justify-content-between mt-3 mb-5 me-5">
+    <nav class="d-flex justify-content-between mt-3 mb-5 me-5">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link text-secondary" href="?page={{ page_obj.previous_page_number }}"hx-get="{% url 'branch'%}?page={{ page_obj.previous_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">Previous</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link text-secondary" href="?page={{ page_obj.previous_page_number }}"hx-get="{% url 'branch'%}?page={{ page_obj.previous_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">{{ page_obj.previous_page_number }}</a>
+                </li>  
+            {% endif %}
+
+            <li class="page-item">
+                <span class="page-link text-primary">{{ page_obj.number }}</span>
+            </li>
+
+           
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link text-secondary" href="?page={{ page_obj.next_page_number }}"hx-get="{% url 'branch'%}?page={{ page_obj.next_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">{{ page_obj.next_page_number }}</a>
+            </li>
+                <li class="page-item">
+                    <a class="page-link text-secondary" href="?page={{ page_obj.next_page_number }}"
+                    hx-get="{% url 'branch'%}?page={{ page_obj.next_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML"
+                    >Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <button class="btn btn-secondary mt-3 mb-5 me-3" id="create_branch" style="width: 200px;">Create new branch</button>
+</div>
 {% endblock %}
