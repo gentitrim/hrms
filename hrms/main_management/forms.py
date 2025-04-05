@@ -7,6 +7,11 @@ class BranchForm(ModelForm):
         model = Branch
         fields = '__all__'
 
+    def clean_name(self):
+        data = self.cleaned_data["name"]
+        return data.title()
+        
+
 
 class ManagerForm(ModelForm):
     class Meta:

@@ -1,19 +1,7 @@
 {% extends "management/management_base.html"%}
 
 {% block content %}
-<div class="container-fluid ms-3 mt-3"  style="height: 100vh;">
-    <div class="row"style='height:100%;'>
-        <div class="col bg-body-tertiary d-flex flex-column" >
-            <button class="btn btn-secondary mt-3" id="manage_branch" style="width: 200px;"
-            hx-get="{% url 'branch' %}" hx-target="#main-dashboard-result" 
-            hx-swap="innerHTML"
-            >Manage Branch</button>
-            <button class="btn btn-secondary mt-3" id="manage_manager" style="width: 200px;">Manage Managers</button>
-            <button class="btn btn-secondary mt-3" id="manage_menu" style="width: 200px;">Manage Menu</button>
-            <button class="btn btn-secondary mt-3" id="manage_staff" style="width: 200px;">Manage Staff</button>
-            <button class="btn btn-secondary mt-3" id="reports" style="width: 200px;">Reports</button>
 
-        </div>
         <div class="col-10" >
             <div id='main-dashboard-result'>
                 
