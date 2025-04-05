@@ -2,6 +2,7 @@
 HRMS - Restaurant & Bar Management System
 
 HRMS (Hospitality Resource Management System) is a web-based POS and management tool designed for restaurants and bars. It helps streamline order processing, inventory tracking, staff management, and shift scheduling.
+dev  branch
 Features
 
 -Order Management – Handle dine-in, takeout, and online orders seamlessly.
