@@ -1,17 +1,17 @@
 from django.forms import ModelForm
 
-from .models import Categories,Products,BranchStaff
+from .models import Categorie,Product,BranchStaff
 
 
 class CategoryCreateForm(ModelForm):
     class Meta:
-        model = Categories
+        model = Categorie
         fields = '__all__'
     
 
 class ProductCreateForm(ModelForm):
     class Meta:
-        model = Products
+        model = Product
         fields = '__all__'
 
 class CreateBranchStaff(ModelForm):

@@ -1,0 +1,17 @@
+<!-- employee_list.html -->
+{% extends "branch_management/manager_dashboard.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Gestione Dipendenti</h1>
+    <a href="{% url 'branch_management:create_employee' %}" class="btn btn-success">
+        <i class="fas fa-plus"></i> Nuovo Dipendente
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <!-- Tabella dipendenti -->
+    </table>
+</div>
+{% endblock %}
