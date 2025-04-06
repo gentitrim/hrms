@@ -18,3 +18,4 @@ class CreateBranchStaff(ModelForm):
     class Meta:
         model = BranchStaff
         fields = '__all__'
+        exclude = ['user', 'branch']

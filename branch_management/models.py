@@ -4,12 +4,12 @@ from main_management.models import Branch
 
 # Create your models here.
 class BranchStaff(models.Model):
-    user_id = models.OneToOneField(CustomUser,on_delete=models.CASCADE,related_name='branchstaff')
+    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE,related_name='branchstaff')
     name = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
     role = models.CharField(max_length=128)
-    created = models.DateTimeField()
-    branch = models.ForeignKey(Branch,on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    branch = models.ForeignKey(Branch,on_delete=models.CASCADE,related_name='staffs')
 
     def __str__(self):
         return f"{self.name} {self.surname}"

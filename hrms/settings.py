@@ -19,15 +19,13 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(r"C:\Users\ritif\OneDrive\Desktop\bar-restorant\env")
-
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1234'
+#SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+SECRET_KEY = "1234"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -90,6 +88,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        # TODO: add db config in .env
+        # "PASSWORD": os.environ.get("DB_PASSWORD"),
+        # "HOST": os.environ.get("DB_HOST")
+        # ...
     }
 }
 
