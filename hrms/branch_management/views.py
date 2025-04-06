@@ -13,7 +13,7 @@ class CreateProductView(CreateView):
     model = Product
     template_name = 'create_product.html'
     fields = '__all__'
-    success_url = reverse_lazy('product_list')
+    success_url = reverse_lazy('create-product')
 
     def form_valid(self, form):
         form.instance.branch = self.request.user.branch 
