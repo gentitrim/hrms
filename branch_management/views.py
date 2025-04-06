@@ -33,26 +33,25 @@ class ProductListView(ListView):
     context_object_name = 'products'
 
 
+
     
     
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductCreateForm
     template_name = 'update_product.html'
-    fields = '__all__'
+    
     success_url = reverse_lazy('product-list')
 
-    def get_queryset(self):
-        return Product.objects.filter(branch=self.request.user.branch)
+    
     
 class ProductDeleteView(DeleteView): 
-    form_class = ProductCreateForm   
+     
     model = Product
     template_name = 'product_confirm_delete.html'
     success_url = reverse_lazy('product-list')
 
-    def get_queryset(self):
-        return Product.objects.filter(branch=self.request.user.branch)
+    
     
 class CreateCategoryView(CreateView):
     model = Categorie
