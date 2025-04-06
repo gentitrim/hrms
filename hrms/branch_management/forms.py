@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 
-from .models import Categories,Products,BranchStaff
+from .models import Categorie,Product,BranchStaff
+from restaurant.models import Product
 
 
 class CategoryCreateForm(ModelForm):
