@@ -1,0 +1,80 @@
+{% extends "manager_dashboard.html" %}
+{% block content %}
+{% if request.resolver_match.url_name == "Product" %}
+{% endif %}
+    
+    <!-- templates/your_app/product_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Table</title>
+    <style>
+        table {
+            width: 70%;
+            border-collapse: collapse;
+            margin: 30px auto;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center;">Product Table</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Price (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td class="product-name" data-id="{{ product.id }}" data-name="{{ product.name }}">{{ product.name }}</td>
+                
+                    <td>{{ product.category.name }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.get_price_as_float }}</td>
+                </tr>
+            {% endfor %}
+            <div id="popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+                        background:white; border:1px solid #aaa; padding:20px; border-radius:10px;
+                        box-shadow: 0px 0px 15px rgba(0,0,0,0.2); z-index:1000;">
+    <p id="popup-title" style="font-weight:bold; font-size:18px; margin-bottom:15px;"></p>
+    <a id="edit-button" href="#" style="margin-right:10px; padding:8px 12px; background:#4da6ff; color:white; border:none; border-radius:5px; text-decoration:none;">Edit</a>
+    <a id="delete-button" href="#" style="padding:8px 12px; background:#ff4d4d; color:white; border:none; border-radius:5px; text-decoration:none;">Delete</a>
+    <button onclick="closePopup()" style="margin-left:15px; padding:6px 10px;">Close</button>
+</div>
+            {% if not products %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">No products available.</td>
+                </tr>
+            {% endif %}
+
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+
+    
+    <button style="background-color: #4da6ff; color: white; font-weight: bold; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+        <a href={% url 'create-product' %}>
+        Add Product
+        </a>
+
+    </button>
+ 
+    
+
+{% endblock %}

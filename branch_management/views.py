@@ -3,6 +3,8 @@ from .models import Branch,Product,Categorie,BranchStaff
 from django.http import HttpResponseRedirect,HttpResponse
 from django.views.generic import TemplateView,ListView ,FormView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from branch_management.forms import ProductCreateForm,CategoryCreateForm
 
 class DashboardView(TemplateView):
     template_name = 'manager_dashboard.html'
@@ -14,32 +16,40 @@ class CreateProductView(CreateView):
     template_name = 'create_product.html'
     fields = '__all__'
     success_url = reverse_lazy('create-product')
+    context_object_name = 'products'
 
     def form_valid(self, form):
-        form.instance.branch = self.request.user.branch 
-        return super().form_valid(form)
-    
+        branch_user = BranchStaff.objects.filter(user_id=self.request.user).first()
+        if branch_user:
+            branch = branch_user.branch
+            form.instance.branch = branch 
+            return super().form_valid(form)
+        else:
+            return HttpResponse("Branch not found for the user.")
+        
 class ProductListView(ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
 
-    def get_queryset(self):
-        return Product.objects.filter(branch=self.request.user.branch)
+
+    
     
 class ProductUpdateView(UpdateView):
     model = Product
+    form_class = ProductCreateForm
     template_name = 'update_product.html'
     fields = '__all__'
-    success_url = reverse_lazy('product_list')
+    success_url = reverse_lazy('product-list')
 
     def get_queryset(self):
         return Product.objects.filter(branch=self.request.user.branch)
     
-class ProductDeleteView(DeleteView):    
+class ProductDeleteView(DeleteView): 
+    form_class = ProductCreateForm   
     model = Product
-    template_name = 'delete_product.html'
-    success_url = reverse_lazy('product_list')
+    template_name = 'product_confirm_delete.html'
+    success_url = reverse_lazy('product-list')
 
     def get_queryset(self):
         return Product.objects.filter(branch=self.request.user.branch)
