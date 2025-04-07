@@ -5,6 +5,8 @@ from django.views.generic import TemplateView,ListView ,FormView,CreateView,Upda
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from branch_management.forms import ProductCreateForm,CategoryCreateForm
+from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 class DashboardView(TemplateView):
     template_name = 'manager_dashboard.html'
@@ -19,18 +21,19 @@ class CreateProductView(CreateView):
     context_object_name = 'products'
 
     def form_valid(self, form):
-        branch_user = BranchStaff.objects.filter(user_id=self.request.user).first()
-        if branch_user:
-            branch = branch_user.branch
-            form.instance.branch = branch 
-            return super().form_valid(form)
-        else:
-            return HttpResponse("Branch not found for the user.")
+        # Seto dega e përdoruesit aktual
+        form.instance.branch = self.request.user.branchstaff.branch
+        return super().form_valid(form)
         
 class ProductListView(ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
+
+    def get_queryset(self):
+        # Filtroni produktet sipas degës së përdoruesit të lidhur
+        user_branch = self.request.user.branchstaff.branch
+        return Product.objects.filter(branch=user_branch)
 
 
 
@@ -40,8 +43,14 @@ class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductCreateForm
     template_name = 'update_product.html'
-    
+    context_object_name = 'products'
     success_url = reverse_lazy('product-list')
+    
+
+    def get_queryset(self):
+        # Filtroni produktet që janë vetëm për degën e përdoruesit
+        user_branch = self.request.user.branchstaff.branch
+        return Product.objects.filter(branch=user_branch)
 
     
     
@@ -50,6 +59,21 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'product_confirm_delete.html'
     success_url = reverse_lazy('product-list')
+
+
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'category', 'quantity', 'price', 'description']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Kjo mund të sigurojë që dega të jetë e vendosur automatikisht nga përdoruesi
+        if self.instance and self.instance.pk:
+            self.fields['branch'].initial = self.instance.branch
+
 
     
     
