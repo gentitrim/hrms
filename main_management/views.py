@@ -71,7 +71,19 @@ class ManagerListView(ListView):
 class CreateManagerView(FormView):
     template_name = 'management/create_manager.html'
     form_class = ManagerForm
-    success_url = '/'
+    success_url = reverse_lazy('management_dashboard')
+    def form_valid(self, form):
+        cleaned_data = form.cleaned_data
+        try:
+            Branch.objects.create(
+                name = cleaned_data["name"],
+                address = cleaned_data["address"],
+                phone = cleaned_data["phone"],
+                email = cleaned_data["email"],
+            )
+            return super().form_valid(form)
+        except Exception as e:
+            return HttpResponse(f"Error: {e}", status=500)
 
 class UpdateManagerView(FormView):
     template_name = 'management/update_manager.html'
