@@ -15,7 +15,7 @@ class Branch(models.Model):
         return f'{self.name} - {self.address}'
     
 class BranchManager(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.ManyToManyField(CustomUser, related_name='managers')
     name = models.CharField(max_length=128)
     surname = models.CharField(max_length=128)
     role = models.CharField(max_length=128)
