@@ -4,14 +4,14 @@ from django.contrib import messages
 from .models import BranchStaff
 from main_management.models import Branch
 from .forms import CreateBranchStaff
-from django.views.generic import ListView,CreateView
+from django.views.generic import ListView,CreateView, UpdateView, DeleteView, TemplateView
 from user_authentication.models import CustomUser
 from user_authentication.forms import CustomUserRegisterForm
 from django.urls import reverse_lazy
 
 class EmployeeCreateView(CreateView):
     template_name = 'branch_management/create_employee.html'
-    success_url = reverse_lazy('employee_list')  # Redirect to the employee list after successful creation
+    success_url = reverse_lazy('employee_list')
     def get(self, request, *args, **kwargs):
         user_create_form = CustomUserRegisterForm()
         branchstaff_form = CreateBranchStaff()
@@ -56,25 +56,36 @@ class EmployeeListView(ListView):
         return BranchStaff.objects.none()
 
 
-def update_employee(request, id):
-    employee = get_object_or_404(BranchStaff, id=id,)
-    if request.method == 'POST':
-        form = CreateBranchStaff(request.POST, instance=employee)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Employee successfully created!')
-            return redirect('employee_list')
-    else:
-        form = CreateBranchStaff(instance=employee)
-    return render(request, 'branch_management/update_employee.html', {'form': form, 'employee': employee})
+class UpdateEmployeeView(UpdateView):
+    model = BranchStaff
+    form_class = CreateBranchStaff
+    template_name = 'branch_management/update_employee.html'
+    context_object_name = 'employee'
+    pk_url_kwarg = 'id'
+    
+    def get_success_url(self):
+        messages.success(self.request, 'Employee successfully updated!')
+        return reverse_lazy('branch_management:employee_list')
 
-def delete_employee(request, id):
-    employee = get_object_or_404(BranchStaff, id=id, branch=request.user.branch)
-    if request.method == 'POST':
-        employee.delete()
-        messages.success(request, 'Employee successfully deleted!')
-        return redirect('employee_list')
-    return render(request, 'branch_management/delete_employee.html', {'employee': employee})
+class DeleteEmployeeView(DeleteView):
+    model = BranchStaff
+    template_name = 'branch_management/delete_employee.html'
+    context_object_name = 'employee'
+    success_url = reverse_lazy('branch_management:employee_list')
 
-def manager_dashboard(request):
-    return render(request, 'branch_management/manager_dashboard.html')
+    def get_queryset(self):
+        from main_management.models import Branch
+        try:
+            branch = Branch.objects.get(branch_manager__user=self.request.user)
+            return BranchStaff.objects.filter(branch=branch)
+        except Branch.DoesNotExist:
+            return BranchStaff.objects.none()
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        messages.success(self.request, "Employee successfully deleted!")
+        return response
+    
+    
+class ManagerDashboardView(TemplateView):
+    template_name = 'branch_management/manager_dashboard.html'

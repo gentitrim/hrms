@@ -6,7 +6,7 @@ app_name = 'branch_management'
 urlpatterns = [
     path('employees/', views.EmployeeListView.as_view(), name='employee_list'),
     path('employees/create/', views.EmployeeCreateView.as_view(), name='create_employee'),
-    path('employees/update/<int:id>/', views.update_employee, name='update_employee'),
-    path('employees/delete/<int:id>/', views.delete_employee, name='delete_employee'),
-    path('', views.manager_dashboard, name='manager_dashboard'),  
+    path('employees/update/<int:id>/', views.UpdateEmployeeView.as_view(), name='update_employee'),
+    path('employees/delete/<int:pk>/', views.DeleteEmployeeView.as_view(), name='delete_employee'),
+    path('', views.ManagerDashboardView.as_view(), name='manager_dashboard'),  
 ]
