@@ -1,5 +1,6 @@
 from django.forms import ModelForm # type: ignore
-from .models import Branch,BranchManager
+from .models import Branch
+from branch_management.models import BranchStaff
 
 
 class BranchForm(ModelForm):
@@ -12,10 +13,9 @@ class BranchForm(ModelForm):
         return data.title()
         
 
-
 class ManagerForm(ModelForm):
     class Meta:
-        model = BranchManager
+        model = BranchStaff
         fields = '__all__'
 
 
