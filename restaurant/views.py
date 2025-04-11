@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView,ListView # type: ignore
 from .models import Order,Order_item # type: ignore
-from branch_management.models import BranchStaff,Product,Categorie
+from branch_management.models import BranchStaff,Product,Category
 from django.shortcuts import get_object_or_404 # type: ignore
 from django.urls import reverse_lazy # type: ignore
 from django.http import JsonResponse,HttpResponse # type: ignore
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class OrderMenuView(LoginRequiredMixin,ListView):
     template_name = 'restaurant/employees_dashboard/orders.html'
-    model = Categorie
+    model = Category
     context_object_name = "categories"
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
@@ -91,30 +91,3 @@ def confirm_order(request):
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-
-
-# To transfere to manager app
-# class CreateCategoryView(LoginRequiredMixin,FormView):
-#     template_name = "restaurant/create_menu.html"
-#     form_class = CategoryCreateForm
-#     success_url = reverse_lazy('create_menu')
-#     def form_valid(self, form):
-#         cleaned_data = form.cleaned_data
-#         Categories.objects.create(
-#             name=cleaned_data["name"],
-#         )
-#         return super().form_valid(form)
-    
-
-
-# To transfere to manager app
-# class CreateProductsView(LoginRequiredMixin,FormView):
-#     template_name = "restaurant/create_menu.html"
-#     form_class = CategoryCreateForm
-#     success_url = reverse_lazy('create_menu')
-#     def form_valid(self, form):
-#         cleaned_data = form.cleaned_data
-#         Categories.objects.create(
-#             name=cleaned_data["name"],
-#         )
-#         return super().form_valid(form)

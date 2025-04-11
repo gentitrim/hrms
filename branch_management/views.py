@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Branch,Product,Categorie,BranchStaff
+from .models import Branch,Product,Category,BranchStaff
 from django.http import HttpResponseRedirect,HttpResponse
 from django.views.generic import TemplateView,ListView ,FormView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
@@ -16,12 +16,12 @@ class DashboardView(TemplateView):
 class CreateProductView(CreateView):
     model = Product
     template_name = 'create_product.html'
-    fields = '__all__'
+    form_class = ProductCreateForm
+    # fields = '__all__'
     success_url = reverse_lazy('create-product')
-    context_object_name = 'products'
+    # context_object_name = 'products'
 
     def form_valid(self, form):
-        # Seto dega e përdoruesit aktual
         form.instance.branch = self.request.user.branchstaff.branch
         return super().form_valid(form)
         
@@ -78,7 +78,7 @@ class ProductForm(forms.ModelForm):
     
     
 class CreateCategoryView(CreateView):
-    model = Categorie
+    model = Category
     template_name = 'create_category.html'
     fields = '__all__'
     success_url = reverse_lazy('category_list')
@@ -88,29 +88,29 @@ class CreateCategoryView(CreateView):
         return super().form_valid(form)
     
 class CategoryListView(ListView):
-    model = Categorie
+    model = Category
     template_name = 'category_list.html'
     context_object_name = 'categories'
 
     def get_queryset(self):
-        return Categorie.objects.filter(branch=self.request.user.branch)
+        return Category.objects.filter(branch=self.request.user.branch)
     
 class CategoryUpdateView(UpdateView):
-    model = Categorie
+    model = Category
     template_name = 'update_category.html'
     fields = '__all__'
     success_url = reverse_lazy('category_list')
 
     def get_queryset(self):
-        return Categorie.objects.filter(branch=self.request.user.branch)
+        return Category.objects.filter(branch=self.request.user.branch)
     
 class CategoryDeleteView(DeleteView):
-    model = Categorie
+    model = Category
     template_name = 'delete_category.html'
     success_url = reverse_lazy('category_list')
 
     def get_queryset(self):
-        return Categorie.objects.filter(branch=self.request.user.branch)
+        return Category.objects.filter(branch=self.request.user.branch)
     
     
     

@@ -14,14 +14,3 @@ class Branch(models.Model):
     def __str__(self):
         return f'{self.name} - {self.address}'
     
-class BranchManager(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    name = models.CharField(max_length=128)
-    surname = models.CharField(max_length=128)
-    role = models.CharField(max_length=128)
-    created = models.DateTimeField(auto_now_add=True)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='managers')
-    
-
-    def __str__(self):
-        return f"{self.name} {self.surname}"
