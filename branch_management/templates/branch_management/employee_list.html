@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Employee List</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% if employees %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Branch</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td>{{ employee.id }}</td>
+                        <td>{{ employee.user_id.username }}</td> <!-- Assumo che user_id sia un campo del modello -->
+                        <td>{{ employee.branch.name }}</td> <!-- Assumo che branch abbia un campo name -->
+                        <td>
+                            <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'branch_management:delete_employee' employee.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No employees found for this branch.</p>
+        {% endif %}
+        <a href="{% url 'branch_management:create_employee' %}" class="btn btn-success mt-3">Add New Employee</a>
+        <a href="{% url 'branch_management:manager_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    </div>
+</body>
+</html>

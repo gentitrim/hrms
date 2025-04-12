@@ -1,0 +1,110 @@
+{% extends 'manager_dashboard.html' %}
+
+{% block content %}
+<div class="product-form-container">
+    <h2>Edit Product</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+        </div>
+
+        <div class="form-group">
+            {{ form.category.label_tag }}
+            {{ form.category }}
+        </div>
+
+        <div class="form-group">
+            {{ form.quantity.label_tag }}
+            {{ form.quantity }}
+        </div>
+
+        <div class="form-group">
+            {{ form.price.label_tag }}
+            {{ form.price }}
+        </div>
+
+        <div class="form-group">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+        </div>
+
+        <div class="form-group">
+            {{ form.branch.label_tag }}
+            {{ form.branch }}
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn-save">💾 Ruaj</button>
+            <a href="{% url 'product-list' %}" class="btn-cancel">❌ Anulo</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .product-form-container {
+        width: 45%;
+        margin: 40px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #fdfdfd;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+        font-size: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 4px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-save {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-save:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .btn-cancel:hover {
+        background-color: #5a6268;
+    }
+</style>
+{% endblock %}
