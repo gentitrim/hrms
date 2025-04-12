@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import BranchStaff,Categorie,Product,Shift
+from .models import BranchStaff,Category,Product,Shift
 
 admin.site.register(BranchStaff)
-admin.site.register(Categorie)
+admin.site.register(Category)
 admin.site.register(Product)

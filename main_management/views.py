@@ -31,7 +31,6 @@ class CreateBranchView(FormView):
                 address = cleaned_data["address"],
                 phone = cleaned_data["phone"],
                 email = cleaned_data["email"],
-                manager = cleaned_data["manager"],
             )
             return super().form_valid(form)
         except Exception as e:

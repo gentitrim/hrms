@@ -1,12 +1,13 @@
 from django.forms import ModelForm
 
-from .models import Categorie,Product,BranchStaff
+from .models import Category,Product,BranchStaff
 
 
 class CategoryCreateForm(ModelForm):
     class Meta:
-        model = Categorie
+        model = Category
         fields = '__all__'
+        exlude = ['branch']
     
 
 class ProductCreateForm(ModelForm):

@@ -10,6 +10,7 @@ class Branch(models.Model):
     phone = models.CharField(max_length=14, blank=True, default="")
     email = models.EmailField(blank=True, default="")
     
+    
 
     def __str__(self):
         return f'{self.name} - {self.address}'

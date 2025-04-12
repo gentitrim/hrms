@@ -1,0 +1,138 @@
+{% extends "manager_dashboard.html" %}
+
+{% block content %}
+<h2 style="text-align:center; margin-top: 30px;">📦 Product Table</h2>
+
+<div style="text-align:center; margin-bottom: 20px;">
+    <a href="{% url 'create-product' %}" class="btn-add">➕ Add Product</a>
+</div>
+
+<!-- Search Bar -->
+<div style="text-align:center; margin-bottom: 20px;">
+    <input type="text" id="searchBar" onkeyup="searchProduct()" placeholder="Search for a product..." style="padding: 10px; width: 80%; max-width: 400px; border-radius: 5px; border: 1px solid #ccc;">
+</div>
+
+<!-- Product Table -->
+<table class="styled-table" id="productTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.get_price_as_float }} €</td>
+                <td>
+                    <a href="{% url 'update-product' product.pk %}" class="btn-edit">Edit</a>
+                    <a href="{% url 'delete-product' product.pk %}" class="btn-delete">Delete</a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center;">No products found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    .styled-table {
+        width: 85%;
+        margin: auto;
+        border-collapse: collapse;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .styled-table thead tr {
+        background-color: #4da6ff;
+        color: white;
+        text-align: left;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .styled-table tbody tr:nth-child(even) {
+        background-color: #f3f3f3;
+    }
+
+    .btn-add {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-add:hover {
+        background-color: #218838;
+    }
+
+    .btn-edit {
+        background-color: #ffc107;
+        color: black;
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        margin-right: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-edit:hover {
+        background-color: #e0a800;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<!-- JavaScript for search functionality -->
+<script>
+    function searchProduct() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchBar");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("productTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows (except the first row, which is the header)
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0]; // Check the first column (product name)
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+{% endblock %}
