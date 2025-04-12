@@ -39,8 +39,6 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField()),
                 ('branch', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='main_management.branch')),
                 ('user_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='branchstaff', to=settings.AUTH_USER_MODEL)),
-                ('branch', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='main_management.branch')),
-                ('user_id', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='branchstaff', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
