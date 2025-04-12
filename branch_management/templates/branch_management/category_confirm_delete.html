@@ -1,3 +1,4 @@
+<!-- category_confirm_delete.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +7,11 @@
     <title>Delete Category</title>
 </head>
 <body>
-    <h1>Are you sure you want to delete the category: {{ object.name }}?</h1>
+    <h1>Are you sure you want to delete the category "{{ category.name }}"?</h1>
     <form method="post">
         {% csrf_token %}
         <button type="submit">Yes, Delete</button>
     </form>
-    <a href="{% url 'branch_managment:category-list' %}">Cancel</a>
+    <a href="{% url 'branch_management:category-list' %}">Cancel</a>
 </body>
 </html>
