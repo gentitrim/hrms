@@ -15,7 +15,7 @@ class BranchStaff(models.Model):
     branch = models.ForeignKey(Branch,on_delete=models.CASCADE)
 
     
-class Categorie(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=250,blank=True,default="")
     branch = models.ForeignKey(Branch,on_delete=models.CASCADE,related_name='categories')
@@ -24,7 +24,7 @@ class Categorie(models.Model):
 
     
 class Product(models.Model):
-    category = models.ForeignKey("Categorie",on_delete=models.CASCADE)
+    category = models.ForeignKey("Category",on_delete=models.CASCADE)
     name = models.CharField(max_length=128) 
     quantity = models.IntegerField(default=1)
     price = models.IntegerField()

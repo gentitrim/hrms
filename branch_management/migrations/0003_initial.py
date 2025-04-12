@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
-            model_name='categorie',
+            model_name='category',
             name='branch',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='main_management.branch'),
         ),
@@ -34,6 +34,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='product',
             name='category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='branch_management.categorie'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='branch_management.category'),
         ),
     ]

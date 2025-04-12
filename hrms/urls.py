@@ -23,8 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('restaurant/',include('restaurant.urls')),
     path('restaurant/api/',include('restaurant.api.urls')),
-    path('',include('user_authentication.urls')),
+    path('', include('user_authentication.urls')),
     path('management/',include('main_management.urls')),
-    path('management/api/',include('main_management.main_api.urls')),
-    path('manager/',include('branch_management.urls')),
+    path('manager/', include('branch_management.urls')),
 ]

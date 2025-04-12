@@ -1,0 +1,37 @@
+
+<div class="container mt-5">
+    <h1>Create New Employee</h1>
+
+    <!-- Messaggi di successo o errore -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Form per creare un dipendente -->
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+
+        <!-- Form per l'utente (CustomUserCreationForm) -->
+        <h3>User Information</h3>
+        <div class="mb-3">
+            {{ user_create_form.as_p }}
+        </div>
+
+        <!-- Form per i dettagli del dipendente (CreateBranchStaff) -->
+        <h3>Employee Details</h3>
+        <div class="mb-3">
+            {{ branchstaff_form.as_p }}
+        </div>
+
+        <!-- Pulsanti di submit e cancel -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Create Employee</button>
+            <a href="{% url 'branch_management:employee_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
