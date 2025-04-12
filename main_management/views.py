@@ -1,7 +1,13 @@
-from django.shortcuts import render
-from .models import Branch
+from django.shortcuts import render,redirect,get_object_or_404
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Branch,BranchManager
+from branch_management.models import BranchStaff
+from user_authentication.models import CustomUser
+from user_authentication.forms import CustomUserRegisterForm
 from .forms import BranchForm,ManagerForm
-from django.views.generic import TemplateView,ListView ,FormView, DeleteView
+from django.views.generic import TemplateView,ListView ,FormView, DeleteView,CreateView,UpdateView,DetailView,View
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import Q
@@ -63,22 +69,96 @@ class DeleteBranchView(DeleteView):
     template_name = 'management/delete_branch.html'
     success_url = 'management/branches'
 
+
+class ManagerManagementView(TemplateView):
+    def get(self,request):
+        return render(request,'management/manage_manager.html')
+
+
+
 class ManagerListView(ListView):
-    template_name = 'management/create_manager.html'
-    form_class = ManagerForm
+    model = BranchStaff
+
+    template_name = 'management/manage_manager.html'
     context_object_name = 'managers'
+    paginate_by = 5
 
-class CreateManagerView(FormView):
+    def get_queryset(self):
+        return BranchStaff.objects.filter(role = 'manager')
+    
+
+class CreateManagerView(View):
     template_name = 'management/create_manager.html'
-    form_class = ManagerForm
-    success_url = '/'
+    success_url = reverse_lazy('management_dashboard')
+ 
+    def get(self, request):
+        managerform = ManagerForm()
+        userform = CustomUserRegisterForm()
+        return render(request, self.template_name, {'managerform': managerform, 'userform': userform})
+       
+    def post(self, request):
+        managerform = ManagerForm(request.POST)
+        userform = CustomUserRegisterForm(request.POST)
+        if managerform.is_valid() and userform.is_valid():
+            user = userform.save(commit=False)
+            user.save()
+            manager = managerform.save(commit=False)
+            manager.user = user
+            manager.role = 'manager'
+            manager.save()
+            return HttpResponse("Manager created successfully")
+ 
+        return render(request, self.template_name, {'manager_errors': managerform.errors,
+    'user_errors': userform.errors})
+    
 
-class UpdateManagerView(FormView):
-    template_name = 'management/update_manager.html'
+class ManagerUpdateView(UpdateView):
+    model = BranchStaff
     form_class = ManagerForm
-    success_url = '/'
+    template_name = 'management/manager_edit.html'
+    success_url = reverse_lazy('manage_managers')
 
-class DeleteManagerView(DeleteView):
-    template_name = 'management/delete_manager.html'
-    success_url = '/'
+    def get_success_url(self):
+        if self.request.htmx:
+            return None  # Do not redirect when HTMX is used
+        return super().get_success_url()
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if self.request.htmx:
+            # Send a response that HTMX can handle to update the manager list
+            return JsonResponse({'message': 'Manager updated successfully!'})
+        return response 
+    
+
+class ManagerDeleteView(DeleteView):
+    model = BranchStaff
+    template_name = 'management/manager_delete.html'
+    success_url = reverse_lazy('manage_manager')  # Pas fshirjes, kthehet tek lista e menaxherëve
+
+    # Trajton fshirjen dhe kthen një përgjigje JSON për HTMX
+    def delete(self, request, *args, **kwargs):
+        if request.htmx:
+            self.object = self.get_object()
+            self.object.delete()
+            # Kthejmë mesazhin e suksesshëm dhe elementin HTML që do të përditësohet
+            return render(request, 'management/manager_list.html', {
+                'message': 'Menaxheri u fshi me sukses!',
+                'manager_list': BranchStaff.objects.all()
+            })
+        return super().delete(request, *args, **kwargs)
+
+    
+
+class ManagerDetailView(DetailView):
+    model = BranchStaff
+    template_name = 'management/manager_detail.html'
+    context_object_name = 'manager'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(BranchStaff, id=self.kwargs.get('pk'))
+       
+
+    
+    
 

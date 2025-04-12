@@ -5,19 +5,15 @@ from main_management.models import Branch
 # Create your models here.
 class BranchStaff(models.Model):
     role_choices = (
+        ('admin','Admin'),
         ('manager','Manager'),
-        ('staff','Staff')
-    )
+        ('staff','Staff'),)
     user = models.OneToOneField(CustomUser,on_delete=models.CASCADE,related_name='branchstaff')
-    name = models.CharField(max_length=128)
-    surname = models.CharField(max_length=128)
     role = models.CharField(max_length=128,choices=role_choices,default='staff')
     created = models.DateTimeField(auto_now_add=True)
-    phone = models.CharField(max_length=14, blank=True, default="")
+    phone =models.CharField(max_length=14,blank=True,default="")
     branch = models.ForeignKey(Branch,on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"{self.name} {self.surname}"
     
 class Category(models.Model):
     name = models.CharField(max_length=128)

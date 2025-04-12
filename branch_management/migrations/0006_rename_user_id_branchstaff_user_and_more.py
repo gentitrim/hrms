@@ -7,16 +7,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('branch_management', '0005_alter_branchstaff_created'),
-        ('main_management', '0005_remove_branch_manager_branchmanager_branch'),
+        ('branch_management', '0005_rename_user_id_branchstaff_user_and_more'),
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name='branchstaff',
-            old_name='user_id',
-            new_name='user',
-        ),
         migrations.AlterField(
             model_name='branchstaff',
             name='branch',
