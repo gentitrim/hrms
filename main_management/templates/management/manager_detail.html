@@ -1,0 +1,30 @@
+
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div class="table-responsive shadow-lg rounded-3 p-4" style="background-color: #f8f9fa; max-width: 600px; width: 100%;">
+    <h5 class="text-center mb-4">Manager Details</h5>
+    <table class="table table-bordered table-striped table-hover">
+      <tbody>
+        <tr>
+          <td><strong>Name:</strong></td>
+          <td>{{ manager.user.first_name }}</td>
+        </tr>
+        <tr>
+          <td><strong>Surname:</strong></td>
+          <td>{{ manager.user.last_name }}</td>
+        </tr>
+        <tr>
+          <td><strong>Role:</strong></td>
+          <td>{{ manager.role }}</td>
+        </tr>
+        <tr>
+          <td><strong>Branch:</strong></td>
+          <td>{{ manager.branch }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

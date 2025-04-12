@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from main_management import views
 # from user_authentication.views import LogoutView,CustomUserLoginView
 
 
@@ -10,7 +10,11 @@ urlpatterns = [
     path('update_branch/',views.CreateBranchView.as_view(),name = 'update_branch'),
     path('delete_branch/',views.DeleteBranchView.as_view(),name = 'delete_branch'),
     path('search_branch/',views.SearchBranchView.as_view(),name = 'search_branch'),
-    path('create_new_manager/',views.CreateManagerView.as_view(),name = 'new_manager'),
-    path('update_manager/',views.UpdateManagerView.as_view(),name = 'update_manager'),
-    path('delete_manager/',views.DeleteManagerView.as_view(),name = 'delete_manager'),
+    path('manage_managers/', views.ManagerManagementView.as_view(), name='manage_managers'),
+    path('managers/', views.ManagerListView.as_view(), name='manager_list'),
+    path('managers/create/', views.CreateManagerView.as_view(), name='create_manager'),
+    path('managers/<int:pk>/edit/', views.ManagerUpdateView.as_view(), name='edit_manager'),    
+    path('managers/<int:pk>/delete/', views.ManagerDeleteView.as_view(), name='delete_manager'),
+    path('managers/<int:pk>/', views.ManagerDetailView.as_view(), name='manager_detail'),
+    
 ]
