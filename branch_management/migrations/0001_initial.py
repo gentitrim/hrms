@@ -12,17 +12,9 @@ class Migration(migrations.Migration):
     dependencies = [
         ('main_management', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('main_management', '0001_initial'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Shift',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-            ],
-        ),
         migrations.CreateModel(
             name='Shift',
             fields=[
@@ -47,7 +39,6 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=128)),
                 ('description', models.CharField(blank=True, default='', max_length=250)),
-                ('branch', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='main_management.branch')),
                 ('branch', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='categories', to='main_management.branch')),
             ],
         ),

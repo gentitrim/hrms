@@ -12,7 +12,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -23,8 +22,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=128)),
                 ('address', models.CharField(blank=True, default='', max_length=250)),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('phone', models.CharField(blank=True, default='', max_length=14)),
-                ('email', models.EmailField(blank=True, default='', max_length=254)),
                 ('phone', models.CharField(blank=True, default='', max_length=14)),
                 ('email', models.EmailField(blank=True, default='', max_length=254)),
             ],
