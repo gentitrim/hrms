@@ -1,1 +1,27 @@
- 
+{% extends "restaurant/employees_dashboard/base_template.html" %}
+{% block content %}
+
+    <div class="container mt-5 justify-content-center">
+
+            <div class="btn-group btn-group-lg d-grid d-md-flex justify-content-md-center" role="group" aria-label="Large button group">
+                <button type="button" class="btn btn-outline-primary"
+                hx-get="{% url 'my_orders'%}"
+                            hx-target="#dash_result"
+                            hx-triger="click"
+                            hx-swap="innerHtml"
+                >My Orders</button>
+                <button type="button" class="btn btn-outline-primary">Profile</button>
+                <button type="button" class="btn btn-outline-primary">Manage Account</button>
+            </div>
+
+            <div >
+                <ul class="list-group mt-3" id='dash_result'>
+                
+                </ul>
+            </div>
+          
+        
+    </div>
+
+
+{% endblock content %}

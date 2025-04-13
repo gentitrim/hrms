@@ -1,6 +1,6 @@
-{% extends 'manager_dashboard.html' %}
+{% extends "branch_main.html" %}
 
-{% block content %}
+{%block content%}
     <h1>Are you sure you want to delete the category "{{ category.name }}"?</h1>
     <form method="post">
         {% csrf_token %}

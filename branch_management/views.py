@@ -31,7 +31,6 @@ class ProductListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        # Filtroni produktet sipas degës së përdoruesit të lidhur
         user_branch = self.request.user.branchstaff.branch
         return Product.objects.filter(branch=user_branch)
 
@@ -44,7 +43,7 @@ class ProductUpdateView(UpdateView):
     form_class = ProductCreateForm
     template_name = 'update_product.html'
     context_object_name = 'products'
-    success_url = reverse_lazy('product-list')
+    success_url = reverse_lazy('branch_management:product-list')
     
 
     def get_queryset(self):
@@ -58,7 +57,7 @@ class ProductDeleteView(DeleteView):
      
     model = Product
     template_name = 'product_confirm_delete.html'
-    success_url = reverse_lazy('product-list')
+    success_url = reverse_lazy('branch_management:product-list')
 
 
 
@@ -77,7 +76,7 @@ class ProductForm(forms.ModelForm):
 
 class EmployeeCreateView(CreateView):
     template_name = 'branch_management/create_employee.html'
-    success_url = reverse_lazy('employee_list')
+    success_url = reverse_lazy('branch_management:employee_list')
     def get(self, request, *args, **kwargs):
         user_create_form = CustomUserRegisterForm()
         branchstaff_form = CreateBranchStaff()
