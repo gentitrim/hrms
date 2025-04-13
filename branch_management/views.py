@@ -18,7 +18,7 @@ class CreateProductView(CreateView):
     template_name = 'create_product.html'
     form_class = ProductCreateForm
     # fields = '__all__'
-    success_url = reverse_lazy('create-product')
+    success_url = reverse_lazy('branch_management:create-product')
     # context_object_name = 'products'
 
     def form_valid(self, form):
@@ -153,8 +153,8 @@ class DeleteEmployeeView(DeleteView):
         return response
     
     
-class ManagerDashboardView(TemplateView):
-    template_name = 'branch_management/manager_dashboard.html'
+# class ManagerDashboardView(TemplateView):
+#     template_name = 'branch_management/manager_dashboard.html'
 
 
 
@@ -167,16 +167,16 @@ class CategoryCreateView(CreateView):
     model = Category
     form_class = CategoryCreateForm
     template_name = 'branch_management/category_form.html'
-    success_url = reverse_lazy('branch_managment:category-list')
+    success_url = reverse_lazy('branch_management:category-list')
 
 
 class CategoryUpdateView(UpdateView):
     model = Category
     form_class = CategoryCreateForm
     template_name = 'branch_management/category_form.html'
-    success_url = reverse_lazy('branch_managment:category-list')
+    success_url = reverse_lazy('branch_management:category-list')
 
 class CategoryDeleteView(DeleteView):
     model = Category
     template_name = 'branch_management/category_confirm_delete.html'
-    success_url = reverse_lazy('branch_managment:category-list')
+    success_url = reverse_lazy('branch_management:category-list')

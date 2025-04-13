@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'manager_dashboard.html' %}
+
+{% block content %}
     <div class="container mt-5">
         <h1>Employee List</h1>
         {% if messages %}
@@ -43,5 +38,6 @@
         <a href="{% url 'branch_management:create_employee' %}" class="btn btn-success mt-3">Add New Employee</a>
         <a href="{% url 'branch_management:manager_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
     </div>
-</body>
-</html>
+
+    
+{% endblock %}

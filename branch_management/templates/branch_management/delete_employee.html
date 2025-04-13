@@ -1,3 +1,7 @@
+{% extends 'manager_dashboard.html' %}
+
+{% block content %}
+
 <div class="container mt-4">
     <h2>Confirm Deletion</h2>
     <p>Are you sure you want to delete employee <strong>{{ employee.name }} {{ employee.surname }}</strong>?</p>
@@ -8,3 +12,5 @@
       <a href="{% url 'branch_management:employee_list' %}" class="btn btn-secondary">Cancel</a>
     </form>
   </div>
+
+{% endblock %}

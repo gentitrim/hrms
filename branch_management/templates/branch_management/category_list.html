@@ -1,12 +1,7 @@
-<!-- category_list.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category List</title>
-</head>
-<body>
+{% extends 'manager_dashboard.html' %}
+
+{% block content %}
+
     <h1>Category List</h1>
     <a href="{% url 'branch_management:category-create' %}">Create New Category</a>
     <ul>
@@ -17,5 +12,4 @@
             </li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}

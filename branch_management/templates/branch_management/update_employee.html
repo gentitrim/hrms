@@ -1,3 +1,6 @@
+{% extends 'manager_dashboard.html' %}
+
+{% block content %}
 
   <div class="container mt-4">
     <h2>Update Employee: {{ employee.name }} {{ employee.surname }}</h2>
@@ -10,3 +13,5 @@
       <a href="{% url 'branch_management:employee_list' %}" class="btn btn-secondary">Cancel</a>
     </form>
   </div>
+
+  {% endblock %}
