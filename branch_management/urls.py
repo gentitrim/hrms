@@ -7,8 +7,8 @@ urlpatterns = [
     path('', views.DashboardView.as_view(), name='manager-dashboard'),
     path('product/create/', views.CreateProductView.as_view(), name='create-product'),
     path('product/list/', views.ProductListView.as_view(), name='product-list'),
-    path('product/list/<int:pk>/edit/', views.ProductUpdateView.as_view(), name='update-product'),
-    path('product/list/<int:pk>/delete/', views.ProductDeleteView.as_view(), name='delete-product'),
+    path('product/list/edit//<int:pk>', views.ProductUpdateView.as_view(), name='update-product'),
+    path('product/list/delete/<int:pk>', views.ProductDeleteView.as_view(), name='delete-product'),
 
     path('employees/', views.EmployeeListView.as_view(), name='employee_list'),
     path('employees/create/', views.EmployeeCreateView.as_view(), name='create_employee'),

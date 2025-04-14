@@ -14,11 +14,12 @@
 </div>
 
 <div class="container">
-    <div class='row'>
+    <div class='row mb-1'>
         <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Name</p>
         <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Category</p>
         <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Quantity</p>
         <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Price</p>
+        <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Action</p>       
     </div>
     {% for product in products %}  
     
@@ -27,6 +28,10 @@
         <p class='fs-6 col border m-0'>{{ product.category.name }}</p>
         <p class='fs-6 col border m-0'>{{ product.quantity }}</p>
         <p class='fs-6 col border m-0'>{{ product.get_price_as_float }} €</p>
+        <div class="btn-group col" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-outline-secondary" onclick="location.href ='{% url "branch_management:update-product" product.id %} '">Edit</button>
+            <button type="button" class="btn btn-outline-danger" onclick="location.href ='{% url "branch_management:delete-product" product.id %} '">Delete</button>
+        </div>
     </div>
 
             

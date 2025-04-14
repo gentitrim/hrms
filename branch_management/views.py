@@ -1,8 +1,7 @@
 from .models import Branch,Product,Category,BranchStaff
 from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
-from branch_management.forms import ProductCreateForm,CategoryCreateForm
-from django import forms
+from branch_management.forms import ProductCreateForm,CategoryCreateForm,ProductForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import CreateBranchStaff
@@ -32,11 +31,7 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         user_branch = self.request.user.branchstaff.branch
-        return Product.objects.filter(branch=user_branch)
-
-
-
-    
+        return Product.objects.filter(branch=user_branch)   
     
 class ProductUpdateView(UpdateView):
     model = Product
@@ -58,20 +53,6 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'product_confirm_delete.html'
     success_url = reverse_lazy('branch_management:product-list')
-
-
-
-
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['name', 'category', 'quantity', 'price', 'description']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Kjo mund të sigurojë që dega të jetë e vendosur automatikisht nga përdoruesi
-        if self.instance and self.instance.pk:
-            self.fields['branch'].initial = self.instance.branch
 
 
 class EmployeeCreateView(CreateView):

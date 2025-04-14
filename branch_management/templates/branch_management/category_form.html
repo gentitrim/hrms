@@ -1,12 +1,21 @@
 {% extends "branch_main.html" %}
 
 {%block content%}
+<div class = 'container'>   
+
     <h1>{% if form.instance.pk %}Update Category{% else %}Create Category{% endif %}</h1>
+
     <form method="post">
         {% csrf_token %}
+        <div class="mb-3">          
         {{ form.as_p }}
-        <button type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %} Category</button>
+        </div>
+        <div class="button-group">
+            <button type="submit" class="btn btn-outline-primary"> {% if form.instance.pk %}Update{% else %}Create{% endif %} Category</button>
+            <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-secondary">Back to Categories</a>
+        </div>
     </form>
-    <a href="{% url 'branch_management:category-list' %}">Back to Categories</a>
-
+    
+    
+</div>
 {% endblock %}
