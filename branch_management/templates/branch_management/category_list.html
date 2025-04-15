@@ -3,31 +3,35 @@
 {%block content%}
 
 <p class="fs-3 text-center mt-3">Category List</p>
-<div style="text-align:center; margin-bottom: 20px;">
-    <a href="{% url 'branch_management:category-create' %}" class="btn btn-outline-secondary"> Add New Category</a>
+<div class="text-center">
+    <a href="{% url 'branch_management:category-create' %}" class="btn btn-outline-primary mt-3"> Add New Category</a>
 </div>
-<div class="container">
-    <div class='row mb-1'>
-        <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Name</p>
-        <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Action</p>       
-    </div>
-    {% for category in categories %}  
-    
-    <div class='row mb-1'>
-        <p class='fs-6 col border m-0'>{{ category.name }}</p>
-        <div class="btn-group col" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-outline-secondary" onclick="location.href ='{% url "branch_management:category-update" category.id %} '">Edit</button>
-            <button type="button" class="btn btn-outline-danger" onclick="location.href ='{% url "branch_management:category-delete" category.id %} '">Delete</button>
-        </div>
-    </div>
-
-            
+<div class="container mt-4">   
+    <table class="table table-hover text-center">
+        <thead>
+            <tr class="table-light">
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody class='table-group-divider'>
+            {% for category in categories %} 
+            <tr>
+                <td>{{ category.name }}</td> 
+                <td>
+                    <div class="btn-group col" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-outline-secondary" onclick="location.href ='{% url "branch_management:category-update" category.id %} '">Edit</button>
+                        <button type="button" class="btn btn-outline-danger" onclick="location.href ='{% url "branch_management:category-delete" category.id %} '">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <p>No categories found for this branch.</p>
+            {% endfor %}
+        </tbody>
+    </table>      
         
-    {% empty %}
-    
-    <p class="fs-3"> No categories created </p>
-
-    {% endfor %}
+</div>
 
 
 {% endblock %}

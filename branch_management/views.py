@@ -14,6 +14,9 @@ class DashboardView(TemplateView):
     redirect_field_name = "next"
 
 
+
+# Product Views
+
 class CreateProductView(CreateView):
     model = Product
     template_name = 'create_product.html'
@@ -79,6 +82,9 @@ class ProductDeleteView(DeleteView):
         return Product.objects.filter(branch=user_branch) 
 
 
+
+# Employee Views
+
 class EmployeeCreateView(CreateView):
     template_name = 'branch_management/create_employee.html'
     success_url = reverse_lazy('branch_management:employee-list')
@@ -143,8 +149,6 @@ class UpdateEmployeeView(UpdateView):
         messages.success(self.request, 'Employee successfully updated!')
         return reverse_lazy('branch_management:employee-list')
     
-    
-
 
 class DeleteEmployeeView(DeleteView):
     model = BranchStaff
@@ -164,6 +168,9 @@ class DeleteEmployeeView(DeleteView):
         messages.success(self.request, "Employee successfully deleted!")
         return response
 
+
+
+#Category Views
 
 class CategoryListView(ListView):
     model = Category
@@ -205,9 +212,9 @@ class CategoryCreateView(CreateView):
 class CategoryUpdateView(UpdateView):
     model = Category
     form_class = CategoryCreateForm
-    template_name = 'branch_management/category_form.html'
+    template_name = 'branch_management/category_update.html'
     success_url = reverse_lazy('branch_management:category-list')
-    context_object_name = 'category_create_form'
+
 
     def get_queryset(self):
         user_branch = self.request.user.branchstaff.branch

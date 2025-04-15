@@ -43,6 +43,12 @@ class ProductCreateForm(ModelForm):
             'class': 'form-control'
         })
     
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if len(name) < 3:
+            raise forms.ValidationError("Name is too short.")
+        return name.title()
+    
     def clean_price(self):
         price = self.cleaned_data.get('price')
         if price < 0:

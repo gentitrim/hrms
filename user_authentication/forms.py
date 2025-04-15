@@ -15,9 +15,16 @@ class CustomUserRegisterForm(UserCreationForm):
             })
 
     def clean_username(self):      
-        data = self.cleaned_data["name"]
+        data = self.cleaned_data["username"]
         return data.lower()
 
+    def clean_first_name(self):
+        data = self.cleaned_data["first_name"]
+        return data.title()
+    
+    def clean_last_name(self): 
+        data = self.cleaned_data["last_name"]
+        return data.title()
 
 
 class CustomLoginForm(AuthenticationForm):

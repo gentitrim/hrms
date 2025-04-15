@@ -3,16 +3,16 @@
 {%block content%}
 <div class = 'container'>   
 
-    <h1>Create Category</h1>
+    <h1>Update Category</h1>
 
     <form method="post">
         {% csrf_token %}
         <div class="mb-3">          
-        {{ category_create_form.as_p }}
+        {{form.as_p }}
         {{category_create_form.errors}}
         </div>
         <div class="button-group">
-            <button type="submit" class="btn btn-outline-success"> Create New Category</button>
+            <button type="submit" class="btn btn-outline-success"> Confirm </button>
             <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-danger">Cancel</a>
         </div>
     </form>
