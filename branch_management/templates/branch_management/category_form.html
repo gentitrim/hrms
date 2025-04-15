@@ -8,11 +8,12 @@
     <form method="post">
         {% csrf_token %}
         <div class="mb-3">          
-        {{ form.as_p }}
+        {{ category_create_form.as_p }}
+        {{category_create_form.error}}
         </div>
         <div class="button-group">
             <button type="submit" class="btn btn-outline-primary"> {% if form.instance.pk %}Update{% else %}Create{% endif %} Category</button>
-            <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-secondary">Back to Categories</a>
+            <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-danger">Cancel</a>
         </div>
     </form>
     

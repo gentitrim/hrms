@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.template.loader import render_to_string
+# from django.template.loader import render_to_string
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Branch,BranchManager
+from .models import Branch
 from branch_management.models import BranchStaff
 from user_authentication.models import CustomUser
 from user_authentication.forms import CustomUserRegisterForm

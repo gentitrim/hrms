@@ -22,7 +22,7 @@
                     {% for employee in employees %}
                     <tr>
                         <td>{{ employee.id }}</td>
-                        <td>{{ employee.user_id.username }}</td> <!-- Assumo che user_id sia un campo del modello -->
+                        <td>{{ employee.user.first_name }}</td> <!-- Assumo che user_id sia un campo del modello -->
                         <td>{{ employee.branch.name }}</td> <!-- Assumo che branch abbia un campo name -->
                         <td>
                             <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
@@ -36,7 +36,7 @@
             <p>No employees found for this branch.</p>
         {% endif %}
         <a href="{% url 'branch_management:create_employee' %}" class="btn btn-success mt-3">Add New Employee</a>
-        <a href="{% url 'branch_management:manager_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+        <a href="{% url 'branch_management:manager-dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
     </div>
 
     

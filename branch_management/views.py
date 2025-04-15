@@ -57,7 +57,7 @@ class ProductDeleteView(DeleteView):
 
 class EmployeeCreateView(CreateView):
     template_name = 'branch_management/create_employee.html'
-    success_url = reverse_lazy('branch_management:employee_list')
+    success_url = reverse_lazy('branch_management:employee-list')
     def get(self, request, *args, **kwargs):
         user_create_form = CustomUserRegisterForm()
         branchstaff_form = CreateBranchStaff()
@@ -77,7 +77,8 @@ class EmployeeCreateView(CreateView):
 
             branchstaff = branchstaff_form.save(commit=False)
             branchstaff.user = user 
-            branchstaff.branch = Branch.objects.get(branch_manager__user_id=request.user.id)
+            branchstaff.branch = Branch.objects.get(branchstaff_branch__user_id=request.user.id)
+            branchstaff.role = 'staff'
             
             branchstaff.save()
             
@@ -96,7 +97,7 @@ class EmployeeListView(ListView):
     context_object_name = 'employees'
 
     def get_queryset(self):
-        branch = Branch.objects.filter(branch_manager__user_id=self.request.user.id).first()
+        branch = Branch.objects.filter(branchstaff_branch__user_id=self.request.user.id).first()
         if branch:
             return BranchStaff.objects.filter(branch=branch)
         return BranchStaff.objects.none()
@@ -132,23 +133,39 @@ class DeleteEmployeeView(DeleteView):
         messages.success(self.request, "Employee successfully deleted!")
         return response
     
-    
-# class ManagerDashboardView(TemplateView):
-#     template_name = 'branch_management/manager_dashboard.html'
-
-
-
 class CategoryListView(ListView):
     model = Category
     template_name = 'branch_management/category_list.html'
     context_object_name = 'categories'
 
+    def get_queryset(self):
+            user_branch = self.request.user.branchstaff.branch
+            return Category.objects.filter(branch=user_branch) 
+
 class CategoryCreateView(CreateView):
-    model = Category
-    form_class = CategoryCreateForm
     template_name = 'branch_management/category_form.html'
     success_url = reverse_lazy('branch_management:category-list')
 
+    def get(self, request, *args, **kwargs):
+        category_create_form = CategoryCreateForm(request.POST)
+        return render(request, self.template_name, {
+            'category_create_form': category_create_form,
+        })
+    
+    def post(self, request, *args, **kwargs):
+        category_create_form = CategoryCreateForm()
+        if category_create_form.is_valid():
+            category = category_create_form.save()
+            user_branch = self.request.user.branchstaff.branch
+            category.branch = Branch.objects.get(branchstaff_branch__user_id=self.user.id)          
+            category.save()
+            
+            messages.success(request, 'Category successfully created!')
+            return redirect(self.success_url)
+
+        return render(request, self.template_name, {
+            'category_create_form': category_create_form,
+        })
 
 class CategoryUpdateView(UpdateView):
     model = Category

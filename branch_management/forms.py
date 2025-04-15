@@ -7,7 +7,7 @@ class CategoryCreateForm(ModelForm):
     class Meta:
         model = Category
         fields = '__all__'
-        exlude = ['branch']
+        exclude = ['branch',]
 
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,7 +35,7 @@ class CreateBranchStaff(ModelForm):
     class Meta:
         model = BranchStaff
         fields = '__all__'
-        exclude = ['user', 'branch']
+        exclude = ['user', 'branch' , 'role']
 
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)

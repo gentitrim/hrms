@@ -2,14 +2,32 @@
 
 {%block content%}
 
-    <h1>Category List</h1>
-    <a href="{% url 'branch_management:category-create' %}">Create New Category</a>
-    <ul>
-        {% for category in categories %}
-            <li>{{ category.name }} - 
-                <a href="{% url 'branch_management:category-update' category.pk %}">Edit</a> | 
-                <a href="{% url 'branch_management:category-delete' category.pk %}">Delete</a>
-            </li>
-        {% endfor %}
-    </ul>
+<p class="fs-3 text-center mt-3">Category List</p>
+<div style="text-align:center; margin-bottom: 20px;">
+    <a href="{% url 'branch_management:category-create' %}" class="btn btn-outline-secondary"> Add New Category</a>
+</div>
+<div class="container">
+    <div class='row mb-1'>
+        <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Name</p>
+        <p class='fs-6 text-white col border m-0 pt-2 pb-2 bg-secondary'>Action</p>       
+    </div>
+    {% for category in categories %}  
+    
+    <div class='row mb-1'>
+        <p class='fs-6 col border m-0'>{{ category.name }}</p>
+        <div class="btn-group col" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-outline-secondary" onclick="location.href ='{% url "branch_management:category-update" category.id %} '">Edit</button>
+            <button type="button" class="btn btn-outline-danger" onclick="location.href ='{% url "branch_management:category-delete" category.id %} '">Delete</button>
+        </div>
+    </div>
+
+            
+        
+    {% empty %}
+    
+    <p class="fs-3"> No categories created </p>
+
+    {% endfor %}
+
+
 {% endblock %}

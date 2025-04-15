@@ -12,7 +12,7 @@ class BranchStaff(models.Model):
     role = models.CharField(max_length=128,choices=role_choices,default='staff')
     created = models.DateTimeField(auto_now_add=True)
     phone =models.CharField(max_length=14,blank=True,default="")
-    branch = models.ForeignKey(Branch,on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch,on_delete=models.CASCADE,related_name='branchstaff_branch')
 
     
 class Category(models.Model):
