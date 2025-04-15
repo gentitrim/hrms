@@ -9,19 +9,10 @@ class CustomUserRegisterForm(UserCreationForm):
         fields = ["username", "first_name", "last_name", "password1", "password2"]
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["password1"].widget.attrs.update({
-            "class": "form-control",
-            "data-bs-toggle": "popover",
-            "data-bs-trigger": "hover focus",
-            "data-bs-placement": "right",
-            "title": "Password Requirements",
-            "data-bs-content": (
-                "• Can’t be too similar to your personal info\n"
-                "• At least 8 characters\n"
-                "• Not a common password\n"
-                "• Not entirely numeric"
-            )
-        })
+        for fileds in self.fields.values():
+            fileds.widget.attrs.update({
+                'class':'form-control',
+            })
 
 
 
