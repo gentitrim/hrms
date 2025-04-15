@@ -1,17 +1,30 @@
 {% extends "branch_main.html" %}
 
-{%block content%}
+{% block content %}
 
-  <div class="container mt-4">
-    <h2>Update Employee: {{ employee.name }} {{ employee.surname }}</h2>
-    
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      
-      <button type="submit" class="btn btn-primary">Update</button>
-      <a href="{% url 'branch_management:employee-list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
-  </div>
+<div class="container mt-4">
+  <h2>Update Employee: {{ employee.name }} {{ employee.surname }}</h2>
 
-  {% endblock %}
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="card mb-4">
+      <div class="card-header">User Data (CustomUser)</div>
+      <div class="card-body">
+        {{ user_form.as_p }}
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header">Employee Data (BranchStaff)</div>
+      <div class="card-body">
+        {{ staff_form.as_p }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="{% url 'branch_management:employee-list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+
+{% endblock %}
