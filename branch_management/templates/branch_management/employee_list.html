@@ -3,12 +3,6 @@
 {%block content%}
     <div class="container mt-5">
         <h1>Employee List</h1>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% if employees %}
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -22,19 +16,18 @@
                     {% for employee in employees %}
                     <tr>
                         <td>{{ employee.id }}</td>
-                        <td>{{ employee.user.first_name }}</td> <!-- Assumo che user_id sia un campo del modello -->
-                        <td>{{ employee.branch.name }}</td> <!-- Assumo che branch abbia un campo name -->
+                        <td>{{ employee.user.first_name }}</td> 
+                        <td>{{ employee.branch.name }}</td>
                         <td>
                             <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
                             <a href="{% url 'branch_management:delete_employee' employee.id %}" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
+                    {% empty %}
+                    <p>No employees found for this branch.</p>
                     {% endfor %}
                 </tbody>
             </table>
-        {% else %}
-            <p>No employees found for this branch.</p>
-        {% endif %}
         <a href="{% url 'branch_management:create_employee' %}" class="btn btn-success mt-3">Add New Employee</a>
         <a href="{% url 'branch_management:manager-dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
     </div>

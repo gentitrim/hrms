@@ -45,14 +45,25 @@ class CreateBranchStaff(ModelForm):
             'class': 'form-control'
         })
 
+        
 
-class ProductForm(forms.ModelForm):
-    required_css_class = "form-control"
-    class Meta:
-        model = Product
-        fields = ['name', 'category', 'quantity', 'price', 'description']
+        # # Optional: style password2 too
+        # self.fields["password2"].widget.attrs.update({
+        #     "class": "form-control"
+        # })
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance and self.instance.pk:
-            self.fields['branch'].initial = self.instance.branch
+
+# class ProductForm(forms.ModelForm):
+#     required_css_class = "form-control"
+#     class Meta:
+#         model = Product
+#         fields = ['name', 'category', 'quantity', 'price', 'description']
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         for field in self.fields.values():
+#             field.widget.attrs.update({
+#             'class': 'form-control'
+#         })
+#         if self.instance and self.instance.pk:
+#             self.fields['branch'].initial = self.instance.branch

@@ -1,11 +1,11 @@
 from .models import Branch,Product,Category,BranchStaff
 from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
-from branch_management.forms import ProductCreateForm,CategoryCreateForm,ProductForm
-from django.shortcuts import render, redirect
+from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff
 from django.contrib import messages
-from .forms import CreateBranchStaff
 from user_authentication.forms import CustomUserRegisterForm
+from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class DashboardView(TemplateView):
     template_name = 'manager_dashboard.html'
@@ -77,7 +77,7 @@ class EmployeeCreateView(CreateView):
 
             branchstaff = branchstaff_form.save(commit=False)
             branchstaff.user = user 
-            branchstaff.branch = Branch.objects.get(branchstaff_branch__user_id=request.user.id)
+            branchstaff.branch = Branch.objects.get(branch__user_id=request.user.id)
             branchstaff.role = 'staff'
             
             branchstaff.save()
@@ -90,14 +90,13 @@ class EmployeeCreateView(CreateView):
             'user_create_form': user_create_form,
         })
     
-
 class EmployeeListView(ListView):
     model = BranchStaff
-    template_name = 'branch_management/employee_list.html'
+    template_name = 'branch_management/employee_list.html'  # Updated template name
     context_object_name = 'employees'
 
     def get_queryset(self):
-        branch = Branch.objects.filter(branchstaff_branch__user_id=self.request.user.id).first()
+        branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
         if branch:
             return BranchStaff.objects.filter(branch=branch)
         return BranchStaff.objects.none()
@@ -112,18 +111,18 @@ class UpdateEmployeeView(UpdateView):
     
     def get_success_url(self):
         messages.success(self.request, 'Employee successfully updated!')
-        return reverse_lazy('branch_management:employee_list')
+        return reverse_lazy('branch_management:employee-list')
 
 class DeleteEmployeeView(DeleteView):
     model = BranchStaff
     template_name = 'branch_management/delete_employee.html'
     context_object_name = 'employee'
-    success_url = reverse_lazy('branch_management:employee_list')
+    success_url = reverse_lazy('branch_management:employee-list')
 
     def get_queryset(self):
         from main_management.models import Branch
         try:
-            branch = Branch.objects.get(branch_manager__user=self.request.user)
+            branch = Branch.objects.get(branch__user=self.request.user)
             return BranchStaff.objects.filter(branch=branch)
         except Branch.DoesNotExist:
             return BranchStaff.objects.none()
@@ -148,16 +147,18 @@ class CategoryCreateView(CreateView):
 
     def get(self, request, *args, **kwargs):
         category_create_form = CategoryCreateForm(request.POST)
+        print(self.request.user.branchstaff.branch)
         return render(request, self.template_name, {
             'category_create_form': category_create_form,
         })
     
     def post(self, request, *args, **kwargs):
+          
         category_create_form = CategoryCreateForm()
         if category_create_form.is_valid():
             category = category_create_form.save()
-            user_branch = self.request.user.branchstaff.branch
-            category.branch = Branch.objects.get(branchstaff_branch__user_id=self.user.id)          
+            # user_branch = self.request.user.branchstaff.branch
+            category.branch = Branch.objects.get(branch__user_id=request.user.id)         
             category.save()
             
             messages.success(request, 'Category successfully created!')
