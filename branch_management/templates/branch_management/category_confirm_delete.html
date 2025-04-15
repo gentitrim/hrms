@@ -1,11 +1,15 @@
 {% extends "branch_main.html" %}
 
 {%block content%}
-    <h1>Are you sure you want to delete the category "{{ category.name }}"?</h1>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Yes, Delete</button>
-    </form>
-    <a href="{% url 'branch_management:category-list' %}">Cancel</a>
-
+    <h2 class='text-center mt-4 mb-5'>Are you sure you want to delete the category "{{ category.name }}"?</h2>
+    <div class="container text-center mt-5">
+        <form method="post">
+            {% csrf_token %}
+            <div class="button-group">
+                <button type="submit" class="btn btn-outline-success">Confirm</button>
+                <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-danger">Cancel</a>
+            </div>
+        </form>
+        
+    </div>
 {% endblock %}

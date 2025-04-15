@@ -229,3 +229,15 @@ class CategoryDeleteView(DeleteView):
     model = Category
     template_name = 'branch_management/category_confirm_delete.html'
     success_url = reverse_lazy('branch_management:category-list')
+
+    def get_queryset(self):
+        try:
+            branch = Branch.objects.get(branch__user=self.request.user)
+            return Category.objects.filter(branch=branch)
+        except Category.DoesNotExist:
+            return Category.objects.none()
+        
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        messages.success(self.request, "Category successfully deleted!")
+        return response
