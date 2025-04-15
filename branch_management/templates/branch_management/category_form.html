@@ -12,7 +12,7 @@
         {{category_create_form.errors}}
         </div>
         <div class="button-group">
-            <button type="submit" class="btn btn-outline-primary"> {% if form.instance.pk %}Update{% else %}Create{% endif %} Category</button>
+            <button type="submit" class="btn btn-outline-success"> {% if form.instance.pk %}Update{% else %}Create{% endif %} Category</button>
             <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-danger">Cancel</a>
         </div>
     </form>

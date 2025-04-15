@@ -9,6 +9,7 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Branch</th>
+                        <th>Role</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -18,9 +19,11 @@
                         <td>{{ employee.id }}</td>
                         <td>{{ employee.user.first_name }}</td> 
                         <td>{{ employee.branch.name }}</td>
+                        <td>{{ employee.role }}</td>
                         <td>
-                            <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
-                            <a href="{% url 'branch_management:delete_employee' employee.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-outline-warning btn-sm text-dark">Edit</a>
+                            <a href="{% url 'branch_management:delete_employee' employee.id %}" class="btn btn-outline-danger btn-sm text-dark">Delete</a>
+                            <a href="{% url 'branch_management:delete_employee' employee.id %}" class="btn btn-outline-secondary btn-sm text-dark">Detail</a>
                         </td>
                     </tr>
                     {% empty %}
@@ -28,8 +31,8 @@
                     {% endfor %}
                 </tbody>
             </table>
-        <a href="{% url 'branch_management:create_employee' %}" class="btn btn-success mt-3">Add New Employee</a>
-        <a href="{% url 'branch_management:manager-dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+        <a href="{% url 'branch_management:create_employee' %}" class="btn btn-outline-success mt-3">Add New Employee</a>
+        <a href="{% url 'branch_management:manager-dashboard' %}" class="btn btn-outline-secondary mt-3">Back to Dashboard</a>
     </div>
 
     

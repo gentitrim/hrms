@@ -64,7 +64,6 @@ class ProductUpdateView(UpdateView):
     
 
     def get_queryset(self):
-        # Filtroni produktet që janë vetëm për degën e përdoruesit
         user_branch = self.request.user.branchstaff.branch
         return Product.objects.filter(branch=user_branch) 
     
@@ -74,6 +73,10 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'product_confirm_delete.html'
     success_url = reverse_lazy('branch_management:product-list')
+
+    def get_queryset(self):
+        user_branch = self.request.user.branchstaff.branch
+        return Product.objects.filter(branch=user_branch) 
 
 
 class EmployeeCreateView(CreateView):
@@ -129,10 +132,18 @@ class UpdateEmployeeView(UpdateView):
     template_name = 'branch_management/update_employee.html'
     context_object_name = 'employee'
     pk_url_kwarg = 'id'
+
+    def get_queryset(self):
+        branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
+        if branch:
+            return BranchStaff.objects.filter(branch=branch)
+        return BranchStaff.objects.none()
     
     def get_success_url(self):
         messages.success(self.request, 'Employee successfully updated!')
         return reverse_lazy('branch_management:employee-list')
+    
+    
 
 
 class DeleteEmployeeView(DeleteView):
@@ -142,7 +153,6 @@ class DeleteEmployeeView(DeleteView):
     success_url = reverse_lazy('branch_management:employee-list')
 
     def get_queryset(self):
-        from main_management.models import Branch
         try:
             branch = Branch.objects.get(branch__user=self.request.user)
             return BranchStaff.objects.filter(branch=branch)
@@ -197,6 +207,15 @@ class CategoryUpdateView(UpdateView):
     form_class = CategoryCreateForm
     template_name = 'branch_management/category_form.html'
     success_url = reverse_lazy('branch_management:category-list')
+    context_object_name = 'category_create_form'
+
+    def get_queryset(self):
+        user_branch = self.request.user.branchstaff.branch
+        return Category.objects.filter(branch=user_branch)
+    
+    def get_success_url(self):
+        messages.success(self.request, 'Category successfully updated!')
+        return reverse_lazy('branch_management:category-list')
 
 
 class CategoryDeleteView(DeleteView):

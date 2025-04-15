@@ -14,6 +14,10 @@ class CustomUserRegisterForm(UserCreationForm):
                 'class':'form-control',
             })
 
+    def clean_username(self):      
+        data = self.cleaned_data["name"]
+        return data.lower()
+
 
 
 class CustomLoginForm(AuthenticationForm):
