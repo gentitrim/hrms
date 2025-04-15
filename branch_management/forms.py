@@ -22,6 +22,7 @@ class ProductCreateForm(ModelForm):
     class Meta:
         model = Product
         fields = '__all__'
+        exclude = ['branch',]
 
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)

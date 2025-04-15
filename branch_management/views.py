@@ -18,13 +18,31 @@ class CreateProductView(CreateView):
     model = Product
     template_name = 'create_product.html'
     form_class = ProductCreateForm
-    # fields = '__all__'
     success_url = reverse_lazy('branch_management:create-product')
-    # context_object_name = 'products'
 
-    def form_valid(self, form):
-        form.instance.branch = self.request.user.branchstaff.branch
-        return super().form_valid(form)
+    def get(self, request, *args, **kwargs):
+        product_create_form = ProductCreateForm()
+        # Filter categories based on the user's branch
+        product_create_form.fields['category'].queryset = Category.objects.filter(branch=request.user.branchstaff.branch)
+        return render(request, self.template_name, {
+            'product_create_form': product_create_form,
+        })   
+           
+    def post(self, request, *args, **kwargs):
+        product_create_form = ProductCreateForm(request.POST)
+        if product_create_form.is_valid():
+            product = product_create_form.save(commit=False)
+            product.branch = Branch.objects.get(branch__user_id=request.user.id)
+            product.save()
+            
+            messages.success(request, 'Product successfully created!')
+            return redirect(self.success_url)
+
+        # Ensure the category field is filtered again in case of form errors
+        product_create_form.fields['category'].queryset = Category.objects.filter(branch=request.user.branchstaff.branch)
+        return render(request, self.template_name, {
+            'product_create_form': product_create_form,
+        })
 
 
 class ProductListView(ListView):
@@ -76,13 +94,12 @@ class EmployeeCreateView(CreateView):
         if branchstaff_form.is_valid() and user_create_form.is_valid():
             user = user_create_form.save(commit=False)
             user.is_branch_staff = True
-            user.save()
 
             branchstaff = branchstaff_form.save(commit=False)
             branchstaff.user = user 
             branchstaff.branch = Branch.objects.get(branch__user_id=request.user.id)
             branchstaff.role = 'staff'
-            
+            user.save()
             branchstaff.save()
             
             messages.success(request, 'Employee successfully created!')
