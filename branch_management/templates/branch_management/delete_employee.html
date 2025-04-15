@@ -3,10 +3,12 @@
 {%block content%}
 
 <div class="container mt-4">
+  <div class='text-center'>
     <h2>Confirm Deletion</h2>
-    <p>Are you sure you want to delete employee <strong>{{ employee.name }} {{ employee.surname }}</strong>?</p>
+    <p>Are you sure you want to delete employee <strong>{{ employee.user.first_name }} {{ employee.user.last_name }}</strong>?</p>
+  </div>
 
-    <form method="post">
+    <form method="post" class='text-center mt-5'>
       {% csrf_token %}
       <button type="submit" class="btn btn-danger">Yes, Delete</button>
       <a href="{% url 'branch_management:employee-list' %}" class="btn btn-secondary">Cancel</a>
