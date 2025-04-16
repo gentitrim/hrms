@@ -117,7 +117,7 @@ class CreateManagerView(View):
 
 class ManagerUpdateView(View):
     template_name = 'management/manager_edit.html'
-    success_url = reverse_lazy('manage_managers')
+    success_url = reverse_lazy('manager_list')
 
     def get(self, request, pk):
         manager = get_object_or_404(BranchStaff, pk=pk)
