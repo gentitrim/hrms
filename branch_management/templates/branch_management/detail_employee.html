@@ -1,0 +1,11 @@
+{% extends "branch_main.html" %}
+
+{%block content%}
+<p>{{employee.user}}</p>
+<p>{{employee.user.first_name}} {{employee.user.last_name}}</p>
+<p>Branch: {{employee.branch.name}}</p>
+<p>Role: {{employee.role}}</p>
+<p>Phone: {{employee.phone}}</p>
+
+
+{% endblock content %}

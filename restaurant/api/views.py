@@ -12,12 +12,20 @@ import datetime
 
 logger = logging.getLogger(__name__)
 
-class ProductsView(ListView):
-    def get_queryset(self):
-        return Product.objects.filter(category_id=self.kwargs['pk'])
-    template_name = "snippets/product_list_by_category.html"
-    context_object_name = "all_products"
+# class ProductsView(ListView):
+#     def get_queryset(self):
+#         return Product.objects.filter(category_id=self.kwargs['pk'])
+#     template_name = "snippets/product_list_by_category.html"
+#     context_object_name = "all_products"
 
+class ProductsView(ListView):
+    model = Product
+    template_name = 'snippets/product_list_by_category.html'
+    context_object_name = 'all_products'
+
+    def get_queryset(self):
+        user_branch = self.request.user.branchstaff.branch
+        return Product.objects.filter(branch=user_branch,category_id=self.kwargs['pk'])   
 
 class UserOrderListView(LoginRequiredMixin,ListView):
     model = Order
@@ -27,7 +35,7 @@ class UserOrderListView(LoginRequiredMixin,ListView):
     redirect_field_name = 'next'
     paginate_by = 10
     def get_queryset(self):
-        self.staff = get_object_or_404(BranchStaff,pk = self.request.user.id)
+        self.staff = get_object_or_404(BranchStaff,pk = self.request.user.branchstaff.id)
         self.date = self.request.GET.get('search_date') or datetime.date.today()
         return Order.objects.filter(staff_id=self.staff, order_time__date=self.date).order_by('-order_time')
     
