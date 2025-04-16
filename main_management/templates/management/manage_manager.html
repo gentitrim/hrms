@@ -48,6 +48,7 @@
                           <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
                           hx-delete="{% url 'delete_manager' manager.id %}"
                           hx-target="#manager-{{ manager.pk }}"
+                          hx-refresh="true"
                           hx-swap="innerHTML"
                           hx-trigger="click"
                           >Confirm</button>
