@@ -2,6 +2,7 @@ from .models import Branch,Product,Category,BranchStaff
 from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
 from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff
+from user_authentication.models import CustomUser
 from django.contrib import messages
 from user_authentication.forms import CustomUserRegisterForm
 from django.shortcuts import render, redirect
@@ -28,7 +29,7 @@ class CreateProductView(CreateView):
         # Filter categories based on the user's branch
         product_create_form.fields['category'].queryset = Category.objects.filter(branch=request.user.branchstaff.branch)
         return render(request, self.template_name, {
-            'product_create_form': product_create_form,
+            'product_create_form': product_create_form
         })   
            
     def post(self, request, *args, **kwargs):
@@ -128,7 +129,7 @@ class EmployeeListView(ListView):
     def get_queryset(self):
         branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
         if branch:
-            return BranchStaff.objects.filter(branch=branch)
+            return BranchStaff.objects.filter(branch=branch).exclude(user=self.request.user)
         return BranchStaff.objects.none()
 
 
@@ -151,17 +152,16 @@ class UpdateEmployeeView(UpdateView):
     
 
 class DeleteEmployeeView(DeleteView):
-    model = BranchStaff
+    model = CustomUser
     template_name = 'branch_management/delete_employee.html'
     context_object_name = 'employee'
     success_url = reverse_lazy('branch_management:employee-list')
 
     def get_queryset(self):
-        try:
-            branch = Branch.objects.get(branch__user=self.request.user)
-            return BranchStaff.objects.filter(branch=branch)
-        except Branch.DoesNotExist:
-            return BranchStaff.objects.none()
+        branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
+        if branch:
+            return CustomUser.objects.filter(branchstaff__branch=branch).exclude(id=self.request.user.id)
+        return CustomUser.objects.none()
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
