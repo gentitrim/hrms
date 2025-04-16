@@ -26,7 +26,7 @@
                         <td>
                             <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-outline-secondary btn-sm">Edit</a>
                             <a href="{% url 'branch_management:delete_employee' employee.user.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
-                            <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-outline-secondary btn-sm">Detail</a>
+                            <a href="{% url 'branch_management:detail_employee' employee.id %}" class="btn btn-outline-secondary btn-sm">Detail</a>
                         </td>
                     </tr>
                     {% empty %}

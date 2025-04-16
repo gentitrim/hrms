@@ -5,7 +5,7 @@ from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateB
 from user_authentication.models import CustomUser
 from django.contrib import messages
 from user_authentication.forms import CustomUserRegisterForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -168,6 +168,16 @@ class DeleteEmployeeView(DeleteView):
         messages.success(self.request, "Employee successfully deleted!")
         return response
 
+
+class DetailEmployeeView(TemplateView):
+    template_name = 'branch_management/detail_employee.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        employee_id = self.kwargs.get('pk')
+        employee = BranchStaff.objects.get(pk=employee_id)
+        context['employee'] = employee
+        return context
 
 
 #Category Views
