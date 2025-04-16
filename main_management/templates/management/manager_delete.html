@@ -1,13 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Delete Manager</title>
-</head>
-<body>
-    
-</body>
-</html>
+<div class="modal-header">
+  <h5 class="modal-title">Delete Manager</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
 
-  
+<div class="modal-body">
+  <p>Are you sure you want to delete <strong>{{ manager.user.first_name }} {{ manager.user.last_name }}</strong>?</p>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+  <button class="btn btn-danger"
+          hx-delete="{% url 'delete_manager' manager.id %}"
+          hx-target="#manager-{{ manager.id }}"
+          hx-swap="outerHTML"
+          hx-trigger="click"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          data-bs-dismiss="modal">
+    Confirm Delete
+  </button>
+</div>

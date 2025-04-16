@@ -78,75 +78,90 @@ class ManagerManagementView(TemplateView):
 
 class ManagerListView(ListView):
     model = BranchStaff
-
     template_name = 'management/manage_manager.html'
     context_object_name = 'managers'
     paginate_by = 5
 
     def get_queryset(self):
-        return BranchStaff.objects.filter(role = 'manager')
+        return BranchStaff.objects.filter(role='manager')
+
+    def render_to_response(self, context, **response_kwargs):
+        # Kthen partial HTML për HTMX (pa base template)
+        if self.request.htmx:
+            return super().render_to_response(context, **response_kwargs)
+        # Opsional: Redirect ose fallback në një faqe tjetër nëse s’është HTMX
+        return super().render_to_response(context, **response_kwargs)
     
 
 class CreateManagerView(View):
+
     template_name = 'management/create_manager.html'
-    success_url = reverse_lazy('management_dashboard')
- 
+    success_url = reverse_lazy('manager_list')
+
     def get(self, request):
-        managerform = ManagerForm()
-        userform = CustomUserRegisterForm()
-        return render(request, self.template_name, {'managerform': managerform, 'userform': userform})
-       
+        manager_form = ManagerForm()
+        user_form = CustomUserRegisterForm()
+        return render(request, self.template_name, {
+            'managerform': manager_form,
+            'userform': user_form
+        })
+
     def post(self, request):
-        managerform = ManagerForm(request.POST)
-        userform = CustomUserRegisterForm(request.POST)
-        if managerform.is_valid() and userform.is_valid():
-            user = userform.save(commit=False)
+        manager_form = ManagerForm(request.POST)
+        user_form = CustomUserRegisterForm(request.POST)
+
+        if user_form.is_valid() and manager_form.is_valid():
+            user = user_form.save(commit=False)
+            user.is_staff = True  # ose ndonjë atribut tjetër për menaxherin
             user.save()
-            manager = managerform.save(commit=False)
+
+            manager = manager_form.save(commit=False)
             manager.user = user
             manager.role = 'manager'
+            manager.branch = Branch.objects.get(branch_manager__user_id=request.user.id)
             manager.save()
-            return HttpResponse("Manager created successfully")
- 
-        return render(request, self.template_name, {'manager_errors': managerform.errors,
-    'user_errors': userform.errors})
+
+            if request.htmx:
+                return HttpResponse(status=204, headers={'HX-Redirect': str(self.success_url)})
+            return redirect(self.success_url)
+
+        return render(request, self.template_name, {
+            'managerform': manager_form,
+            'userform': user_form,
+            'manager_errors': manager_form.errors,
+            'user_errors': user_form.errors
+        })
     
 
 class ManagerUpdateView(UpdateView):
     model = BranchStaff
     form_class = ManagerForm
     template_name = 'management/manager_edit.html'
-    success_url = reverse_lazy('manage_managers')
+    context_object_name = 'manager'
 
     def get_success_url(self):
-        if self.request.htmx:
-            return None  # Do not redirect when HTMX is used
-        return super().get_success_url()
+        return reverse_lazy('manager_list')
 
     def form_valid(self, form):
         response = super().form_valid(form)
         if self.request.htmx:
-            # Send a response that HTMX can handle to update the manager list
-            return JsonResponse({'message': 'Manager updated successfully!'})
-        return response 
+            response['HX-Redirect'] = self.get_success_url()
+        return response
     
 
 class ManagerDeleteView(DeleteView):
     model = BranchStaff
     template_name = 'management/manager_delete.html'
-    success_url = reverse_lazy('manage_manager')  # Pas fshirjes, kthehet tek lista e menaxherëve
+    context_object_name = 'manager'
 
-    # Trajton fshirjen dhe kthen një përgjigje JSON për HTMX
+    def get_success_url(self):
+        return reverse_lazy('manager_list')
+
     def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
         if request.htmx:
-            self.object = self.get_object()
-            self.object.delete()
-            # Kthejmë mesazhin e suksesshëm dhe elementin HTML që do të përditësohet
-            return render(request, 'management/manager_list.html', {
-                'message': 'Menaxheri u fshi me sukses!',
-                'manager_list': BranchStaff.objects.all()
-            })
-        return super().delete(request, *args, **kwargs)
+            response['HX-Redirect'] = self.get_success_url()
+        return response
 
     
 

@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import CreateBranchStaff
 from user_authentication.forms import CustomUserRegisterForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class DashboardView(TemplateView):
     template_name = 'manager_dashboard.html'
@@ -44,7 +45,7 @@ class ProductUpdateView(UpdateView):
     form_class = ProductCreateForm
     template_name = 'update_product.html'
     context_object_name = 'products'
-    success_url = reverse_lazy('product-list')
+    success_url = reverse_lazy('branch_management:product-list')
     
 
     def get_queryset(self):
