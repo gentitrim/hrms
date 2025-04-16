@@ -121,19 +121,20 @@ class ManagerUpdateView(UpdateView):
     
     
 
-class ManagerDeleteView(DeleteView):
-    model = BranchStaff
+class ManagerDeleteView(View):
     template_name = 'management/manager_delete.html'
-    context_object_name = 'manager'
     success_url = reverse_lazy('manager_list')
 
-    def delte(self, request, *args, **kwargs):
-        manager = self.get_object()
+    def get(self, request, pk):
+        manager = get_object_or_404(BranchStaff, pk=pk)
+        return render(request, self.template_name, {'manager': manager})
+
+    def post(self, request, pk):
+        manager = get_object_or_404(BranchStaff, pk=pk)
         user = manager.user
-        response = super().delete(request, *args, **kwargs)
+        manager.delete()
         user.delete()
-        return HttpResponse("Manager deleted Successfully")
-    
+        return render(request, 'management/manage_manager.html')
     
 
     
