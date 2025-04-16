@@ -12,6 +12,7 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import Q
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 # Create your views here.
 
 
@@ -106,20 +107,41 @@ class CreateManagerView(View):
             manager.user = user
             manager.role = 'manager'
             manager.save()
-            return render(request, 'management/manage_manager.html')
+            messages.success(request, 'Manager created successfully!')
+            return redirect(self.success_url)
+            
  
         return render(request, self.template_name, {'manager_errors': managerform.errors,
     'user_errors': userform.errors})
     
 
-class ManagerUpdateView(UpdateView):
-    model = BranchStaff
-    form_class = ManagerForm
+class ManagerUpdateView(View):
     template_name = 'management/manager_edit.html'
     success_url = reverse_lazy('manage_managers')
 
+    def get(self, request, pk):
+        manager = get_object_or_404(BranchStaff, pk=pk)
+        managerform = ManagerForm(instance=manager)
+        userform = CustomUserRegisterForm(instance=manager.user)
+        return render(request, self.template_name, {'managerform': managerform, 'userform': userform, 'manager': manager})
     
-    
+    def post(self, request, pk):
+        manager = get_object_or_404(BranchStaff, pk=pk)
+        managerform = ManagerForm(request.POST, instance=manager)
+        userform = CustomUserRegisterForm(request.POST, instance=manager.user)
+        if managerform.is_valid() and userform.is_valid():
+            user = userform.save()
+            manager = managerform.save(commit=False)
+            manager.user = user
+            manager.save()
+            messages.success(request, 'Manager updated successfully!')
+            return redirect(self.success_url)
+        return render(request, self.template_name, {'managerform': managerform, 
+                                                    'userform': userform, 
+                                                    'manager': manager
+                                                    })
+
+
 
 class ManagerDeleteView(View):
     template_name = 'management/manager_delete.html'
@@ -134,7 +156,9 @@ class ManagerDeleteView(View):
         user = manager.user
         manager.delete()
         user.delete()
-        return render(request, 'management/manage_manager.html')
+        messages.success(request, 'Manager deleted successfully!')
+        
+        return redirect(self.success_url)
     
 
     

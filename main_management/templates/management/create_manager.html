@@ -1,21 +1,27 @@
 {% extends "management/management_base.html" %}
 
 {% block content %}
+<h2>Create new Manager</h2>
 
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+{% endif %}
 
-    <form method="post">
-      
-      {% csrf_token %}
-      {{ userform.as_p }}
-      {{ managerform.as_p }}
-      {{userform.errors}}
-      {{manageform.errors}}
+<form method="post">
+  {% csrf_token %}
+  
+  <fieldset>
+    <legend>Manager Info</legend>
+    {{ userform.as_p }}
+  </fieldset>
 
+  <fieldset>
+    <legend>Manager Deatils</legend>
+    {{ managerform.as_p }}
+  </fieldset>
 
-        <div class="d-flex justify-content-end mt-3">
-        <button type="submit" class="btn btn-primary">Save</button>
-      </div>
-    </form>
-  </div>
-</div>
+  <button type="submit" class="btn btn-primary">Krijo</button>
+</form>
 {% endblock %}
