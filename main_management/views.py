@@ -11,6 +11,7 @@ from django.views.generic import TemplateView,ListView ,FormView, DeleteView,Cre
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 # Create your views here.
 
 
@@ -69,7 +70,6 @@ class DeleteBranchView(DeleteView):
     template_name = 'management/delete_branch.html'
     success_url = 'management/branches'
 
-
 class ManagerManagementView(TemplateView):
     def get(self,request):
         return render(request,'management/manage_manager.html')
@@ -89,7 +89,7 @@ class ManagerListView(ListView):
 
 class CreateManagerView(View):
     template_name = 'management/create_manager.html'
-    success_url = reverse_lazy('management_dashboard')
+    success_url = reverse_lazy('manager_list')
  
     def get(self, request):
         managerform = ManagerForm()
@@ -106,7 +106,7 @@ class CreateManagerView(View):
             manager.user = user
             manager.role = 'manager'
             manager.save()
-            return HttpResponse("Manager created successfully")
+            return render(request, 'management/manage_manager.html')
  
         return render(request, self.template_name, {'manager_errors': managerform.errors,
     'user_errors': userform.errors})
@@ -118,35 +118,26 @@ class ManagerUpdateView(UpdateView):
     template_name = 'management/manager_edit.html'
     success_url = reverse_lazy('manage_managers')
 
-    def get_success_url(self):
-        if self.request.htmx:
-            return None  # Do not redirect when HTMX is used
-        return super().get_success_url()
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        if self.request.htmx:
-            # Send a response that HTMX can handle to update the manager list
-            return JsonResponse({'message': 'Manager updated successfully!'})
-        return response 
+    
     
 
 class ManagerDeleteView(DeleteView):
     model = BranchStaff
     template_name = 'management/manager_delete.html'
-    success_url = reverse_lazy('manage_manager')  # Pas fshirjes, kthehet tek lista e menaxherëve
+    context_object_name = 'manager'
+    success_url = reverse_lazy('manager_list')
 
-    # Trajton fshirjen dhe kthen një përgjigje JSON për HTMX
-    def delete(self, request, *args, **kwargs):
-        if request.htmx:
-            self.object = self.get_object()
-            self.object.delete()
-            # Kthejmë mesazhin e suksesshëm dhe elementin HTML që do të përditësohet
-            return render(request, 'management/manager_list.html', {
-                'message': 'Menaxheri u fshi me sukses!',
-                'manager_list': BranchStaff.objects.all()
-            })
-        return super().delete(request, *args, **kwargs)
+    def delte(self, request, *args, **kwargs):
+        manager = self.get_object()
+        user = manager.user
+        response = super().delete(request, *args, **kwargs)
+        user.delete()
+        return HttpResponse("Manager deleted Successfully")
+    
+    
+
+    
+
 
     
 

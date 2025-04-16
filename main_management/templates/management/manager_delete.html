@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Delete Manager</title>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'management/management_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="alert alert-danger text-center">
+        <h4 class="mb-3">A jeni i sigurt që doni ta fshini këtë menaxher?</h4>
+        <p>{{ object.user.first_name }} {{ object.user.last_name }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <a href="{% url 'manager_list' %}" class="btn btn-secondary">Anulo</a>
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
 
   
