@@ -89,6 +89,7 @@ class ProductDeleteView(DeleteView):
 class EmployeeCreateView(CreateView):
     template_name = 'branch_management/create_employee.html'
     success_url = reverse_lazy('branch_management:employee-list')
+    
     def get(self, request, *args, **kwargs):
         user_create_form = CustomUserRegisterForm()
         branchstaff_form = CreateBranchStaff()
