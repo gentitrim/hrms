@@ -43,7 +43,7 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5">Nuk ka menaxherë të regjistruar.</td>
+                    <td colspan="5">There is no manager registered yet.</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -104,11 +104,12 @@
         setTimeout(() => msg.remove(), 1000); 
       });
     }, 2000); 
-  </script>
+</script>
   
-  <style>
+<style>
     .fade-out {
       opacity: 0;
       transition: opacity 1s ease-out;
     }
-  </style>
+</style>
+
