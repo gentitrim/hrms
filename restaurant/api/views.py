@@ -51,7 +51,7 @@ class UserOrderListView(LoginRequiredMixin,ListView):
 
 class UserOrderDetailView(LoginRequiredMixin,View):
     def get(self,request,pk):
-        staff = get_object_or_404(BranchStaff,pk = self.request.user.id)
+        staff = get_object_or_404(BranchStaff,pk = self.request.user.branchstaff.id)
         order = get_object_or_404(Order,pk=pk)
         if order.staff_id != staff:
             return HttpResponseForbidden("You are not allowed to view this order.")
