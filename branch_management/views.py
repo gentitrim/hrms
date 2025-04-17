@@ -1,7 +1,7 @@
 from .models import Branch,Product,Category,BranchStaff
 from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
-from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff
+from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm
 from user_authentication.models import CustomUser
 from django.contrib import messages
 from user_authentication.forms import CustomUserRegisterForm
@@ -141,14 +141,30 @@ class UpdateEmployeeView(UpdateView):
     context_object_name = 'employee'
     pk_url_kwarg = 'id'
 
-    def get_queryset(self):
-        branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
-        if branch:
-            return BranchStaff.objects.filter(branch=branch)
-        return BranchStaff.objects.none()
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        staff_form = self.form_class(instance=self.object)
+        user_form = CustomUserUpdateForm(instance=self.object.user)
+        return render(request, self.template_name, {
+            'staff_form': staff_form,
+            'user_form': user_form
+        })
     
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        staff_form = self.form_class(request.POST, instance=self.object)
+        user_form = CustomUserUpdateForm(request.POST, instance=self.object.user)
+        if staff_form.is_valid() and user_form.is_valid():
+            staff_form.save()
+            user_form.save()
+            messages.success(request, 'Employee successfully updated!')
+            return redirect(self.get_success_url())
+        return render(request, self.template_name, {
+            'staff_form': staff_form,
+            'user_form': user_form
+        })
+
     def get_success_url(self):
-        messages.success(self.request, 'Employee successfully updated!')
         return reverse_lazy('branch_management:employee-list')
     
 

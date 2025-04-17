@@ -3,6 +3,7 @@ from django import forms
 from .models import Category,Product,BranchStaff
 import re
 from django.core.exceptions import ValidationError
+from user_authentication.models import CustomUser
 
 
 class CategoryCreateForm(ModelForm):
@@ -82,3 +83,17 @@ class CreateBranchStaff(ModelForm):
         if not re.match(r'^\+?\d{0,14}$', phone):
             raise forms.ValidationError("Invalid phone number format.")
         return phone 
+    
+
+class CustomUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name'] 
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        return first_name.title()
+    
+    def clean_last_name(self):
+        first_name = self.cleaned_data.get('last_name')
+        return first_name.title()
