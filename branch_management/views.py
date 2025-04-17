@@ -119,7 +119,7 @@ class EmployeeCreateView(CreateView):
         return render(request, self.template_name, {
             'branchstaff_form': branchstaff_form,
             'user_create_form': user_create_form,
-        })
+        })   
 
 
 class EmployeeListView(ListView):
