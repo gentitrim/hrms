@@ -1,27 +1,71 @@
 {% extends "management/management_base.html" %}
 
 {% block content %}
-<h2>Create new Manager</h2>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <h4 class="text-center mb-4">Create New Manager</h4>
 
-{% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-  {% endfor %}
-{% endif %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
 
-<form method="post">
-  {% csrf_token %}
-  
-  <fieldset>
-    <legend>Manager Info</legend>
-    {{ userform.as_p }}
-  </fieldset>
+      <form method="post">
+        {% csrf_token %}
 
-  <fieldset>
-    <legend>Manager Deatils</legend>
-    {{ managerform.as_p }}
-  </fieldset>
+        <!-- USER FORM -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-secondary text-white">
+            <strong>Manager Details</strong>
+          </div>
+          <div class="card-body">
+            {% for field in userform %}
+              <div class="mb-3">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                
+                {% if field.help_text %}
+                  <div class="form-text text-muted small">{{ field.help_text|safe }}</div>
+                {% endif %}
+                
+                {% if field.errors %}
+                  <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
 
-  <button type="submit" class="btn btn-primary">Krijo</button>
-</form>
+        <!-- MANAGER FORM -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-secondary text-white">
+            <strong>Manager Details</strong>
+          </div>
+          <div class="card-body">
+            {% for field in managerform %}
+              <div class="mb-3">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                
+                {% if field.help_text %}
+                  <div class="form-text text-muted small">{{ field.help_text|safe }}</div>
+                {% endif %}
+                
+                {% if field.errors %}
+                  <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success px-4">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
