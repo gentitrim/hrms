@@ -143,6 +143,12 @@ class ManagerUpdateView(View):
             manager.save()
             messages.success(request, 'Manager updated successfully!')
             return redirect(self.success_url)
+        
+        if managerform.errors:
+            messages.error(request,"Please complete in the correct form.")
+        if userform.errors:
+            messages.error(request,"Please complete in the correct form.")
+            return render(request, self.template_name, {'managerform': managerform, 'userform': userform})
         return render(request, self.template_name, {'managerform': managerform, 
                                                     'userform': userform, 
                                                     'manager': manager
