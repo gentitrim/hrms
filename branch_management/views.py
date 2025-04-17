@@ -1,7 +1,7 @@
 from .models import Branch,Product,Category,BranchStaff
-from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView
+from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView,View
 from django.urls import reverse_lazy
-from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm
+from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm,CustomUserResetPassForm
 from user_authentication.models import CustomUser
 from django.contrib import messages
 from user_authentication.forms import CustomUserRegisterForm
@@ -166,6 +166,27 @@ class UpdateEmployeeView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('branch_management:employee-list')
+    
+
+class EmployeeResetPasswordView(View):
+    template_name = 'branch_management/reset_employee_password.html'
+
+    def get(self, request, pk):
+        user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm()
+        return render(request, self.template_name, {'form': form, 'user': user})
+
+    def post(self, request, pk):
+        user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm(request.POST)
+
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password']
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, f"Password for {user.username} has been changed.")
+            return redirect('branch_management:employee-list')  # or any page you want
+        return render(request, self.template_name, {'form': form, 'user': user})
     
 
 class DeleteEmployeeView(DeleteView):
