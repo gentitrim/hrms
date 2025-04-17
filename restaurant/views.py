@@ -14,13 +14,16 @@ logger = logging.getLogger(__name__)
 
 
 
-class OrderMenuView(LoginRequiredMixin,ListView):
+class CategoryListView(LoginRequiredMixin,ListView):
     template_name = 'restaurant/employees_dashboard/orders.html'
     model = Category
     context_object_name = "categories"
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
     
+    def get_queryset(self):
+            user_branch = self.request.user.branchstaff.branch
+            return Category.objects.filter(branch=user_branch)
 
 class DashboardView(LoginRequiredMixin,TemplateView):
     template_name = 'restaurant/employees_dashboard/dashboard.html'
@@ -75,7 +78,7 @@ def confirm_order(request):
         total_price = sum(item['total_price'] for item in items) * 100
 
         #For test until branch staff is created
-        staff = get_object_or_404(BranchStaff,pk=request.user.id)
+        staff = get_object_or_404(BranchStaff,pk=request.user.branchstaff.id)
         order = Order.objects.create(total_price=total_price,staff_id=staff )
         print(staff)
         for item in items:

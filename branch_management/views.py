@@ -2,9 +2,10 @@ from .models import Branch,Product,Category,BranchStaff
 from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
 from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff
+from user_authentication.models import CustomUser
 from django.contrib import messages
 from user_authentication.forms import CustomUserRegisterForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -28,7 +29,7 @@ class CreateProductView(CreateView):
         # Filter categories based on the user's branch
         product_create_form.fields['category'].queryset = Category.objects.filter(branch=request.user.branchstaff.branch)
         return render(request, self.template_name, {
-            'product_create_form': product_create_form,
+            'product_create_form': product_create_form
         })   
            
     def post(self, request, *args, **kwargs):
@@ -88,6 +89,7 @@ class ProductDeleteView(DeleteView):
 class EmployeeCreateView(CreateView):
     template_name = 'branch_management/create_employee.html'
     success_url = reverse_lazy('branch_management:employee-list')
+    
     def get(self, request, *args, **kwargs):
         user_create_form = CustomUserRegisterForm()
         branchstaff_form = CreateBranchStaff()
@@ -128,7 +130,7 @@ class EmployeeListView(ListView):
     def get_queryset(self):
         branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
         if branch:
-            return BranchStaff.objects.filter(branch=branch)
+            return BranchStaff.objects.filter(branch=branch).exclude(user=self.request.user)
         return BranchStaff.objects.none()
 
 
@@ -139,52 +141,44 @@ class UpdateEmployeeView(UpdateView):
     context_object_name = 'employee'
     pk_url_kwarg = 'id'
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        staff_form = self.form_class(instance=self.object)
-        user_form = CustomUserRegisterForm(instance=self.object.user)
-        return render(request, self.template_name, {
-            'staff_form': staff_form,
-            'user_form': user_form
-        })
+    def get_queryset(self):
+        branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
+        if branch:
+            return BranchStaff.objects.filter(branch=branch)
+        return BranchStaff.objects.none()
     
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        staff_form = self.form_class(request.POST, instance=self.object)
-        user_form = CustomUserRegisterForm(request.POST, instance=self.object.user)
-
-        if staff_form.is_valid() and user_form.is_valid():
-            staff_form.save()
-            user_form.save()
-            messages.success(request, 'Employee successfully updated!')
-            return redirect(self.get_success_url())
-        return render(request, self.template_name, {
-            'staff_form': staff_form,
-            'user_form': user_form
-        })
-
     def get_success_url(self):
-        return reverse_lazy('branch_management:employee_list')
+        messages.success(self.request, 'Employee successfully updated!')
+        return reverse_lazy('branch_management:employee-list')
     
 
 class DeleteEmployeeView(DeleteView):
-    model = BranchStaff
+    model = CustomUser
     template_name = 'branch_management/delete_employee.html'
     context_object_name = 'employee'
     success_url = reverse_lazy('branch_management:employee-list')
 
     def get_queryset(self):
-        try:
-            branch = Branch.objects.get(branch__user=self.request.user)
-            return BranchStaff.objects.filter(branch=branch)
-        except Branch.DoesNotExist:
-            return BranchStaff.objects.none()
+        branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
+        if branch:
+            return CustomUser.objects.filter(branchstaff__branch=branch).exclude(id=self.request.user.id)
+        return CustomUser.objects.none()
 
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         messages.success(self.request, "Employee successfully deleted!")
         return response
 
+
+class DetailEmployeeView(TemplateView):
+    template_name = 'branch_management/detail_employee.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        employee_id = self.kwargs.get('pk')
+        employee = BranchStaff.objects.get(pk=employee_id)
+        context['employee'] = employee
+        return context
 
 
 #Category Views
