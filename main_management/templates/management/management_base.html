@@ -52,12 +52,10 @@
                     Manage Branch
                 </button>
 
-                <button a href="{% url 'manager_list' %}" class="btn btn-secondary mt-3" style="width: 200px;"
-                        hx-get="{% url 'manager_list' %}" 
-                        hx-target="#main-dashboard-result" 
-                        hx-swap="innerHTML">
-                        Manage Managers
-                </button>
+                <a href="{% url 'manager_list' %}" class="btn btn-secondary mt-3" style="width: 200px;">
+                    Manage Managers
+                </a>
+               
 
                 <button class="btn btn-secondary mt-3" style="width: 200px;">Manage Menu</button>
                 <button class="btn btn-secondary mt-3" style="width: 200px;">Manage Staff</button>

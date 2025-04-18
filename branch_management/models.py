@@ -27,13 +27,13 @@ class Product(models.Model):
     category = models.ForeignKey("Category",on_delete=models.CASCADE)
     name = models.CharField(max_length=128) 
     quantity = models.IntegerField(default=1)
-    price = models.IntegerField()
+    price = models.FloatField()
     description = models.CharField(max_length=250,blank=True,default="")
     branch = models.ForeignKey(Branch,on_delete=models.CASCADE,related_name='products')
     # image = models.ImageField()
 
     def get_price_as_float(self):
-        return f'{self.price/100}'
+        return f'{self.price}'
 
     def __str__(self):
         return self.name

@@ -1,43 +1,71 @@
-
-
-{% load static %}
+{% extends "management/management_base.html" %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-  <div class="shadow-lg rounded-3 p-4" style="background-color: #f8f9fa; max-width: 600px; width: 100%;">
-    <h5 class="text-center mb-4">Edit Manager</h5>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <h4 class="text-center mb-4">Create New Manager</h4>
 
-    <form method="post">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
 
-      <div class="mb-3">
-        <label class="form-label">Name</label>
-        {{ form.name }}
-      </div>
+      <form method="post">
+        {% csrf_token %}
 
-      <div class="mb-3">
-        <label class="form-label">Surname</label>
-        {{ form.surname }}
-      </div>
+        <!-- USER FORM -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-secondary text-white">
+            <strong>Manager Details</strong>
+          </div>
+          <div class="card-body">
+            {% for field in userform %}
+              <div class="mb-3">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                
+                {% if field.help_text %}
+                  <div class="form-text text-muted small">{{ field.help_text|safe }}</div>
+                {% endif %}
+                
+                {% if field.errors %}
+                  <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
 
-      
+        <!-- MANAGER FORM -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-secondary text-white">
+            <strong>Manager Details</strong>
+          </div>
+          <div class="card-body">
+            {% for field in managerform %}
+              <div class="mb-3">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                
+                {% if field.help_text %}
+                  <div class="form-text text-muted small">{{ field.help_text|safe }}</div>
+                {% endif %}
+                
+                {% if field.errors %}
+                  <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
 
-      <div class="mb-3">
-        <label class="form-label">Branch</label>
-        {{ form.branch }}
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Role</label>
-        {{ form.role }}
-      </div>
-
-      <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{% url 'management_dashboard' %}" class="btn btn-secondary ms-2">Cancel</a>
-      </div>
-    </form>
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success px-4">Create</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}

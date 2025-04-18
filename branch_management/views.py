@@ -1,7 +1,7 @@
 from .models import Branch,Product,Category,BranchStaff
-from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView
+from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView,View
 from django.urls import reverse_lazy
-from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff
+from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm,CustomUserResetPassForm
 from user_authentication.models import CustomUser
 from django.contrib import messages
 from user_authentication.forms import CustomUserRegisterForm
@@ -89,6 +89,7 @@ class ProductDeleteView(LoginRequiredMixin,DeleteView):
 class EmployeeCreateView(LoginRequiredMixin,CreateView):
     template_name = 'branch_management/create_employee.html'
     success_url = reverse_lazy('branch_management:employee-list')
+    
     def get(self, request, *args, **kwargs):
         user_create_form = CustomUserRegisterForm()
         branchstaff_form = CreateBranchStaff()
@@ -118,7 +119,7 @@ class EmployeeCreateView(LoginRequiredMixin,CreateView):
         return render(request, self.template_name, {
             'branchstaff_form': branchstaff_form,
             'user_create_form': user_create_form,
-        })
+        })   
 
 
 class EmployeeListView(LoginRequiredMixin,ListView):
@@ -140,18 +141,55 @@ class UpdateEmployeeView(LoginRequiredMixin,UpdateView):
     context_object_name = 'employee'
     pk_url_kwarg = 'id'
 
-    def get_queryset(self):
-        branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
-        if branch:
-            return BranchStaff.objects.filter(branch=branch)
-        return BranchStaff.objects.none()
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        staff_form = self.form_class(instance=self.object)
+        user_form = CustomUserUpdateForm(instance=self.object.user)
+        return render(request, self.template_name, {
+            'staff_form': staff_form,
+            'user_form': user_form
+        })
     
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        staff_form = self.form_class(request.POST, instance=self.object)
+        user_form = CustomUserUpdateForm(request.POST, instance=self.object.user)
+        if staff_form.is_valid() and user_form.is_valid():
+            staff_form.save()
+            user_form.save()
+            messages.success(request, 'Employee successfully updated!')
+            return redirect(self.get_success_url())
+        return render(request, self.template_name, {
+            'staff_form': staff_form,
+            'user_form': user_form
+        })
+
     def get_success_url(self):
-        messages.success(self.request, 'Employee successfully updated!')
         return reverse_lazy('branch_management:employee-list')
     
 
-class DeleteEmployeeView(LoginRequiredMixin,DeleteView):
+class EmployeeResetPasswordView(View):
+    template_name = 'branch_management/reset_employee_password.html'
+
+    def get(self, request, pk):
+        user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm()
+        return render(request, self.template_name, {'form': form, 'user': user})
+
+    def post(self, request, pk):
+        user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm(request.POST)
+
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password']
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, f"Password for {user.username} has been changed.")
+            return redirect('branch_management:employee-list')  # or any page you want
+        return render(request, self.template_name, {'form': form, 'user': user})
+    
+
+class DeleteEmployeeView(DeleteView):
     model = CustomUser
     template_name = 'branch_management/delete_employee.html'
     context_object_name = 'employee'

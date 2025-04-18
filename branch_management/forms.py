@@ -3,6 +3,7 @@ from django import forms
 from .models import Category,Product,BranchStaff
 import re
 from django.core.exceptions import ValidationError
+from user_authentication.models import CustomUser
 
 
 class CategoryCreateForm(ModelForm):
@@ -82,3 +83,47 @@ class CreateBranchStaff(ModelForm):
         if not re.match(r'^\+?\d{0,14}$', phone):
             raise forms.ValidationError("Invalid phone number format.")
         return phone 
+    
+
+class CustomUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name'] 
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        return first_name.title()
+    
+    def clean_last_name(self):
+        first_name = self.cleaned_data.get('last_name')
+        return first_name.title()
+    
+
+class CustomUserResetPassForm(forms.Form):
+    new_password = forms.CharField(
+        label="New Password",
+        widget=forms.PasswordInput,
+        min_length=8
+    )
+     
+    confirm_password = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput
+    )
+
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update({
+            'class': 'form-control'
+        })
+            
+    def clean(self):
+        cleaned_data = super().clean()
+        pw1 = cleaned_data.get("new_password")
+        pw2 = cleaned_data.get("confirm_password")
+
+        if pw1 and pw2 and pw1 != pw2:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data

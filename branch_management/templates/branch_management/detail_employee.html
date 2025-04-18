@@ -1,11 +1,41 @@
 {% extends "branch_main.html" %}
 
 {%block content%}
-<p>{{employee.user}}</p>
-<p>{{employee.user.first_name}} {{employee.user.last_name}}</p>
-<p>Branch: {{employee.branch.name}}</p>
-<p>Role: {{employee.role}}</p>
-<p>Phone: {{employee.phone}}</p>
+
+<p class='fs-4 text-center mt-3'>Employee Info<p>
+
+
+<div class="container mt-4">   
+    <table class="table table-hover table-striped text-center">
+        <thead>
+            <tr class="table-light">
+                <th>Username</th>
+                <th>{{employee.user}}</th>
+            </tr>
+        </thead>
+        <tbody class='table-group-divider'>
+            <tr>
+                <td>Name</td> 
+                <td>{{employee.user.first_name}}</td>
+            </tr>
+            <tr>
+                <td>Last Name</td> 
+                <td>{{employee.user.last_name}}</td>
+            </tr>
+            <tr>
+                <td>Branch</td> 
+                <td>{{employee.branch.name}} - {{employee.branch.address}}</td>
+            </tr>
+            <tr>
+                <td>Role</td> 
+                <td>{{employee.role}}</td>
+            </tr>
+            <tr>
+                <td>Contact</td> 
+                <td>{{employee.phone}}</td>
+            </tr>
+        </tbody>
+    </table>      
 
 
 {% endblock content %}
