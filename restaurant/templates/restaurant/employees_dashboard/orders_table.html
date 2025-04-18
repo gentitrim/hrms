@@ -1,0 +1,35 @@
+{% if orders %}
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Total Price (€)</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr id="order-{{ order.id }}">
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.order_time|date:"Y-m-d H:i" }}</td>
+                    <td>{{ order.get_price_as_float }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger"
+                                hx-post="{% url 'cancel_order' order.id %}"
+                                hx-target="#ordersTable"
+                                hx-swap="outerHTML"
+                                hx-confirm="Are you sure you want to cancel this order?"
+                                {% if order.status == 'CANCELED' %}disabled{% endif %}>
+                            Cancel
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="mt-3">No orders found for the selected date.</p>
+{% endif %}

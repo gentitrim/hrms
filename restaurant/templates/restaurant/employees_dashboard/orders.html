@@ -1,40 +1,93 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
 {% block content %}
     <main>
+        <!-- My Orders Section -->
+        <h1 style="text-align: center;">My Orders</h1>
+        <div class="container card">
+            <div class="row">
+                <div class="col-md-12 mt-3">
+                    <!-- Date Filter Form -->
+                    <form method="GET" action="{% url 'order_menu' %}">
+                        <label for="date">Filter by Date:</label>
+                        <input type="date" id="date" name="date" value="{{ selected_date }}">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a href="{% url 'order_menu' %}" class="btn btn-secondary">Reset to Today</a>
+                    </form>
 
+                    <!-- Orders Table -->
+                    <div id="ordersTable">
+                        {% if orders %}
+                            <table class="table mt-3">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Total Price (€)</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                        <tr id="order-{{ order.id }}">
+                                            <td>{{ order.id }}</td>
+                                            <td>{{ order.order_time|date:"Y-m-d H:i" }}</td>
+                                            <td>{{ order.get_price_as_float }}</td>
+                                            <td>{{ order.status }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger"
+                                                        hx-post="{% url 'cancel_order' order.id %}"
+                                                        hx-target="#ordersTable"
+                                                        hx-swap="outerHTML"
+                                                        hx-confirm="Are you sure you want to cancel this order?"
+                                                        {% if order.status == 'CANCELED' %}disabled{% endif %}>
+                                                    Cancel
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p class="mt-3">No orders found for the selected date.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu and Order Creation Section -->
         <h1 style="text-align: center;">Menu</h1>
         <div class="container card">
-
             <div class="row">
                 <div class="col-md-3 mt-3">
                     <h4>Category</h4>
-
                     <div class="list-group">
-                        {% for category in categories%}
-                        <button type="button" class="list-group-item list-group-item-action"
-                            value="{{category.name}}" id="{{category.name}}"
-                            hx-get="{% url 'get_products' category.id %}"
-                            hx-target="#productResult"
-                            hx-triger="click"
-                            hx-swap="innerHtml">{{category.name}}
-                        </button>
+                        {% for category in categories %}
+                            <button type="button" class="list-group-item list-group-item-action"
+                                    value="{{ category.name }}" id="{{ category.name }}"
+                                    hx-get="{% url 'get_products' category.id %}"
+                                    hx-target="#productResult"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML">{{ category.name }}
+                            </button>
                         {% endfor %}
-                      </div>
+                    </div>
                 </div>
 
                 <div class="col-md-4 mt-3">
-                        <h4>Product</h4>
-                        <div id="productResult">
-                                {% include 'snippets/product_list_by_category.html' %}
-                        </div>
+                    <h4>Product</h4>
+                    <div id="productResult">
+                        {% include 'snippets/product_list_by_category.html' %}
+                    </div>
                 </div>
 
-                <div class="col-md-5 mt-3">   
+                <div class="col-md-5 mt-3">
                     <div class="selected-products">
                         <h4>Current Order</h4>
-                        <table id="selectedProductsTable" >
-                            <thead >
-                                <tr >
+                        <table id="selectedProductsTable">
+                            <thead>
+                                <tr>
                                     <th style="border-top-left-radius:9px">Product</th>
                                     <th>Quantity</th>
                                     <th>Unit Price</th>
@@ -42,11 +95,7 @@
                                     <th style="border-top-right-radius:9px">Action</th>
                                 </tr>
                             </thead>
-
-                            <tbody id = "orderItemList" style="font-size:14px">
-
-                            </tbody>
-                        
+                            <tbody id="orderItemList" style="font-size:14px"></tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="3" class="total-price">Total Price</td>
@@ -54,9 +103,9 @@
                                 </tr>
                             </tfoot>
                         </table>
-                        <button id="clearSelection" type="button" class="btn btn-outline-danger"><i class="bi bi-trash3"></i> Clear Order</button>
-
-
+                        <button id="clearSelection" type="button" class="btn btn-outline-danger">
+                            <i class="bi bi-trash3"></i> Clear Order
+                        </button>
 
                         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
@@ -64,7 +113,6 @@
                             Confirm Order
                         </button>
 
-                  
                         <div class="modal fade" id="confirmOrderModal" tabindex="-1" aria-labelledby="confirmOrderModal" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -82,19 +130,11 @@
                                 </div>
                             </div>
                         </div>
-                        
 
-                        <div id="response">
-                            
-                        </div>
+                        <div id="response"></div>
                     </div>
                 </div>
             </div>
         </div>
-
-  
-        
     </main>
-
-
-    {% endblock content %}
+{% endblock content %}

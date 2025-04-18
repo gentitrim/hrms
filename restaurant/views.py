@@ -1,29 +1,52 @@
-from django.views.generic import TemplateView,ListView # type: ignore
-from .models import Order,Order_item # type: ignore
-from branch_management.models import BranchStaff,Product,Category
-from django.shortcuts import get_object_or_404 # type: ignore
-from django.urls import reverse_lazy # type: ignore
-from django.http import JsonResponse,HttpResponse # type: ignore
+from django.views.generic import TemplateView, ListView
+from .models import Order, Order_item
+from branch_management.models import BranchStaff, Product, Category
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.http import JsonResponse, HttpResponse
 import json
 import logging
-from django.contrib.auth.decorators import login_required # type: ignore
-from django.contrib.auth.mixins import LoginRequiredMixin# type: ignore
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
+from datetime import datetime
 
 
 logger = logging.getLogger(__name__)
 
-
-
-class CategoryListView(LoginRequiredMixin,ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
     template_name = 'restaurant/employees_dashboard/orders.html'
     model = Category
     context_object_name = "categories"
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
-    
+
     def get_queryset(self):
-            user_branch = self.request.user.branchstaff.branch
-            return Category.objects.filter(branch=user_branch)
+        user_branch = self.request.user.branchstaff.branch
+        return Category.objects.filter(branch=user_branch)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_branch = self.request.user.branchstaff.branch
+        
+        orders = Order.objects.filter(staff_id__branch=user_branch)
+
+        
+        date_str = self.request.GET.get('date', None)
+        try:
+            if date_str:
+                selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                orders = orders.filter(order_time__date=selected_date)
+            else:
+                
+                orders = orders.filter(order_time__date=timezone.now().date())
+        except ValueError:
+            
+            orders = orders.filter(order_time__date=timezone.now().date())
+
+        context['orders'] = orders
+        context['selected_date'] = date_str or timezone.now().date().strftime('%Y-%m-%d')
+        return context
 
 class DashboardView(LoginRequiredMixin,TemplateView):
     template_name = 'restaurant/employees_dashboard/dashboard.html'
@@ -41,7 +64,19 @@ class CancelOrderView(LoginRequiredMixin, TemplateView):
             order = Order.objects.get(pk=self.kwargs['pk'])
             order.status = 'CANCELED'
             order.save()
-            return HttpResponse('Order canceled successfully', status=200)
+            
+            user_branch = self.request.user.branchstaff.branch
+            orders = Order.objects.filter(staff_id__branch=user_branch)
+            date_str = self.request.GET.get('date', None)
+            try:
+                if date_str:
+                    selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+                    orders = orders.filter(order_time__date=selected_date)
+                else:
+                    orders = orders.filter(order_time__date=timezone.now().date())
+            except ValueError:
+                orders = orders.filter(order_time__date=timezone.now().date())
+            return render(request, 'restaurant/employees_dashboard/orders_table.html', {'orders': orders})
         except Order.DoesNotExist:
             return HttpResponse('Order not found', status=404)
         except Exception as e:
@@ -51,7 +86,6 @@ class CancelOrderView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['order'] = Order.objects.get(pk=self.kwargs['pk'])
         return context
-
 
 class ShiftsView(LoginRequiredMixin,TemplateView):
     template_name = 'restaurant/employees_dashboard/shifts.html'
