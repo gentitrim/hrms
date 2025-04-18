@@ -53,6 +53,7 @@ class ProductListView(ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
+    paginate_by = 10
 
     def get_queryset(self):
         user_branch = self.request.user.branchstaff.branch
@@ -124,14 +125,16 @@ class EmployeeCreateView(CreateView):
 
 class EmployeeListView(ListView):
     model = BranchStaff
-    template_name = 'branch_management/employee_list.html'  # Updated template name
+    template_name = 'branch_management/employee_list.html'
     context_object_name = 'employees'
+    paginate_by = 10
 
     def get_queryset(self):
         branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
         if branch:
             return BranchStaff.objects.filter(branch=branch).exclude(user=self.request.user)
         return BranchStaff.objects.none()
+
 
 
 class UpdateEmployeeView(UpdateView):
@@ -224,10 +227,11 @@ class CategoryListView(ListView):
     model = Category
     template_name = 'branch_management/category_list.html'
     context_object_name = 'categories'
+    paginate_by = 10
 
     def get_queryset(self):
-            user_branch = self.request.user.branchstaff.branch
-            return Category.objects.filter(branch=user_branch) 
+        user_branch = self.request.user.branchstaff.branch
+        return Category.objects.filter(branch=user_branch) 
 
 
 class CategoryCreateView(CreateView):
