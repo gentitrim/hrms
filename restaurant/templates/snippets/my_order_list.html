@@ -1,131 +1,138 @@
 {% load static %}
 
+<!-- Card Container for Total and Date Filter -->
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <div class="d-flex align-items-center justify-content-between">
+      <h5 class="mb-0 fw-bold">Total: {{ total_amount }} €</h5>
+      <form class="d-flex align-items-center gap-2">
+        <label for="date-search" class="form-label mb-0">Filter by Date:</label>
+        <input
+          type="date"
+          class="form-control form-control-sm w-auto"
+          id="date-search"
+          name="search_date"
+          aria-describedby="date-search-help"
+          hx-get="{% url 'search_order_by_date' %}"
+          hx-trigger="change delay:500ms"
+          hx-target="#dash_result"
+        />
+        <small id="date-search-help" class="form-text text-muted visually-hidden">Select a date to filter orders.</small>
+      </form>
+    </div>
+  </div>
+</div>
 
-<li class="list-group-item">
-  <ul class="list-group list-group-horizontal"  style="width: 100%;">
-      <li class="list-group-item border border-0"  style="width: 100%;">Total</li>
-      <li class="list-group-item border border-0"  style="width: 100%;">{{ total_amount }} €</li>
-      <li class="list-group-item border border-0" style="width: 100%;">
-        <p>Select orders Date: 
-          <input type="date"
-        hx-get="{% url 'search_order_by_date' %}"
-        hx-trigger="change delay:500ms"
-        hx-target="#dash_result"
-        id="date-search" 
-        name="search_date"
-          />
-        </p>
-      </li>
-  </ul>
-</li>
-<li class="list-group-item" >
-<ul class="list-group list-group-horizontal"  style="width: 100%;">
-  <li class="list-group-item border border-0"  style="width: 100%;">Order Id</li>
-  <li class="list-group-item border border-0"  style="width: 100%;">Order Time</li>
-  <li class="list-group-item border border-0"  style="width: 100%;">Order Price</li>
-  <li class="list-group-item border border-0"  style="width: 100%;">Order Status</li>
-  <li class="list-group-item border border-0"  style="width: 100%;">Cancel Order</li>
-  <li class="list-group-item border border-0"  style="width: 100%;">Order Detail</li>
-  </ul>
-  </li>
+<!-- Card Container for Orders Table -->
+<div class="card shadow-sm">
+  <!-- Table Header -->
+  <div class="card-header bg-primary text-white">
+    <div class="row g-0 text-center">
+      <div class="col-2 fw-bold">Order ID</div>
+      <div class="col-2 fw-bold">Order Time</div>
+      <div class="col-2 fw-bold">Order Price</div>
+      <div class="col-2 fw-bold">Status</div>
+      <div class="col-2 fw-bold">Cancel</div>
+      <div class="col-2 fw-bold">Details</div>
+    </div>
+  </div>
 
+  <!-- Table Body -->
+  <div class="card-body" id="dash_result">
     {% for order in orders %}
-        
-            <li class="list-group-item" >
-                
-                <ul class="list-group list-group-horizontal"  style="width: 100%;">
-                    <li class="list-group-item border border-0"  style="width: 100%;">{{ order.id }}</li>
-                    <li class="list-group-item border border-0"  style="width: 100%;">{{ order.order_time|date:"d/m/Y" }}-{{ order.order_time|time:"H:i" }}</li>
-                    <li class="list-group-item border border-0"  style="width: 100%;">{{ order.get_price_as_float }} €</li>
-                    <li class="list-group-item border border-0"  style="width: 100%;">{{ order.status }} </li>
-                    {% if order.status == "CANCELED" %}
-                    <li class="list-group-item border border-0"  style="width: 100%;"><button type="button" class="btn btn-outline-danger disabled" style="display:none">Cancel</button></li>
-                    {% else %}
-                    <li class="list-group-item border border-0"  style="width: 100%;"> 
-                        <button type="submit" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal_{{order.id}}" >Cancel</button>
+    <div class="row g-0 border-bottom py-2 text-center">
+      <div class="col-2">{{ order.id }}</div>
+      <div class="col-2">{{ order.order_time|date:"d/m/Y" }} - {{ order.order_time|time:"H:i" }}</div>
+      <div class="col-2">{{ order.get_price_as_float }} €</div>
+      <div class="col-2">{{ order.status }}</div>
+      <div class="col-2">
+        {% if order.status == "CANCELED" %}
+        <button type="button" class="btn btn-outline-secondary btn-sm disabled" disabled>Canceled</button>
+        {% else %}
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          data-bs-toggle="modal"
+          data-bs-target="#cancelOrderModal_{{ order.id }}"
+          aria-label="Cancel order {{ order.id }}"
+        >
+          Cancel
+        </button>
+        {% endif %}
+      </div>
+      <div class="col-2">
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm"
+          data-bs-toggle="modal"
+          data-bs-target="#orderDetailsModal_{{ order.id }}"
+          hx-get="{% url 'my_order_detail' order.id %}"
+          hx-target="#order_details_modal_body_{{ order.id }}"
+          hx-swap="innerHTML"
+          aria-label="View details for order {{ order.id }}"
+        >
+          View Details
+        </button>
+      </div>
+    </div>
 
-                        <div class="modal fade" id="cancelOrderModal_{{order.id}}" tabindex="-1" aria-labelledby="cancelOrderModal_{{order.id}}" aria-hidden="true">
-                            <div class="modal-dialog">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h1 class="modal-title fs-5" id="cancelOrderModal_{{order.id}}_Label">Order Cancelation</h1>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body" id="cancelOrderModalBody">
-                                  Are you sure you want to cancel this order?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                                    >Close</button>
-
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                                    hx-post="{% url 'cancel_order' order.id %}"
-                                    hx-target="#dash_result"
-                                    hx-swap="innerHtml"
-                                    hx-on="htmx:afterRequest: document.getElementById('dash_result').innerHTML = this.responseText"
-                                    >Confirm</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-
-                    </li>
-                        {% endif %}
-                    <li class="list-group-item border border-0" 
-                    style="width: 100%;">
-
-                    <button type="button" 
-                    class="btn btn-outline-secondary"
-                    data-bs-toggle="modal" data-bs-target="#order_details_modal_{{ order.id }}"
-                    hx-get="{% url 'my_order_detail' order.id %}"
-                    hx-target="#order_details_modal_body_{{ order.id }}"
-                    hx-swap="innerHtml"
-                    >View Details</button></li>
-                    
-                    <div class="modal fade" id="order_details_modal_{{ order.id }}" tabindex="-1" aria-labelledby="order_details_modal_{{ order.id }}" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Order {{ order.id }}</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body" id="order_details_modal_body_{{ order.id }}">
-                            
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    
-                 </ul>
-            </li>
-           
-    {%empty%}
-
-            <li class="list-group-item">No Orders </li>
-
-    {% endfor %}
-
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="cancelOrderModal" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Order Cancellation</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              Are you sure you want to cancel this order?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Confirm</button>
-            </div>
+    <!-- Cancel Order Modal -->
+    <div
+      class="modal fade"
+      id="cancelOrderModal_{{ order.id }}"
+      tabindex="-1"
+      aria-labelledby="cancelOrderModalLabel_{{ order.id }}"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancelOrderModalLabel_{{ order.id }}">Cancel Order {{ order.id }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">Are you sure you want to cancel this order?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              data-bs-dismiss="modal"
+              hx-post="{% url 'cancel_order' order.id %}"
+              hx-target="#dash_result"
+              hx-swap="innerHTML"
+              aria-label="Confirm cancellation"
+            >
+              Confirm
+            </button>
           </div>
         </div>
       </div>
-      
+    </div>
+
+    <!-- Order Details Modal -->
+    <div
+      class="modal fade"
+      id="orderDetailsModal_{{ order.id }}"
+      tabindex="-1"
+      aria-labelledby="orderDetailsModalLabel_{{ order.id }}"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="orderDetailsModalLabel_{{ order.id }}">Order {{ order.id }} Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="order_details_modal_body_{{ order.id }}"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% empty %}
+    <div class="text-center text-muted py-4">No orders found.</div>
+    {% endfor %}
+  </div>
+</div>

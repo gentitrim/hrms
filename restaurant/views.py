@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, ListView
 from .models import Order, Order_item
 from branch_management.models import BranchStaff, Product, Category
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
 import json
@@ -76,7 +76,7 @@ class CancelOrderView(LoginRequiredMixin, TemplateView):
                     orders = orders.filter(order_time__date=timezone.now().date())
             except ValueError:
                 orders = orders.filter(order_time__date=timezone.now().date())
-            return render(request, 'restaurant/employees_dashboard/orders_table.html', {'orders': orders})
+            return render(request, 'snippets/my_order_list.html', {'orders': orders})
         except Order.DoesNotExist:
             return HttpResponse('Order not found', status=404)
         except Exception as e:
