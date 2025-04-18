@@ -13,7 +13,7 @@
                         {% for category in categories%}
                         <button type="button" class="list-group-item list-group-item-action"
                             value="{{category.name}}" id="{{category.name}}"
-                            hx-get="{% url 'get_products' category.id %}"
+                            hx-get="{% url 'api_restaurant:get_products' category.id %}"
                             hx-target="#productResult"
                             hx-triger="click"
                             hx-swap="innerHtml">{{category.name}}

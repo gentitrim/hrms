@@ -3,7 +3,7 @@
 {% block content %}
 <form class="d-flex mb-3 me-5 justify-content-end" role="search">
     <input class="form-control me-2" style="width: 200px;" type="search" placeholder="Search" aria-label="Search"
-        hx-get="{% url 'search_branch' %}"
+        hx-get="{% url 'main_management:search_branch' %}"
        hx-trigger="submit"
        hx-target="#main-dashboard-result"
     >
@@ -63,7 +63,7 @@
             {% endif %}
         </ul>
     </nav>
-    <button class="btn btn-outline-secondary mb-5 me-3" onclick = "window.open('{% url 'new_branch' %}','_self')">Create new branch</button>
+    <button class="btn btn-outline-secondary mb-5 me-3" onclick = "window.open('{% url 'main_management:new_branch' %}','_self')">Create new branch</button>
 
 </div>
 {% endblock %}

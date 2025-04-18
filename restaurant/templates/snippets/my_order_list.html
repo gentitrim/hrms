@@ -8,7 +8,7 @@
       <li class="list-group-item border border-0" style="width: 100%;">
         <p>Select orders Date: 
           <input type="date"
-        hx-get="{% url 'search_order_by_date' %}"
+        hx-get="{% url 'api_restaurant:search_order_by_date' %}"
         hx-trigger="change delay:500ms"
         hx-target="#dash_result"
         id="date-search" 
@@ -59,7 +59,7 @@
                                     >Close</button>
 
                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                                    hx-post="{% url 'cancel_order' order.id %}"
+                                    hx-post="{% url 'restaurant:cancel_order' order.id %}"
                                     hx-target="#dash_result"
                                     hx-swap="innerHtml"
                                     hx-on="htmx:afterRequest: document.getElementById('dash_result').innerHTML = this.responseText"
@@ -78,7 +78,7 @@
                     <button type="button" 
                     class="btn btn-outline-secondary"
                     data-bs-toggle="modal" data-bs-target="#order_details_modal_{{ order.id }}"
-                    hx-get="{% url 'my_order_detail' order.id %}"
+                    hx-get="{% url 'api_restaurant:my_order_detail' order.id %}"
                     hx-target="#order_details_modal_body_{{ order.id }}"
                     hx-swap="innerHtml"
                     >View Details</button></li>

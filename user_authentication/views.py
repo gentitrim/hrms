@@ -6,8 +6,23 @@ from django.views.generic import CreateView,View,UpdateView,ListView,DeleteView
 from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
+def redirect_by_role(request):
+    user = request.user
+    role = user.branchstaff.role
+
+    if role == 'admin':
+        return redirect('main_management:management_dashboard')  # ✅ includes app namespace
+
+    elif role == 'manager':
+        return redirect('branch_management:manager-dashboard')
+    elif role == 'staff':
+        return redirect('restaurant:order_menu')
+    else:
+        return redirect('/')
 
 class UserRegistrationView(CreateView):
     form_class = CustomUserRegisterForm

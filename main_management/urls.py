@@ -2,6 +2,7 @@ from django.urls import path
 from main_management import views
 # from user_authentication.views import LogoutView,CustomUserLoginView
 
+app_name = 'main_management'
 
 urlpatterns = [
     path('',views.MainPage.as_view(),name='management_dashboard'),

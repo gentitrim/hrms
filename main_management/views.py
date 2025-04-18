@@ -17,8 +17,7 @@ from django.contrib import messages
 
 
 class MainPage(TemplateView):
-    def get(self, request):
-        return render(request,'management/main.html')
+    template_name = 'management/main.html'
     
 class BranchListView(ListView):
     paginate_by = 3
@@ -29,7 +28,7 @@ class BranchListView(ListView):
 
 class CreateBranchView(FormView):
     template_name = 'management/create_branch.html'
-    success_url = reverse_lazy('management_dashboard')
+    success_url = reverse_lazy('main_management:management_dashboard')
     form_class = BranchForm
     def form_valid(self, form):
         cleaned_data = form.cleaned_data
@@ -61,7 +60,7 @@ class SearchBranchView(ListView):
     
 class EditBranchView(FormView):
     template_name = 'management/edit_branch.html'
-    success_url = 'management/branches'
+    success_url = 'main_management:branch'
     form_class = BranchForm
     
     def form_valid(self, form):
@@ -69,7 +68,7 @@ class EditBranchView(FormView):
     
 class DeleteBranchView(DeleteView):
     template_name = 'management/delete_branch.html'
-    success_url = 'management/branches'
+    success_url = 'main_management:branch'
 
 class ManagerManagementView(TemplateView):
     def get(self,request):
@@ -90,7 +89,7 @@ class ManagerListView(ListView):
 
 class CreateManagerView(View):
     template_name = 'management/create_manager.html'
-    success_url = reverse_lazy('manager_list')
+    success_url = reverse_lazy('main_management:manager_list')
  
     def get(self, request):
         managerform = ManagerForm()
@@ -124,7 +123,7 @@ class CreateManagerView(View):
 
 class ManagerUpdateView(View):
     template_name = 'management/manager_edit.html'
-    success_url = reverse_lazy('manager_list')
+    success_url = reverse_lazy('main_management:manager_list')
 
     def get(self, request, pk):
         manager = get_object_or_404(BranchStaff, pk=pk)
@@ -158,7 +157,7 @@ class ManagerUpdateView(View):
 
 class ManagerDeleteView(View):
     template_name = 'management/manager_delete.html'
-    success_url = reverse_lazy('manager_list')
+    success_url = reverse_lazy('main_management:manager_list')
 
     def get(self, request, pk):
         manager = get_object_or_404(BranchStaff, pk=pk)

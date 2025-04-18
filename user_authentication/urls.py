@@ -4,7 +4,10 @@ from user_authentication.views import (UserRegistrationView,
                                        ConfirmLogoutView,
                                        UserUpdateView,
                                        UserListView,
-                                       UserDeleteView)
+                                       UserDeleteView,
+                                       redirect_by_role)
+
+
 
 
 urlpatterns = [
@@ -14,6 +17,7 @@ urlpatterns = [
     path('user/<int:pk>/delete/', UserDeleteView.as_view(), name = 'delete-user'),
     path('', CustomUserLoginView.as_view(), name = 'login'),
     path('logout/', ConfirmLogoutView.as_view(), name='logout'),
+    path('redirect-by-role/', redirect_by_role, name='redirect_by_role'),
     
     
 ]

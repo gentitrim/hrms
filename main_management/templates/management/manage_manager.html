@@ -31,13 +31,13 @@
                     <td>{{ manager.branch.name }}</td>
                     <td>
                         <button class="btn btn-info btn-sm"
-                                hx-get="{% url 'manager_detail' manager.pk %}"
+                                hx-get="{% url 'main_management:manager_detail' manager.pk %}"
                                 hx-target="#manager-detail-container"
                                 hx-swap="innerHTML">
                             View
                         </button>
-                        <a href="{% url 'edit_manager' manager.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="{% url 'delete_manager' manager.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{% url 'main_management:edit_manager' manager.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'main_management:delete_manager' manager.pk %}" class="btn btn-danger btn-sm">Delete</a>
                         
                     </td>
                 </tr>
@@ -50,7 +50,7 @@
     </table>
 
     <div class="d-flex justify-content-end mb-3">
-        <a href="{% url 'create_manager' %}" class="btn btn-primary">Add Manager</a>
+        <a href="{% url 'main_management:create_manager' %}" class="btn btn-primary">Add Manager</a>
     </div>
 
     <!-- Pagination -->
