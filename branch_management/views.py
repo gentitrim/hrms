@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin,TemplateView):
     template_name = 'manager_dashboard.html'
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
@@ -18,7 +18,7 @@ class DashboardView(TemplateView):
 
 # Product Views
 
-class CreateProductView(CreateView):
+class CreateProductView(LoginRequiredMixin,CreateView):
     model = Product
     template_name = 'create_product.html'
     form_class = ProductCreateForm
@@ -49,7 +49,7 @@ class CreateProductView(CreateView):
         })
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin,ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
@@ -59,7 +59,7 @@ class ProductListView(ListView):
         return Product.objects.filter(branch=user_branch)   
     
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin,UpdateView):
     model = Product
     form_class = ProductCreateForm
     template_name = 'update_product.html'
@@ -72,7 +72,7 @@ class ProductUpdateView(UpdateView):
         return Product.objects.filter(branch=user_branch) 
     
 
-class ProductDeleteView(DeleteView): 
+class ProductDeleteView(LoginRequiredMixin,DeleteView): 
      
     model = Product
     template_name = 'product_confirm_delete.html'
@@ -86,7 +86,7 @@ class ProductDeleteView(DeleteView):
 
 # Employee Views
 
-class EmployeeCreateView(CreateView):
+class EmployeeCreateView(LoginRequiredMixin,CreateView):
     template_name = 'branch_management/create_employee.html'
     success_url = reverse_lazy('branch_management:employee-list')
     def get(self, request, *args, **kwargs):
@@ -121,7 +121,7 @@ class EmployeeCreateView(CreateView):
         })
 
 
-class EmployeeListView(ListView):
+class EmployeeListView(LoginRequiredMixin,ListView):
     model = BranchStaff
     template_name = 'branch_management/employee_list.html'  # Updated template name
     context_object_name = 'employees'
@@ -133,7 +133,7 @@ class EmployeeListView(ListView):
         return BranchStaff.objects.none()
 
 
-class UpdateEmployeeView(UpdateView):
+class UpdateEmployeeView(LoginRequiredMixin,UpdateView):
     model = BranchStaff
     form_class = CreateBranchStaff
     template_name = 'branch_management/update_employee.html'
@@ -151,7 +151,7 @@ class UpdateEmployeeView(UpdateView):
         return reverse_lazy('branch_management:employee-list')
     
 
-class DeleteEmployeeView(DeleteView):
+class DeleteEmployeeView(LoginRequiredMixin,DeleteView):
     model = CustomUser
     template_name = 'branch_management/delete_employee.html'
     context_object_name = 'employee'
@@ -169,7 +169,7 @@ class DeleteEmployeeView(DeleteView):
         return response
 
 
-class DetailEmployeeView(TemplateView):
+class DetailEmployeeView(LoginRequiredMixin,TemplateView):
     template_name = 'branch_management/detail_employee.html'
 
     def get_context_data(self, **kwargs):
@@ -182,7 +182,7 @@ class DetailEmployeeView(TemplateView):
 
 #Category Views
 
-class CategoryListView(ListView):
+class CategoryListView(LoginRequiredMixin,ListView):
     model = Category
     template_name = 'branch_management/category_list.html'
     context_object_name = 'categories'
@@ -192,7 +192,7 @@ class CategoryListView(ListView):
             return Category.objects.filter(branch=user_branch) 
 
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(LoginRequiredMixin,CreateView):
     template_name = 'branch_management/category_form.html'
     success_url = reverse_lazy('branch_management:category-list')
 
@@ -219,7 +219,7 @@ class CategoryCreateView(CreateView):
         })
 
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(LoginRequiredMixin,UpdateView):
     model = Category
     form_class = CategoryCreateForm
     template_name = 'branch_management/category_update.html'
@@ -235,7 +235,7 @@ class CategoryUpdateView(UpdateView):
         return reverse_lazy('branch_management:category-list')
 
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(LoginRequiredMixin,DeleteView):
     model = Category
     template_name = 'branch_management/category_confirm_delete.html'
     success_url = reverse_lazy('branch_management:category-list')
