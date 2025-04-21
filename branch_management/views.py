@@ -7,9 +7,11 @@ from django.contrib import messages
 from user_authentication.forms import CustomUserRegisterForm
 from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from hrms.rolemixin import RoleAccessMixin
 
 
-class DashboardView(LoginRequiredMixin,TemplateView):
+class DashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
+    allowed_roles = ['manager']
     template_name = 'manager_dashboard.html'
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
@@ -18,7 +20,8 @@ class DashboardView(LoginRequiredMixin,TemplateView):
 
 # Product Views
 
-class CreateProductView(LoginRequiredMixin,CreateView):
+class CreateProductView(LoginRequiredMixin,RoleAccessMixin,CreateView):
+    allowed_roles = ['manager']
     model = Product
     template_name = 'create_product.html'
     form_class = ProductCreateForm
@@ -49,7 +52,8 @@ class CreateProductView(LoginRequiredMixin,CreateView):
         })
 
 
-class ProductListView(LoginRequiredMixin,ListView):
+class ProductListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['manager']
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
@@ -59,7 +63,8 @@ class ProductListView(LoginRequiredMixin,ListView):
         return Product.objects.filter(branch=user_branch)   
     
 
-class ProductUpdateView(LoginRequiredMixin,UpdateView):
+class ProductUpdateView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
+    allowed_roles = ['manager']
     model = Product
     form_class = ProductCreateForm
     template_name = 'update_product.html'
@@ -72,8 +77,8 @@ class ProductUpdateView(LoginRequiredMixin,UpdateView):
         return Product.objects.filter(branch=user_branch) 
     
 
-class ProductDeleteView(LoginRequiredMixin,DeleteView): 
-     
+class ProductDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView): 
+    allowed_roles = ['manager']
     model = Product
     template_name = 'product_confirm_delete.html'
     success_url = reverse_lazy('branch_management:product-list')
@@ -86,7 +91,8 @@ class ProductDeleteView(LoginRequiredMixin,DeleteView):
 
 # Employee Views
 
-class EmployeeCreateView(LoginRequiredMixin,CreateView):
+class EmployeeCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
+    allowed_roles = ['manager']
     template_name = 'branch_management/create_employee.html'
     success_url = reverse_lazy('branch_management:employee-list')
     
@@ -122,7 +128,8 @@ class EmployeeCreateView(LoginRequiredMixin,CreateView):
         })   
 
 
-class EmployeeListView(LoginRequiredMixin,ListView):
+class EmployeeListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['manager']
     model = BranchStaff
     template_name = 'branch_management/employee_list.html'  # Updated template name
     context_object_name = 'employees'
@@ -134,7 +141,8 @@ class EmployeeListView(LoginRequiredMixin,ListView):
         return BranchStaff.objects.none()
 
 
-class UpdateEmployeeView(LoginRequiredMixin,UpdateView):
+class UpdateEmployeeView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
+    allowed_roles = ['manager']
     model = BranchStaff
     form_class = CreateBranchStaff
     template_name = 'branch_management/update_employee.html'
@@ -168,7 +176,8 @@ class UpdateEmployeeView(LoginRequiredMixin,UpdateView):
         return reverse_lazy('branch_management:employee-list')
     
 
-class EmployeeResetPasswordView(View):
+class EmployeeResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['manager']
     template_name = 'branch_management/reset_employee_password.html'
 
     def get(self, request, pk):
@@ -189,7 +198,8 @@ class EmployeeResetPasswordView(View):
         return render(request, self.template_name, {'form': form, 'user': user})
     
 
-class DeleteEmployeeView(DeleteView):
+class DeleteEmployeeView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
+    allowed_roles = ['manager']
     model = CustomUser
     template_name = 'branch_management/delete_employee.html'
     context_object_name = 'employee'
@@ -207,7 +217,8 @@ class DeleteEmployeeView(DeleteView):
         return response
 
 
-class DetailEmployeeView(LoginRequiredMixin,TemplateView):
+class DetailEmployeeView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
+    allowed_roles = ['manager']
     template_name = 'branch_management/detail_employee.html'
 
     def get_context_data(self, **kwargs):
@@ -220,7 +231,8 @@ class DetailEmployeeView(LoginRequiredMixin,TemplateView):
 
 #Category Views
 
-class CategoryListView(LoginRequiredMixin,ListView):
+class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['manager']
     model = Category
     template_name = 'branch_management/category_list.html'
     context_object_name = 'categories'
@@ -230,7 +242,8 @@ class CategoryListView(LoginRequiredMixin,ListView):
             return Category.objects.filter(branch=user_branch) 
 
 
-class CategoryCreateView(LoginRequiredMixin,CreateView):
+class CategoryCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
+    allowed_roles = ['manager']
     template_name = 'branch_management/category_form.html'
     success_url = reverse_lazy('branch_management:category-list')
 
@@ -257,7 +270,8 @@ class CategoryCreateView(LoginRequiredMixin,CreateView):
         })
 
 
-class CategoryUpdateView(LoginRequiredMixin,UpdateView):
+class CategoryUpdateView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
+    allowed_roles = ['manager']
     model = Category
     form_class = CategoryCreateForm
     template_name = 'branch_management/category_update.html'
@@ -273,7 +287,8 @@ class CategoryUpdateView(LoginRequiredMixin,UpdateView):
         return reverse_lazy('branch_management:category-list')
 
 
-class CategoryDeleteView(LoginRequiredMixin,DeleteView):
+class CategoryDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
+    allowed_roles = ['manager']
     model = Category
     template_name = 'branch_management/category_confirm_delete.html'
     success_url = reverse_lazy('branch_management:category-list')

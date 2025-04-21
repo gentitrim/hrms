@@ -8,13 +8,15 @@ import json
 import logging
 from django.contrib.auth.decorators import login_required # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin# type: ignore
+from hrms.rolemixin import RoleAccessMixin
 
 
 logger = logging.getLogger(__name__)
 
 
 
-class CategoryListView(LoginRequiredMixin,ListView):
+class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['staff']
     template_name = 'restaurant/employees_dashboard/orders.html'
     model = Category
     context_object_name = "categories"
@@ -25,13 +27,15 @@ class CategoryListView(LoginRequiredMixin,ListView):
             user_branch = self.request.user.branchstaff.branch
             return Category.objects.filter(branch=user_branch)
 
-class DashboardView(LoginRequiredMixin,TemplateView):
+class DashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
+    allowed_roles = ['staff']
     template_name = 'restaurant/employees_dashboard/dashboard.html'
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
 
 
-class CancelOrderView(LoginRequiredMixin, TemplateView):
+class CancelOrderView(LoginRequiredMixin,RoleAccessMixin, TemplateView):
+    allowed_roles = ['staff']
     template_name = 'restaurant/employees_dashboard/cancel_order.html'
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
@@ -53,7 +57,8 @@ class CancelOrderView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ShiftsView(LoginRequiredMixin,TemplateView):
+class ShiftsView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
+    allowed_roles = ['staff']
     template_name = 'restaurant/employees_dashboard/shifts.html'
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
@@ -61,6 +66,8 @@ class ShiftsView(LoginRequiredMixin,TemplateView):
 
 @login_required
 def confirm_order(request):
+    if request.user.branchstaff.role != 'staff':
+        return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
     try:
         raw_body = request.body.decode('utf-8')
         logger.debug(f"Raw request body: {raw_body}")

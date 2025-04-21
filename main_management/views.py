@@ -13,20 +13,27 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from hrms.rolemixin import RoleAccessMixin
 # Create your views here.
 
 
-class MainPage(TemplateView):
+class MainPage(LoginRequiredMixin,RoleAccessMixin,TemplateView):
+    allowed_roles = ['admin']
     template_name = 'management/main.html'
     
-class BranchListView(ListView):
+    
+class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['admin']
     paginate_by = 3
     model = Branch
     template_name = 'management/branches_list.html'
     ordering = ['name']
     # context_object_name = 'branches'
 
-class CreateBranchView(FormView):
+
+class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
+    allowed_roles = ['admin']
     template_name = 'management/create_branch.html'
     success_url = reverse_lazy('main_management:management_dashboard')
     form_class = BranchForm
@@ -46,7 +53,8 @@ class CreateBranchView(FormView):
         return super().form_invalid(form)
     
 
-class SearchBranchView(ListView):
+class SearchBranchView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['admin']
     template_name = 'management/branches_list.html'
     paginate_by = 3
     model = Branch
@@ -58,7 +66,9 @@ class SearchBranchView(ListView):
             return Branch.objects.filter(Q(name__icontains=search)).order_by('name')
         return Branch.objects.all().order_by('name')
     
-class EditBranchView(FormView):
+
+class EditBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
+    allowed_roles = ['admin']
     template_name = 'management/edit_branch.html'
     success_url = 'main_management:branch'
     form_class = BranchForm
@@ -66,17 +76,19 @@ class EditBranchView(FormView):
     def form_valid(self, form):
         return super().form_valid(form)
     
-class DeleteBranchView(DeleteView):
+class DeleteBranchView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
+    allowed_roles = ['admin']
     template_name = 'management/delete_branch.html'
     success_url = 'main_management:branch'
 
-class ManagerManagementView(TemplateView):
+class ManagerManagementView(LoginRequiredMixin,TemplateView):
     def get(self,request):
         return render(request,'management/manage_manager.html')
 
 
 
-class ManagerListView(ListView):
+class ManagerListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['admin']
     model = BranchStaff
 
     template_name = 'management/manage_manager.html'
@@ -87,7 +99,8 @@ class ManagerListView(ListView):
         return BranchStaff.objects.filter(role = 'manager')
     
 
-class CreateManagerView(View):
+class CreateManagerView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['admin']
     template_name = 'management/create_manager.html'
     success_url = reverse_lazy('main_management:manager_list')
  
@@ -121,7 +134,8 @@ class CreateManagerView(View):
     'user_errors': userform.errors})
     
 
-class ManagerUpdateView(View):
+class ManagerUpdateView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['admin']
     template_name = 'management/manager_edit.html'
     success_url = reverse_lazy('main_management:manager_list')
 
@@ -154,8 +168,8 @@ class ManagerUpdateView(View):
                                                     })
 
 
-
-class ManagerDeleteView(View):
+class ManagerDeleteView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['admin']
     template_name = 'management/manager_delete.html'
     success_url = reverse_lazy('main_management:manager_list')
 
@@ -173,12 +187,8 @@ class ManagerDeleteView(View):
         return redirect(self.success_url)
     
 
-    
-
-
-    
-
-class ManagerDetailView(DetailView):
+class ManagerDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
+    allowed_roles = ['admin']
     model = BranchStaff
     template_name = 'management/manager_detail.html'
     context_object_name = 'manager'

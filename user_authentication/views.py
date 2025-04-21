@@ -7,6 +7,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 @login_required
@@ -24,25 +25,25 @@ def redirect_by_role(request):
     else:
         return redirect('/')
 
-class UserRegistrationView(CreateView):
+class UserRegistrationView(LoginRequiredMixin,CreateView):
     form_class = CustomUserRegisterForm
     model = CustomUser
     template_name = 'user_registration.html'
     success_url = reverse_lazy('login')
 
-class UserListView(ListView):
+class UserListView(LoginRequiredMixin,ListView):
     model = CustomUser
     template_name = ("users_list.html") 
     context_object_name = ('users')
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin,UpdateView):
     form_class = CustomUserRegisterForm
     model = CustomUser
     template_name = 'user_registration.html'
     success_url = reverse_lazy('users')
 
 
-class UserDeleteView(DeleteView):
+class UserDeleteView(LoginRequiredMixin,DeleteView):
     template_name = 'user_delete.html'
     model = CustomUser
     success_url = reverse_lazy('users')
@@ -57,7 +58,7 @@ class CustomUserLoginView(LoginView):
 
 
 
-class ConfirmLogoutView(LogoutView):
+class ConfirmLogoutView(LoginRequiredMixin,LogoutView):
     def dispatch(self, request, *args, **kwargs):
         logout(request)
         return redirect('login')
