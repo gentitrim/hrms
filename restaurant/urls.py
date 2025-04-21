@@ -3,6 +3,8 @@ from . import views
 # from user_authentication.views import LogoutView,CustomUserLoginView
 
 
+app_name = 'restaurant'
+
 urlpatterns = [
     # path('',views.IndexPage.as_view(),name="restaurant"),
     path('dashboard/',views.DashboardView.as_view(),name='dashboard'),

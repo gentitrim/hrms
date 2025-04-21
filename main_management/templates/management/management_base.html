@@ -22,10 +22,10 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'management_dashboard' %}">Dashboard</a>
+                            <a class="nav-link" href="{% url 'main_management:management_dashboard' %}">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'shifts' %}">Reports</a>
+                            <a class="nav-link" href="#">Reports</a>
                         </li>
                 </ul>
 
@@ -46,13 +46,13 @@
         <div class="row" style="height:100%;">
             <div class="col bg-body-tertiary d-flex flex-column">
                 <button class="btn btn-secondary mt-3" style="width: 200px;"
-                        hx-get="{% url 'branch' %}" 
+                        hx-get="{% url 'main_management:branch' %}" 
                         hx-target="#main-dashboard-result" 
                         hx-swap="innerHTML">
                     Manage Branch
                 </button>
 
-                <a href="{% url 'manager_list' %}" class="btn btn-secondary mt-3" style="width: 200px;">
+                <a href="{% url 'main_management:manager_list' %}" class="btn btn-secondary mt-3" style="width: 200px;">
                     Manage Managers
                 </a>
                

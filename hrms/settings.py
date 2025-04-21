@@ -143,6 +143,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user_authentication.CustomUser"
 
 
-LOGIN_REDIRECT_URL = 'restaurant/order_menu/'
+LOGIN_REDIRECT_URL = 'redirect_by_role'  # ✅ underscores, matches the name in urlpatterns
 
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
+
+
+#for auto logout after 15 minutes of inactivity
+
+SESSION_COOKIE_AGE = 900  
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = True 

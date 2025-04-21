@@ -20,13 +20,13 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'order_menu' %}">Make Orders</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'restaurant:order_menu' %}">Make Orders</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                <a class="nav-link" href="{% url 'restaurant:dashboard' %}">Dashboard</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'shifts'%}">Shifts</a>
+                <a class="nav-link" href="{% url 'restaurant:shifts'%}">Shifts</a>
               </li>
               {% endif %}
             </ul>
