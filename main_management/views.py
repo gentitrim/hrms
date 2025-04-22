@@ -15,12 +15,16 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from hrms.rolemixin import RoleAccessMixin
+from restaurant.models import Order
+from django.db.models import Sum
 # Create your views here.
 
 
 class MainPage(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     allowed_roles = ['admin']
     template_name = 'management/main.html'
+
+    
     
     
 class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):

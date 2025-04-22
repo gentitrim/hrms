@@ -13,7 +13,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container">
-            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href="#">Restaurant POS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -22,13 +22,18 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'main_management:management_dashboard' %}">Dashboard</a>
+                            <a class="nav-link" href="{% url 'main_management:management_dashboard' %}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Reports</a>
+                            <a class="nav-link" href="{% url 'main_management:branch' %}">Branches</a>
                         </li>
-                </ul>
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'main_management:manager_list' %}">Managers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="">Reports</a>
+                        </li>
+                    </ul>
 
                     <div class="d-flex align-items-center">
                         <p class="fs-6 me-5 mb-0">Welcome, {{ user.username }}</p>
@@ -41,38 +46,73 @@
         </div>
     </nav>
 
-    <!-- SIDEBAR + MAIN -->
-    <div class="container-fluid ms-3 mt-3" style="height: 100vh;">
-        <div class="row" style="height:100%;">
-            <div class="col bg-body-tertiary d-flex flex-column">
-                <button class="btn btn-secondary mt-3" style="width: 200px;"
-                        hx-get="{% url 'main_management:branch' %}" 
-                        hx-target="#main-dashboard-result" 
-                        hx-swap="innerHTML">
-                    Manage Branch
-                </button>
+    <!-- CONTENT AREA -->
+    <div id="main-dashboard-result">
+        <div class="container mt-4">
+            {% block content %}
+                <div class="row g-4">
+                    <!-- Total Revenue -->
+                    <div class="col-md-4">
+                        <div class="card text-bg-success">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Revenue</h5>
+                                <p class="card-text fs-4">€ {{ total_revenue }}</p>
+                                <button 
+                                    class="btn btn-light btn-sm" 
+                                    hx-get="" 
+                                    hx-target="#modal-body" 
+                                    hx-trigger="click" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modal">
+                                    Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                <a href="{% url 'main_management:manager_list' %}" class="btn btn-secondary mt-3" style="width: 200px;">
-                    Manage Managers
-                </a>
-               
+                    <!-- Total Employees -->
+                    <div class="col-md-4">
+                        <div class="card text-bg-primary">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Employees</h5>
+                                <p class="card-text fs-4">{{ total_employees }}</p>
+                                <button 
+                                    class="btn btn-light btn-sm" 
+                                    hx-get="" 
+                                    hx-target="#modal-body" 
+                                    hx-trigger="click" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modal">
+                                    Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                <button class="btn btn-secondary mt-3" style="width: 200px;">Manage Menu</button>
-                <button class="btn btn-secondary mt-3" style="width: 200px;">Manage Staff</button>
-                <button class="btn btn-secondary mt-3" style="width: 200px;">Reports</button>
-            </div>
-
-            <!-- CONTENT AREA -->
-            <div class="col-10">
-                <div id="main-dashboard-result">
-                    {% block content %}
-                    {% endblock content %}
+                    <!-- Total Orders -->
+                    <div class="col-md-4">
+                        <div class="card text-bg-warning">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Orders</h5>
+                                <p class="card-text fs-4">{{ total_orders }}</p>
+                                <button 
+                                    class="btn btn-light btn-sm" 
+                                    hx-get="" 
+                                    hx-target="#modal-body" 
+                                    hx-trigger="click" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modal">
+                                    Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {% endblock content %}
         </div>
     </div>
 
-    <!-- HTMX MODAL (pjesa që kërkove) -->
+    <!-- HTMX MODAL -->
     <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content" id="modal-body">
@@ -80,8 +120,6 @@
             </div>
         </div>
     </div>
- 
-   
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
