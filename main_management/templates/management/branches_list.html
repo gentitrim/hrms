@@ -38,10 +38,10 @@
         <ul class="pagination">
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link text-secondary" href="?page={{ page_obj.previous_page_number }}"hx-get="{% url 'branch'%}?page={{ page_obj.previous_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">Previous</a>
+                    <a class="page-link text-secondary" href="?page={{ page_obj.previous_page_number }}"hx-get="{% url 'main_management:branch'%}?page={{ page_obj.previous_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">Previous</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link text-secondary" href="?page={{ page_obj.previous_page_number }}"hx-get="{% url 'branch'%}?page={{ page_obj.previous_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">{{ page_obj.previous_page_number }}</a>
+                    <a class="page-link text-secondary" href="?page={{ page_obj.previous_page_number }}"hx-get="{% url 'main_management:branch'%}?page={{ page_obj.previous_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">{{ page_obj.previous_page_number }}</a>
                 </li>  
             {% endif %}
 
@@ -53,11 +53,11 @@
 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link text-secondary" href="?page={{ page_obj.next_page_number }}"hx-get="{% url 'branch'%}?page={{ page_obj.next_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">{{ page_obj.next_page_number }}</a>
+                <a class="page-link text-secondary" href="?page={{ page_obj.next_page_number }}"hx-get="{% url 'main_management:branch'%}?page={{ page_obj.next_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML">{{ page_obj.next_page_number }}</a>
             </li>
                 <li class="page-item">
                     <a class="page-link text-secondary" href="?page={{ page_obj.next_page_number }}"
-                    hx-get="{% url 'branch'%}?page={{ page_obj.next_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML"
+                    hx-get="{% url 'main_management:branch'%}?page={{ page_obj.next_page_number }}" hx-target="#main-dashboard-result" hx-swap="innerHTML"
                     >Next</a>
                 </li>
             {% endif %}

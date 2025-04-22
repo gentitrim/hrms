@@ -6,7 +6,7 @@ from .models import Branch
 from branch_management.models import BranchStaff
 from user_authentication.models import CustomUser
 from user_authentication.forms import CustomUserRegisterForm
-from .forms import BranchForm,ManagerForm
+from .forms import BranchForm,ManagerForm,CustomManagerUpdateForm
 from django.views.generic import TemplateView,ListView ,FormView, DeleteView,CreateView,UpdateView,DetailView,View
 from django.urls import reverse_lazy
 from django.http import HttpResponse
@@ -142,7 +142,7 @@ class ManagerUpdateView(LoginRequiredMixin,RoleAccessMixin,View):
     def get(self, request, pk):
         manager = get_object_or_404(BranchStaff, pk=pk)
         managerform = ManagerForm(instance=manager)
-        userform = CustomUserRegisterForm(instance=manager.user)
+        userform = CustomManagerUpdateForm(instance=manager.user)
         return render(request, self.template_name, {'managerform': managerform, 'userform': userform, 'manager': manager})
     
     def post(self, request, pk):
