@@ -8,13 +8,27 @@ from user_authentication.forms import CustomUserRegisterForm
 from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from hrms.rolemixin import RoleAccessMixin
+from restaurant.models import Order
+from django.db.models import Sum
 
 
-class DashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
+class DashboardView(LoginRequiredMixin,RoleAccessMixin,View):
     allowed_roles = ['manager']
-    template_name = 'manager_dashboard.html'
     login_url = reverse_lazy('login')
     redirect_field_name = "next"
+    def get(self, request, *args, **kwargs):
+        user_branch = self.request.user.branchstaff.branch
+        staff = BranchStaff.objects.filter(branch=user_branch).exclude(user=self.request.user)       
+        orders = Order.objects.filter(staff_id__branch__id=user_branch.id)
+        print(orders)
+        total_amount = orders.filter(status='CONFIRMED').aggregate(Sum('total_price'))['total_price__sum'] or 0
+        context = {
+            'orders': orders,
+            'total_amount': total_amount / 100,
+            'total_orders': orders.count() or 0,
+            'staff_number': staff.count() or 0,
+        }
+        return render(request, 'manager_dashboard.html', context)
 
 
 
@@ -304,3 +318,20 @@ class CategoryDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
         response = super().post(request, *args, **kwargs)
         messages.success(self.request, "Category successfully deleted!")
         return response
+    
+
+
+# class TotalOrdersView(LoginRequiredMixin,RoleAccessMixin,View):
+#     allowed_roles = ['manager']
+#     def get(self, request, *args, **kwargs):
+#         user_branch = self.request.user.branchstaff.branch
+#         orders = get_object_or_404(Order,branch=user_branch)
+#         print(orders)
+#         total_amount = orders.filter(status='CONFIRMED').aggregate(Sum('total_price'))['total_price__sum'] or 0
+#         context = {
+#             'orders': orders,
+#             'total_amount': total_amount / 100,
+#             'total_orders': orders.count() or 0,
+#         }
+#         return render(request, 'manager_dashboard.html', context)
+    

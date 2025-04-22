@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from django.contrib.auth import get_user_model
 from branch_management.models import BranchStaff
 from main_management.models import Branch
 from user_authentication.models import CustomUser
@@ -8,7 +7,6 @@ class Command(BaseCommand):
     help = "Creates a default branch and an admin user"
 
     def handle(self, *args, **kwargs):
-        User = get_user_model()
 
         # Create default branch
         branch, branch_created = Branch.objects.get_or_create(

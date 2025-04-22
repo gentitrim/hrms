@@ -12,11 +12,6 @@ import datetime
 
 logger = logging.getLogger(__name__)
 
-# class ProductsView(ListView):
-#     def get_queryset(self):
-#         return Product.objects.filter(category_id=self.kwargs['pk'])
-#     template_name = "snippets/product_list_by_category.html"
-#     context_object_name = "all_products"
 
 class ProductsView(ListView):
     model = Product
@@ -67,7 +62,6 @@ class SearchByDate(LoginRequiredMixin,View):
     def get(self,request):
         date = request.GET.get('search_date') or datetime.date.today()
         staff = BranchStaff.objects.get(pk = request.user.id)
-        print(f"Raw request body: {date}")
         logger.debug(f"Raw request body: {date}")
         orders = Order.objects.filter(order_time__date=date,staff_id=staff).order_by('-order_time')
         order_items = Order_item.objects.filter(order_id__in=orders)

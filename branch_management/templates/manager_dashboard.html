@@ -4,35 +4,27 @@
     <div class="container mt-4">
         <h1 class="text-center">Welcome to the Manager Dashboard</h1>
         <div class="row mt-5">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Total Orders</h5>
-                        <p class="card-text">120</p>
+                        <p class="card-text">{{ total_orders }}</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Revenue</h5>
-                        <p class="card-text">$5,000</p>
+                        <p class="card-text">{{ total_amount }} €</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card  mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">Pending Orders</h5>
-                        <p class="card-text">15</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Staff Members</h5>
-                        <p class="card-text">10</p>
+                        <p class="card-text">{{staff_number}}</p>
                     </div>
                 </div>
             </div>
