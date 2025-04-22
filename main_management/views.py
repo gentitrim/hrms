@@ -29,8 +29,13 @@ class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     model = Branch
     template_name = 'management/branches_list.html'
     ordering = ['name']
-    # context_object_name = 'branches'
+    def get_queryset(self):
+        branches = super().get_queryset()
 
+        for branch in branches:
+            manager = BranchStaff.objects.filter(branch=branch, role='manager').select_related('user').first()
+            branch.manager = manager  
+        return branches
 
 class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
     allowed_roles = ['admin']
@@ -67,8 +72,9 @@ class SearchBranchView(LoginRequiredMixin,RoleAccessMixin,ListView):
         return Branch.objects.all().order_by('name')
     
 
-class EditBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
+class EditBranchView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
     allowed_roles = ['admin']
+    model = Branch
     template_name = 'management/edit_branch.html'
     success_url = 'main_management:branch'
     form_class = BranchForm
@@ -80,6 +86,19 @@ class DeleteBranchView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
     allowed_roles = ['admin']
     template_name = 'management/delete_branch.html'
     success_url = 'main_management:branch'
+
+
+class BranchDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
+    allowed_roles = ['admin']
+    model = Branch
+    template_name = 'management/branch_detail.html'
+    context_object_name = 'branch'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Branch, id=self.kwargs.get('pk'))
+
+
+
 
 class ManagerManagementView(LoginRequiredMixin,TemplateView):
     def get(self,request):

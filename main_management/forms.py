@@ -11,6 +11,14 @@ class BranchForm(ModelForm):
     class Meta:
         model = Branch
         fields = '__all__'
+
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update({
+            'class': 'form-control'
+        })
  
     def clean_name(self):      
         data = self.cleaned_data["name"]
