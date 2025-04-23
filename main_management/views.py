@@ -19,23 +19,24 @@ from restaurant.models import Order
 from django.db.models import Sum,Count
 # Create your views here.
 class OwnerDashboardView(TemplateView):
+    model = Branch
     template_name = 'management/owner_dashboard.html'
     allowed_roles = ['admin']
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Get the total number of branches
         context['total_branches'] = Branch.objects.count()
-        
         # Get the total number of managers
         context['total_managers'] = BranchStaff.objects.filter(role='manager').count()
-        
+        # Get the total number of staff
+        context['total_staff'] = BranchStaff.objects.filter(role = 'staff').count()
         # Get the total number of orders
         context['total_orders'] = Order.objects.count()
-        
-        # Get the total revenue from all orders
-        context['total_revenue'] = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
-        
+        # Get the total revenue
+        context['total_revenue'] = Order.objects.aggregate(Sum('total_price'))['total_price__sum']
+
         return context
+    
     
 class OrdersPerBranchView(TemplateView):
     model = Order
@@ -65,7 +66,7 @@ class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     model = Branch
     template_name = 'management/branches_list.html'
     ordering = ['name']
-    # context_object_name = 'branches'
+    #context_object_name = 'branches'
 
 
 class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):

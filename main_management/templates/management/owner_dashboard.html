@@ -7,8 +7,8 @@
     <h1 class="text-center">Welcome to the Owner Dashboard</h1>
     <div class="row mt-5">
         <!-- Total Orders Card -->
-        <div class="col-md-4">
-            <div class="card mb-3 shadow">
+        <div class="col-md-3">
+            <div class="card mb-4 shadow">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Orders</h5>
                     <p class="card-text display-6">{{ total_orders }}</p>
@@ -18,22 +18,31 @@
         </div>
 
         <!-- Revenue Card -->
-        <div class="col-md-4">
-            <div class="card mb-3 shadow">
+        <div class="col-md-3">
+            <div class="card mb-4 shadow">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Revenue</h5>
-                    <p class="card-text display-6">{{ total_amount }} €</p>
+                    <p class="card-text display-6">{{ total_revenue }} €</p>
                     <a href="" class="btn btn-outline-success">Details</a>
                 </div>
             </div>
         </div>
 
         <!-- Staff Members Card -->
-        <div class="col-md-4">
-            <div class="card mb-3 shadow">
+        <div class="col-md-3">
+            <div class="card mb-4 shadow">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Total Employees</h5>
-                    <p class="card-text display-6">{{ staff_number }}</p>
+                    <h5 class="card-title">Total Managers</h5>
+                    <p class="card-text display-6">{{ total_managers}}</p>
+                    <a href="" class="btn btn-outline-secondary">Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mb-4 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Staff</h5>
+                    <p class="card-text display-6">{{ total_staff}}</p>
                     <a href="" class="btn btn-outline-secondary">Details</a>
                 </div>
             </div>
