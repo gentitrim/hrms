@@ -10,13 +10,14 @@ from .forms import BranchForm,ManagerForm
 from django.views.generic import TemplateView,ListView ,FormView, DeleteView,CreateView,UpdateView,DetailView,View
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.db.models import Q
+from django.db.models import Q,F,ExpressionWrapper,FloatField,Sum
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from hrms.rolemixin import RoleAccessMixin
 from restaurant.models import Order
 from django.db.models import Sum,Count
+from django.utils.timezone import now
 # Create your views here.
 class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     model = Branch
@@ -53,6 +54,22 @@ class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     template_name = 'management/branches_list.html'
     ordering = ['name']
     #context_object_name = 'branches'
+
+    def get_queryset(self):
+        today = now().date()
+        return Branch.objects.annotate(
+            raw_turnover=Sum(
+                'branch__order__total_price',
+                filter=Q(
+                    branch__order__order_time__date=today,
+                    branch__order__status='CONFIRMED'
+                )
+            ),
+            daily_turnover=ExpressionWrapper(
+                F('raw_turnover') / 100.0,
+                output_field=FloatField()
+            )
+        ).order_by('name')
 
 
 class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):

@@ -23,7 +23,8 @@
                 <p class="card-text">Address: {{ branch.address }}</p>
                 <p class="card-text">Phone: {{ branch.phone }}</p>
                 <p class="card-text">Email: {{ branch.email }}</p>
-                <p class="card-text">Manager: {{ branch.manager }}</p>  
+                <p class="card-text">Manager: {{ branch.manager }}</p> 
+                <p>Revenue: {{ branch.daily_turnover|default:"0"|floatformat:2 }} €</p> 
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <button class="btn btn-secondary" id="manage_branch" style="width: 200px;">Manage Branch</button>
