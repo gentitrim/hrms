@@ -5,6 +5,10 @@ from main_management import views
 app_name = 'main_management'
 
 urlpatterns = [
+    path('owner_dashboard/',views.OwnerDashboardView.as_view(),name='owner_dashboard'),
+    path('orders_per_branch/',views.OrdersPerBranchView.as_view(),name='orders_per_branch'),
+
+
     path('',views.MainPage.as_view(),name='management_dashboard'),
     path('manage_branch/',views.BranchListView.as_view(),name = 'branch'),
     path('create_new_branch/',views.CreateBranchView.as_view(),name = 'new_branch'),

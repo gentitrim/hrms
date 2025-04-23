@@ -22,7 +22,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'main_management:management_dashboard' %}">Home</a>
+                            <a class="nav-link" href="{% url 'main_management:owner_dashboard' %}">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'main_management:branch' %}">Branches</a>
@@ -42,74 +42,15 @@
                         <button type="button" class="btn btn-outline-secondary me-4">Logout</button>
                     </a>
                 {% endif %}
+                
             </div>
         </div>
     </nav>
 
     <!-- CONTENT AREA -->
-    <div id="main-dashboard-result">
-        <div class="container mt-4">
-            {% block content %}
-                <div class="row g-4">
-                    <!-- Total Revenue -->
-                    <div class="col-md-4">
-                        <div class="card text-bg-success">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Revenue</h5>
-                                <p class="card-text fs-4">€ {{ total_revenue }}</p>
-                                <button 
-                                    class="btn btn-light btn-sm" 
-                                    hx-get="" 
-                                    hx-target="#modal-body" 
-                                    hx-trigger="click" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modal">
-                                    Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Total Employees -->
-                    <div class="col-md-4">
-                        <div class="card text-bg-primary">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Employees</h5>
-                                <p class="card-text fs-4">{{ total_employees }}</p>
-                                <button 
-                                    class="btn btn-light btn-sm" 
-                                    hx-get="" 
-                                    hx-target="#modal-body" 
-                                    hx-trigger="click" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modal">
-                                    Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Total Orders -->
-                    <div class="col-md-4">
-                        <div class="card text-bg-warning">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Orders</h5>
-                                <p class="card-text fs-4">{{ total_orders }}</p>
-                                <button 
-                                    class="btn btn-light btn-sm" 
-                                    hx-get="" 
-                                    hx-target="#modal-body" 
-                                    hx-trigger="click" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modal">
-                                    Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endblock content %}
-        </div>
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock content %}
     </div>
 
     <!-- HTMX MODAL -->

@@ -1,0 +1,23 @@
+{% extends "management/management_base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Orders per Branch</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Branch Name</th>
+                <th>Total Orders</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for branch in page_obj %}
+            <tr>
+                <td>{{ branch.name }}</td>
+                <td>{{ branch.order_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

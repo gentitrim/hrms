@@ -16,9 +16,41 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from hrms.rolemixin import RoleAccessMixin
 from restaurant.models import Order
-from django.db.models import Sum
+from django.db.models import Sum,Count
 # Create your views here.
+class OwnerDashboardView(TemplateView):
+    template_name = 'management/owner_dashboard.html'
+    allowed_roles = ['admin']
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get the total number of branches
+        context['total_branches'] = Branch.objects.count()
+        
+        # Get the total number of managers
+        context['total_managers'] = BranchStaff.objects.filter(role='manager').count()
+        
+        # Get the total number of orders
+        context['total_orders'] = Order.objects.count()
+        
+        # Get the total revenue from all orders
+        context['total_revenue'] = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
+        
+        return context
+    
+class OrdersPerBranchView(TemplateView):
+    model = Order
+    template_name = 'management/orders_per_branch.html'
+    alloewd_roles = ['admin' ] 
 
+    
+    
+    
+    
+    
+
+   
+
+    
 
 class MainPage(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     allowed_roles = ['admin']
