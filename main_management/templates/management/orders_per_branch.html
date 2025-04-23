@@ -11,9 +11,9 @@
             </tr>
         </thead>
         <tbody>
-            {% for branch in page_obj %}
+            {% for branch in branches %}
             <tr>
-                <td>{{ branch.name }}</td>
+                <td>{{ branch_names }}</td>
                 <td>{{ branch.order_count }}</td>
             </tr>
             {% endfor %}

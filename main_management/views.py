@@ -33,7 +33,8 @@ class OwnerDashboardView(TemplateView):
         # Get the total number of orders
         context['total_orders'] = Order.objects.count()
         # Get the total revenue
-        context['total_revenue'] = Order.objects.aggregate(Sum('total_price'))['total_price__sum']
+        total = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
+        context['total_revenue'] = total / 100
 
         return context
     
@@ -41,7 +42,27 @@ class OwnerDashboardView(TemplateView):
 class OrdersPerBranchView(TemplateView):
     model = Order
     template_name = 'management/orders_per_branch.html'
-    alloewd_roles = ['admin' ] 
+    alloewd_roles = ['admin' ]
+    context_object_name = 'branches'
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get the total number of branches
+        # Get the branch names
+        context['branch_names'] = Branch.objects.values_list('name', flat=True)
+        # Get the total number of managers
+        context['total_managers'] = BranchStaff.objects.filter(role='manager').count()
+        # Get the total number of staff
+        context['total_staff'] = BranchStaff.objects.filter(role = 'staff').count()
+        # Get the total number of orders
+        context['total_orders'] = Order.objects.count()
+        # Get the total revenue
+        total = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
+        context['total_revenue'] = total / 100
+        
+        return context 
 
     
     
