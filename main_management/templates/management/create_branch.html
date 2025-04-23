@@ -1,11 +1,35 @@
-{% extends "management/management_base.html"%}
+{% extends "management/management_base.html" %}
 
 {% block content %}
-    <form method="post" class="container-fluid ms-3 mt-3" id="create_branch_form">
-        {% csrf_token %}
-        {{form.as_p}}
-        <div class="d-flex justify-content-center mt-3 mb-5 me-5">
-            <button type="submit" class="btn btn-outline-secondary mb-5 me-3" id="create_branch"
-            >Create Branch</button>
-    </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow rounded-4 p-4">
+                <h3 class="text-center mb-4">Create a New Branch</h3>
+                <form method="post" id="create_branch_form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-4 text-end">
+                                <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            </div>
+                            <div class="col-sm-8">
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-outline-primary px-4">Create Branch</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

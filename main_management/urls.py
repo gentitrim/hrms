@@ -6,8 +6,8 @@ app_name = 'main_management'
 
 urlpatterns = [
     path('',views.OwnerDashboardView.as_view(),name='owner_dashboard'),
-    path('orders_per_branch/',views.OrdersPerBranchView.as_view(),name='orders_per_branch'),
-    path('orders_per_branch/<int:pk>/',views.OrdersPerBranchView.as_view(),name='orders_per_branch'),
+    # path('orders_per_branch/',views.OrdersPerBranchView.as_view(),name='orders_per_branch'),
+    # path('orders_per_branch/<int:pk>/',views.OrdersPerBranchView.as_view(),name='orders_per_branch'),
 
 
     path('',views.MainPage.as_view(),name='management_dashboard'),
