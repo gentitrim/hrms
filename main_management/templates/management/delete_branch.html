@@ -1,5 +1,16 @@
 {% extends "management/management_base.html"%}
 
 {% block content %}
+<div class="container mt-5">
+    <div class="alert alert-danger text-center">
+        <h4 class="mb-3">Are you sure to delete this Branch??</h4>
+        <p>{{ object.name }} {{ object.address }}</p>
 
+        <form method="post">
+            {% csrf_token %}
+            <a href="{% url 'main_management:branch' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

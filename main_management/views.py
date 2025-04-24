@@ -83,9 +83,10 @@ class EditBranchView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
         return super().form_valid(form)
     
 class DeleteBranchView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
+    model = Branch
     allowed_roles = ['admin']
     template_name = 'management/delete_branch.html'
-    success_url = 'main_management:branch'
+    success_url = reverse_lazy('main_management:branch')
 
 
 class BranchDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
