@@ -6,19 +6,20 @@ from .models import Branch
 from branch_management.models import BranchStaff
 from user_authentication.models import CustomUser
 from user_authentication.forms import CustomUserRegisterForm
-from .forms import BranchForm,ManagerForm
+from .forms import BranchForm,ManagerForm,CustomManagerUpdateForm
 from django.views.generic import TemplateView,ListView ,FormView, DeleteView,CreateView,UpdateView,DetailView,View
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import Q,F,ExpressionWrapper,FloatField,Sum
-from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from hrms.rolemixin import RoleAccessMixin
 from restaurant.models import Order
 from django.db.models import Sum,Count
 from django.utils.timezone import now
-# Create your views here.
+
+
+
 class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     model = Branch
     template_name = 'management/owner_dashboard.html'
@@ -39,9 +40,6 @@ class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
         
         daily_total = Order.objects.filter(order_time__date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
         context['total_revenue'] = daily_total / 100
-
-        
-        
         return context
     
 
@@ -52,18 +50,17 @@ class MainPage(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     
     
     
-class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
     allowed_roles = ['admin']
     paginate_by = 3
     model = Branch
     template_name = 'management/branches_list.html'
     ordering = ['name']
-    #context_object_name = 'branches'
-
     def get_queryset(self):
         today = now().date()
-        
-        return Branch.objects.annotate(
+
+        # Annotate branches with today's confirmed turnover
+        branches = Branch.objects.annotate(
             raw_turnover=Sum(
                 'branch__order__total_price',
                 filter=Q(
@@ -76,6 +73,13 @@ class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):
                 output_field=FloatField()
             )
         ).order_by('name')
+
+        # Add manager dynamically
+        for branch in branches:
+            manager = BranchStaff.objects.filter(branch=branch, role='manager').select_related('user').first()
+            branch.manager = manager
+
+        return branches
 
 
 class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
@@ -113,8 +117,9 @@ class SearchBranchView(LoginRequiredMixin,RoleAccessMixin,ListView):
         return Branch.objects.all().order_by('name')
     
 
-class EditBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
+class EditBranchView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
     allowed_roles = ['admin']
+    model = Branch
     template_name = 'management/edit_branch.html'
     success_url = 'main_management:branch'
     form_class = BranchForm
@@ -123,9 +128,23 @@ class EditBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
         return super().form_valid(form)
     
 class DeleteBranchView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
+    model = Branch
     allowed_roles = ['admin']
     template_name = 'management/delete_branch.html'
-    success_url = 'main_management:branch'
+    success_url = reverse_lazy('main_management:branch')
+
+
+class BranchDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
+    allowed_roles = ['admin']
+    model = Branch
+    template_name = 'management/branch_detail.html'
+    context_object_name = 'branch'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Branch, id=self.kwargs.get('pk'))
+
+
+
 
 class ManagerManagementView(LoginRequiredMixin,TemplateView):
     def get(self,request):
@@ -188,7 +207,7 @@ class ManagerUpdateView(LoginRequiredMixin,RoleAccessMixin,View):
     def get(self, request, pk):
         manager = get_object_or_404(BranchStaff, pk=pk)
         managerform = ManagerForm(instance=manager)
-        userform = CustomUserRegisterForm(instance=manager.user)
+        userform = CustomManagerUpdateForm(instance=manager.user)
         return render(request, self.template_name, {'managerform': managerform, 'userform': userform, 'manager': manager})
     
     def post(self, request, pk):
