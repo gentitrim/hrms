@@ -71,6 +71,7 @@ class ProductListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
+    paginate_by = 10
 
     def get_queryset(self):
         user_branch = self.request.user.branchstaff.branch
@@ -145,8 +146,9 @@ class EmployeeCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
 class EmployeeListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     allowed_roles = ['manager']
     model = BranchStaff
-    template_name = 'branch_management/employee_list.html'  # Updated template name
+    template_name = 'branch_management/employee_list.html'
     context_object_name = 'employees'
+    paginate_by = 10
 
     def get_queryset(self):
         branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
@@ -250,10 +252,11 @@ class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     model = Category
     template_name = 'branch_management/category_list.html'
     context_object_name = 'categories'
+    paginate_by = 10
 
     def get_queryset(self):
-            user_branch = self.request.user.branchstaff.branch
-            return Category.objects.filter(branch=user_branch) 
+        user_branch = self.request.user.branchstaff.branch
+        return Category.objects.filter(branch=user_branch) 
 
 
 class CategoryCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
