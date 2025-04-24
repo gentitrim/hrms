@@ -32,7 +32,7 @@ class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
         # Get the total number of managers
         context['total_managers'] = BranchStaff.objects.filter(role='manager').count()
         # Get the total number of staff
-        context['total_staff'] = BranchStaff.objects.filter(role = 'staff').count()
+        context['total_staff'] = BranchStaff.objects.filter(Q(role = 'staff') | Q(role = 'manager')).count()
         # Get the total number of orders
         daily_order= Order.objects.filter(order_time__date = today).count()
         context['total_orders'] = daily_order
