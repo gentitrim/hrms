@@ -113,11 +113,16 @@ class EditBranchView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
     allowed_roles = ['admin']
     model = Branch
     template_name = 'management/edit_branch.html'
-    success_url = 'main_management:branch'
+    success_url = reverse_lazy('main_management:branch')
     form_class = BranchForm
     
     def form_valid(self, form):
+        messages.success(self.request, 'Branch updated successfully!')
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error updating branch. Please check the form and try again.')
+        return super().form_invalid(form)
     
 
 class DeleteBranchView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
@@ -125,6 +130,16 @@ class DeleteBranchView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
     allowed_roles = ['admin']
     template_name = 'management/delete_branch.html'
     success_url = reverse_lazy('main_management:branch')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "TEST MESSAGE - BEFORE DELETE")
+        try:
+            response = super().delete(request, *args, **kwargs)
+            messages.success(request, "Branch deleted successfully.")
+            return response
+        except Exception as e:
+            messages.error(request, f"Failed to delete branch: {e}")
+            return redirect(self.success_url)
 
 
 class BranchDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):

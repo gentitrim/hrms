@@ -1,18 +1,33 @@
 {% extends 'management/management_base.html' %}
 
 {% block content %}
-<div class="container mt-5">
+  {% comment %} <div class="container mt-5">
     <div class="alert alert-danger text-center">
-        <h4 class="mb-3">Are you sure to delete this manager??</h4>
-        <p>{{ object.user.first_name }} {{ object.user.last_name }}</p>
+      <h4 class="mb-3">Are you sure to delete this manager??</h4>
+      <p>{{ object.user.first_name }} {{ object.user.last_name }}</p>
 
-        <form method="post">
-            {% csrf_token %}
-            <a href="{% url 'main_management:manager_list' %}" class="btn btn-secondary">Cancel</a>
-            <button type="submit" class="btn btn-danger">Yes, Delete</button>
-        </form>
+      <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'main_management:manager_list' %}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      </form>
     </div>
-</div>
-{% endblock %}
+  </div> {% endcomment %}
 
-  
+
+  <div class="container col-md-10 col-lg-8">
+    <div class="card text-center">
+      <div class="card-header bg-danger">
+        <p class="fs-4">Are you sure to delete this Manager??</p>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title mb-5 mt-5">{{ object.user.first_name }} {{ object.user.last_name }}</h5>
+        <form method="post" class='mb-5'>
+          {% csrf_token %}
+          <a href="{% url 'main_management:manager_list' %}" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

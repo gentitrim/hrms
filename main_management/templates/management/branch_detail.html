@@ -1,20 +1,24 @@
 {% load static %}
 
 {% block content %}
-
-<div class="card mx-auto" style="max-width: 600px;" id="manager-detail-card">
+  <div class="card mx-auto" style="max-width: 600px;" id="manager-detail-card">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
       <span>Branch Detail</span>
-      <button class="btn btn-sm btn-light text-danger" onclick="document.getElementById('branch-detail-container').innerHTML = '';">
-        &times;
-      </button>
+      <button class="btn btn-sm btn-light text-danger" onclick="document.getElementById('branch-detail-container').innerHTML = '';">&times;</button>
     </div>
     <div class="card-body">
-      <p><strong>Name:</strong> {{ branch.name }}</p>
-      <p><strong>Address:</strong> {{ branch.address }}</p>
-      <p><strong>Phone Number:</strong> {{ branch.phone }}</p>
-      <p><strong>Email:</strong> {{ brnach.email }}</p>
+      <p>
+        <strong>Name:</strong> {{ branch.name }}
+      </p>
+      <p>
+        <strong>Address:</strong> {{ branch.address }}
+      </p>
+      <p>
+        <strong>Phone Number:</strong> {{ branch.phone }}
+      </p>
+      <p>
+        <strong>Email:</strong> {{ brnach.email }}
+      </p>
     </div>
   </div>
-
-{% endblock content %}
+{% endblock %}
