@@ -1,5 +1,5 @@
 document.body.addEventListener("click", (event) => {
-    // ✅ Handle "Add to Order"
+
     if (event.target.classList.contains("add-to-order")) {
         const button = event.target;
         const productId = button.getAttribute("data-product-id");
@@ -10,23 +10,23 @@ document.body.addEventListener("click", (event) => {
 
         console.log(`Adding product: ${product}, Price: ${price}`);
 
-        // Ensure totalPrice is correctly retrieved
+
         let totalPrice = parseFloat(totalPriceElement.textContent) || 0;
 
-        // Check if product already exists in the order
+
         let existingRow = [...orderTableBody.querySelectorAll("tr")].find(row => {
             return row.querySelector("td").textContent === product;
         });
 
         if (existingRow) {
-            // Update quantity and total
+
             let quantityCell = existingRow.querySelector("td:nth-child(2)");
             let totalCell = existingRow.querySelector("td:nth-child(4)");
             let quantity = parseInt(quantityCell.textContent, 10) + 1;
             quantityCell.textContent = quantity;
             totalCell.textContent = (quantity * price).toFixed(2) + " €";
         } else {
-            // Add new row for the product
+            
             let newRow = document.createElement("tr");
             newRow.setAttribute("data-product-id", productId);
             newRow.innerHTML = `
@@ -39,12 +39,12 @@ document.body.addEventListener("click", (event) => {
             orderTableBody.appendChild(newRow);
         }
 
-        // Update total price
+        
         totalPrice += price;
         totalPriceElement.textContent = totalPrice.toFixed(2) + " €";
     }
 
-    // ✅ Handle "Remove Item"
+    
     if (event.target.classList.contains("remove-item")) {
         const row = event.target.closest("tr");
         const totalCell = row.querySelector("td:nth-child(4)");
@@ -59,33 +59,32 @@ document.body.addEventListener("click", (event) => {
         row.remove();
     }
 
-    // ✅ Handle "Clear Order"
+    
     if (event.target.id === "clearSelection") {
         console.log("Clearing selection");
         document.querySelector("#selectedProductsTable tbody").innerHTML = "";
         document.getElementById("totalPrice").textContent = "0.00 €";
     }
 
-    // ✅ Handle "Print Invoice"
+    
     if (event.target.id === "printInvoice") {
         console.log("Printing invoice...");
         // alert("Invoice printed!"); // Replace with actual print functionality
     }
 });
 
-// ✅ Ensure JavaScript Runs After HTMX Updates
+
 document.body.addEventListener("htmx:afterSettle", () => {
     console.log("HTMX content updated - JavaScript is still working!");
 });
 
 
-// Function to get the CSRF token
-// Function to get the CSRF token
+
 function getCsrfToken() {
     return document.querySelector("input[name='csrfmiddlewaretoken']").value;
 }
 
-// Function to get order items from the table
+
 function getOrderItems() {
     const rows = document.querySelectorAll('#selectedProductsTable tbody tr');
     const items = [];
@@ -107,19 +106,19 @@ function getOrderItems() {
     return items;
 }
 
-// Get references to the dialog and buttons
+
 const dialog = document.getElementById('confirmationDialog');
 const printInvoiceButton = document.getElementById('printInvoice');
 const confirmOrderButton = document.getElementById('confirmOrder');
 const cancelOrderButton = document.getElementById('cancelOrder');
 
-// Open the dialog when the Print Invoice button is clicked
+
 printInvoiceButton.addEventListener('click', function() {
     dialog.showModal(); // Open the dialog
 });
 
 
-// Handle confirmation
+
 confirmOrderButton.addEventListener('click', function() {
     const csrfToken = getCsrfToken();
     const items = getOrderItems();

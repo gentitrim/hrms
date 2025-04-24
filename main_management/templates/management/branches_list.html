@@ -15,7 +15,7 @@
 
 <ul class="list-group me-5">
 {% for branch in page_obj %}
-
+    {% if branch.id != user.branchstaff.branch.id%}
     <li class="list-group-item bg-body-tertiary border-bottom rounded-end" id = '{{ branch.id }}'>
         <div id="branch-detail-container" class="mt-4"></div>
         <div class="row">
@@ -40,12 +40,14 @@
                         hx-target="#branch-detail-container"
                         hx-swap="innerHTML">
                     View
+                    
                 </button>
                     <a href="{% url 'main_management:update_branch' branch.pk %}" class="btn btn-warning btn-sm me-1">Edit</a>
                     <a href="{% url 'main_management:delete_branch' branch.pk %}" class="btn btn-danger btn-sm me=1">Delete</a>
             </div>
         </div>
     </li>
+    {%endif%}
   
 {% endfor %}
 </ul>

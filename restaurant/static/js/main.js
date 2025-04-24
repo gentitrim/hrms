@@ -24,14 +24,14 @@ function createInitialTable() {
             `;
             tableBody.appendChild(productRow);
 
-            // Aggiungi l'evento click ai prodotti
+
             productRow.addEventListener('click', () => {
                 addSelectedProduct(product);
                 updateTotal();
             });
         });
 
-        // Mostra/nascondi i prodotti quando si clicca sulla categoria
+
         categoryRow.addEventListener('click', () => {
             const productRows = Array.from(tableBody.querySelectorAll('.product-row'));
             productRows.forEach(row => {
@@ -43,7 +43,7 @@ function createInitialTable() {
     }
 }
 
-// Funzione per aggiungere un prodotto selezionato
+
 function addSelectedProduct(product) {
     const selectedTableBody = document.querySelector('#selectedProductsTable tbody');
     const existingRow = Array.from(selectedTableBody.children).find(row => row.querySelector('td').textContent === product.name);
@@ -65,7 +65,7 @@ function addSelectedProduct(product) {
         `;
         selectedTableBody.appendChild(newRow);
 
-        // Aggiungi l'evento per rimuovere il prodotto
+
         newRow.querySelector('.remove-btn').addEventListener('click', () => {
             selectedTableBody.removeChild(newRow);
             updateTotal();
@@ -73,7 +73,7 @@ function addSelectedProduct(product) {
     }
 }
 
-// Funzione per aggiornare il prezzo totale
+
 function updateTotal() {
     let total = 0;
     const rows = document.querySelectorAll('#selectedProductsTable tbody tr');
@@ -86,25 +86,25 @@ function updateTotal() {
     document.getElementById('totalPrice').textContent = total.toFixed(2) + ' €';
 }
 
-// Inizializza la tabella
+
 createInitialTable();
 
-// Hamburger menu toggle
-const hamburger = document.querySelector('.hamburger');
-const navUl = document.querySelector('#nav ul');
+// // Hamburger menu toggle
+// const hamburger = document.querySelector('.hamburger');
+// const navUl = document.querySelector('#nav ul');
 
-hamburger.addEventListener('click', () => {
-    navUl.classList.toggle('active');
-});
+// hamburger.addEventListener('click', () => {
+//     navUl.classList.toggle('active');
+// });
 
-// Pulsante Svuota Lista
+
 document.getElementById('clearSelection').addEventListener('click', () => {
     const selectedTableBody = document.querySelector('#selectedProductsTable tbody');
     selectedTableBody.innerHTML = '';
     updateTotal();
 });
 
-// Funzione per stampare la fattura
+
 document.getElementById('printInvoice').addEventListener('click', () => {
     const printWindow = window.open('', '', 'height=600,width=800');
     printWindow.document.write('<html><head><title>Fattura</title>');

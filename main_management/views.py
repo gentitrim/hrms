@@ -74,7 +74,7 @@ class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
 class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
     allowed_roles = ['admin']
     template_name = 'management/create_branch.html'
-    success_url = reverse_lazy('main_management:management_dashboard')
+    success_url = reverse_lazy('main_management:branch')
     form_class = BranchForm
     def form_valid(self, form):
         cleaned_data = form.cleaned_data
@@ -85,10 +85,13 @@ class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
                 phone = cleaned_data["phone"],
                 email = cleaned_data["email"],
             )
+            messages.success(self.request, 'Branch created successfully!')
             return super().form_valid(form)
         except Exception as e:
+            messages.error(self.request, 'Error creating branch: {}'.format(e))
             return HttpResponse(f"Error: {e}", status=500)
     def form_invalid(self, form):
+        messages.error(self.request, 'Error creating branch. Please check the form and try again.')
         return super().form_invalid(form)
     
 
