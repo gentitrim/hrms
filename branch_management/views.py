@@ -157,13 +157,8 @@ class EmployeeListView(LoginRequiredMixin,RoleAccessMixin,ListView):
         return BranchStaff.objects.none()
 
 
-<<<<<<< HEAD
 class UpdateEmployeeView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
     allowed_roles = ['manager']
-=======
-
-class UpdateEmployeeView(UpdateView):
->>>>>>> b737c051ecb411bc0d84a6ec38333b8410b03408
     model = BranchStaff
     form_class = CreateBranchStaff
     template_name = 'branch_management/update_employee.html'
