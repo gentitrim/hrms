@@ -10,32 +10,77 @@ from .forms import BranchForm,ManagerForm,CustomManagerUpdateForm
 from django.views.generic import TemplateView,ListView ,FormView, DeleteView,CreateView,UpdateView,DetailView,View
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.db.models import Q,F,ExpressionWrapper,FloatField,Sum
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from hrms.rolemixin import RoleAccessMixin
-# Create your views here.
+from restaurant.models import Order
+from django.db.models import Sum,Count
+from django.utils.timezone import now
 
+
+
+class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
+    model = Branch
+    template_name = 'management/owner_dashboard.html'
+    allowed_roles = ['admin']
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get the total number of branches
+        context['total_branches'] = Branch.objects.count()
+        # Get the total number of managers
+        context['total_managers'] = BranchStaff.objects.filter(role='manager').count()
+        # Get the total number of staff
+        context['total_staff'] = BranchStaff.objects.filter(role = 'staff').count()
+        # Get the total number of orders
+        context['total_orders'] = Order.objects.count()
+        # Get the total revenue
+        today = now().date()
+        daily_total = Order.objects.filter(order_time__date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
+        context['total_revenue'] = daily_total / 100
+        return context
+    
 
 class MainPage(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     allowed_roles = ['admin']
     template_name = 'management/main.html'
+
     
     
-class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    
+class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
     allowed_roles = ['admin']
     paginate_by = 3
     model = Branch
     template_name = 'management/branches_list.html'
     ordering = ['name']
-    def get_queryset(self):
-        branches = super().get_queryset()
+    # context_object_name = 'branches'  # Optional: uncomment if needed in template
 
+    def get_queryset(self):
+        today = now().date()
+
+        # Annotate branches with today's confirmed turnover
+        branches = Branch.objects.annotate(
+            raw_turnover=Sum(
+                'branch__order__total_price',
+                filter=Q(
+                    branch__order__order_time__date=today,
+                    branch__order__status='CONFIRMED'
+                )
+            ),
+            daily_turnover=ExpressionWrapper(
+                F('raw_turnover') / 100.0,
+                output_field=FloatField()
+            )
+        ).order_by('name')
+
+        # Add manager dynamically
         for branch in branches:
             manager = BranchStaff.objects.filter(branch=branch, role='manager').select_related('user').first()
-            branch.manager = manager  
+            branch.manager = manager
+
         return branches
+
 
 class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
     allowed_roles = ['admin']

@@ -13,7 +13,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container">
-            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href="#">Restaurant POS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -22,13 +22,18 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'main_management:management_dashboard' %}">Dashboard</a>
+                            <a class="nav-link" href="{% url 'main_management:owner_dashboard' %}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Reports</a>
+                            <a class="nav-link" href="{% url 'main_management:branch' %}">Branches</a>
                         </li>
-                </ul>
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'main_management:manager_list' %}">Managers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="">Reports</a>
+                        </li>
+                    </ul>
 
                     <div class="d-flex align-items-center">
                         <p class="fs-6 me-5 mb-0">Welcome, {{ user.username }}</p>
@@ -37,39 +42,18 @@
                         <button type="button" class="btn btn-outline-secondary me-4">Logout</button>
                     </a>
                 {% endif %}
+                
             </div>
         </div>
     </nav>
 
-
-    <div class="container-fluid ms-3 mt-3" style="height: 100vh;">
-        <div class="row" style="height:100%;">
-            <div class="col bg-body-tertiary d-flex flex-column">
-                <a href="{% url 'main_management:branch' %}" class="btn btn-secondary mt-3" style="width: 200px;">
-                    Manage Branch
-                </button>
-
-                <a href="{% url 'main_management:manager_list' %}" class="btn btn-secondary mt-3" style="width: 200px;">
-                    Manage Managers
-                </a>
-               
-
-                <button class="btn btn-secondary mt-3" style="width: 200px;">Manage Menu</button>
-                <button class="btn btn-secondary mt-3" style="width: 200px;">Manage Staff</button>
-                <button class="btn btn-secondary mt-3" style="width: 200px;">Reports</button>
-            </div>
-
-            <!-- CONTENT AREA -->
-            <div class="col-10">
-                <div id="main-dashboard-result">
-                    {% block content %}
-                    {% endblock content %}
-                </div>
-            </div>
-        </div>
+    <!-- CONTENT AREA -->
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock content %}
     </div>
 
-    <!-- HTMX MODAL (pjesa që kërkove) -->
+    <!-- HTMX MODAL -->
     <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content" id="modal-body">
@@ -77,8 +61,6 @@
             </div>
         </div>
     </div>
- 
-   
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
