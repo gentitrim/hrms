@@ -47,10 +47,16 @@
         </div>
     </nav>
 
-    <!-- CONTENT AREA -->
-    <div class="container mt-4">
-        {% block content %}
-        {% endblock content %}
+
+    <div class="container-fluid ms-3 mt-3" style="height: 100vh;">
+        <div class="row" style="height:100%;">
+
+            <!-- CONTENT AREA -->
+            <div id="main-dashboard-result">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+        </div>
     </div>
 
     <!-- HTMX MODAL -->

@@ -54,33 +54,13 @@ class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
     model = Branch
     template_name = 'management/branches_list.html'
     ordering = ['name']
-    # context_object_name = 'branches'  # Optional: uncomment if needed in template
-
     def get_queryset(self):
-        today = now().date()
+        branches = super().get_queryset()
 
-        # Annotate branches with today's confirmed turnover
-        branches = Branch.objects.annotate(
-            raw_turnover=Sum(
-                'branch__order__total_price',
-                filter=Q(
-                    branch__order__order_time__date=today,
-                    branch__order__status='CONFIRMED'
-                )
-            ),
-            daily_turnover=ExpressionWrapper(
-                F('raw_turnover') / 100.0,
-                output_field=FloatField()
-            )
-        ).order_by('name')
-
-        # Add manager dynamically
         for branch in branches:
             manager = BranchStaff.objects.filter(branch=branch, role='manager').select_related('user').first()
-            branch.manager = manager
-
+            branch.manager = manager  
         return branches
-
 
 class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
     allowed_roles = ['admin']
