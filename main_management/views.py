@@ -54,8 +54,6 @@ class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
     model = Branch
     template_name = 'management/branches_list.html'
     ordering = ['name']
-    # context_object_name = 'branches'  # Optional: uncomment if needed in template
-
     def get_queryset(self):
         today = now().date()
 
