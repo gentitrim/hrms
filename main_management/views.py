@@ -1,13 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
-# from django.template.loader import render_to_string
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from .models import Branch
 from branch_management.models import BranchStaff
-from user_authentication.models import CustomUser
 from user_authentication.forms import CustomUserRegisterForm
 from .forms import BranchForm,ManagerForm,CustomManagerUpdateForm
-from django.views.generic import TemplateView,ListView ,FormView, DeleteView,CreateView,UpdateView,DetailView,View
+from django.views.generic import TemplateView,ListView ,FormView, DeleteView,UpdateView,DetailView,View
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import Q,F,ExpressionWrapper,FloatField,Sum
@@ -44,9 +40,7 @@ class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
 class MainPage(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     allowed_roles = ['admin']
     template_name = 'management/main.html'
-
-    
-    
+   
     
 class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
     allowed_roles = ['admin']
@@ -70,12 +64,12 @@ class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
             )
         ).order_by('name')
 
-        # Add manager dynamically
         for branch in branches:
             manager = BranchStaff.objects.filter(branch=branch, role='manager').select_related('user').first()
             branch.manager = manager
 
         return branches
+
 
 class CreateBranchView(LoginRequiredMixin,RoleAccessMixin,FormView):
     allowed_roles = ['admin']
@@ -122,6 +116,7 @@ class EditBranchView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
     def form_valid(self, form):
         return super().form_valid(form)
     
+
 class DeleteBranchView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
     model = Branch
     allowed_roles = ['admin']
@@ -139,12 +134,9 @@ class BranchDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
         return get_object_or_404(Branch, id=self.kwargs.get('pk'))
 
 
-
-
 class ManagerManagementView(LoginRequiredMixin,TemplateView):
     def get(self,request):
         return render(request,'management/manage_manager.html')
-
 
 
 class ManagerListView(LoginRequiredMixin,RoleAccessMixin,ListView):
