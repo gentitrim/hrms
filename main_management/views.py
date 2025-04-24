@@ -34,9 +34,12 @@ class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
         # Get the total number of orders
         context['total_orders'] = Order.objects.count()
         # Get the total revenue
-        total = Order.objects.aggregate(Sum('total_price'))['total_price__sum'] or 0
-        context['total_revenue'] = total / 100
+        today = now().date()
+        daily_total = Order.objects.filter(order_time__date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
+        context['total_revenue'] = daily_total / 100
 
+        
+        
         return context
     
 
@@ -57,6 +60,7 @@ class BranchListView(LoginRequiredMixin,RoleAccessMixin,ListView):
 
     def get_queryset(self):
         today = now().date()
+        
         return Branch.objects.annotate(
             raw_turnover=Sum(
                 'branch__order__total_price',
