@@ -27,12 +27,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'main_management:branch' %}">Branches</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'main_management:manager_list' %}">Managers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="">Reports</a>
-                        </li>
+                        
                     </ul>
 
                     <div class="d-flex align-items-center">
@@ -50,6 +45,8 @@
     <!-- CONTENT AREA -->
     <div class="container mt-4">
         {% block content %}
+            {% include "branch_management/employee_list_inner.html" with employees=employees %}
+
         {% endblock content %}
     </div>
 

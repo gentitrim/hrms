@@ -24,6 +24,7 @@ class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     template_name = 'management/owner_dashboard.html'
     allowed_roles = ['admin']
     def get_context_data(self, **kwargs):
+        today = now().date()
         context = super().get_context_data(**kwargs)
         # Get the total number of branches
         context['total_branches'] = Branch.objects.count()
@@ -32,9 +33,10 @@ class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
         # Get the total number of staff
         context['total_staff'] = BranchStaff.objects.filter(role = 'staff').count()
         # Get the total number of orders
-        context['total_orders'] = Order.objects.count()
+        daily_order= Order.objects.filter(order_time__date = today).count()
+        context['total_orders'] = daily_order
         # Get the total revenue
-        today = now().date()
+        
         daily_total = Order.objects.filter(order_time__date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
         context['total_revenue'] = daily_total / 100
 
@@ -243,4 +245,13 @@ class ManagerDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
 
     
     
+class AllEmployeesListView(ListView):
+    model = BranchStaff
+    paginate_by = 5
+    template_name = 'management/all_employees_list.html'
+    context_object_name = 'employees'
 
+    def get_queryset(self):
+        return BranchStaff.objects.select_related('user').exclude(role='admin')
+
+        
