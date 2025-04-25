@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from hrms.rolemixin import RoleAccessMixin
 from restaurant.models import Order
 from django.db.models import Sum
+from django.utils.timezone import now
 
 
 class DashboardView(LoginRequiredMixin,RoleAccessMixin,View):
@@ -22,11 +23,15 @@ class DashboardView(LoginRequiredMixin,RoleAccessMixin,View):
         staff = BranchStaff.objects.filter(branch=user_branch).exclude(user=self.request.user)       
         orders = Order.objects.filter(staff_id__branch__id=user_branch.id)
         print(orders)
-        total_amount = orders.filter(status='CONFIRMED').aggregate(Sum('total_price'))['total_price__sum'] or 0
+        today = now().date()
+        daily_amount = orders.filter(status='CONFIRMED',order_time__date=today).aggregate(Sum('total_price'))['total_price__sum'] or 0
+        total_orders = orders.filter(status='CONFIRMED',order_time__date=today).count() or 0
+
+        # Filter orders for today
         context = {
             'orders': orders,
-            'total_amount': total_amount / 100,
-            'total_orders': orders.count() or 0,
+            'total_amount': daily_amount / 100,
+            'total_orders': total_orders or 0,
             'staff_number': staff.count() or 0,
         }
         return render(request, 'manager_dashboard.html', context)
