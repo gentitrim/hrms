@@ -7,6 +7,7 @@ from django.db.models import Sum # type: ignore
 from django.http import HttpResponseForbidden # type: ignore
 import logging
 import datetime
+from django.contrib import messages # type: ignore
 
 from restaurant.models import Order_item,Order
 from restaurant.forms import EmployeeUpdateForm,UserUpdateForm
@@ -102,7 +103,7 @@ class EditProfileView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
     template_name = 'snippets/edit_profile.html'
     model = CustomUser
     fields = ['first_name','last_name']
-    success_url = reverse_lazy('api_restaurant:edit_profile')
+    success_url = reverse_lazy('api_restaurant:esit_profile')
     def get(self,request,pk):
         staff = get_object_or_404(CustomUser,pk = pk)
         if staff != request.user:
@@ -112,9 +113,11 @@ class EditProfileView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
         context = {
             'user_form': user_form,
             'employee_form': employee_form,
+            'staff': staff,
         }
         return render(request, self.template_name, context)
     def post(self,request,pk):
+        print(request.POST)
         staff = get_object_or_404(CustomUser,pk = pk)
         if staff != request.user:
             return HttpResponseForbidden("You are not allowed to edit this profile.")
@@ -124,11 +127,20 @@ class EditProfileView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
             user_form.save()
             employee_form.save()
             return render(request, 'snippets/employee_profile.html', {'staff': staff})
-        context = {
-            'user_form': user_form,
-            'employee_form': employee_form,
-        }
-        return render(request, self.template_name, {'user_form': user_form,
+        if user_form.invalid():
+            messages.error(request, "Please correct the errors in the form.")
+            return render(request, self.template_name, { 'user_form': user_form,
+                                                    'employee_form': employee_form,
+                                                    'staff': staff,
+                                                    })
+        if employee_form.invalid():
+            messages.error(request, "Please correct the errors in the form.")
+            return render(request, self.template_name, { 'user_form': user_form,
+                                                    'employee_form': employee_form,
+                                                    'staff': staff,
+                                                    })
+
+        return render(request, self.template_name, { 'user_form': user_form,
                                                     'employee_form': employee_form,
                                                     'staff': staff,
                                                     })

@@ -289,7 +289,7 @@ class ManagerResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
             new_password = form.cleaned_data['new_password']
             staff_user.set_password(new_password)
             staff_user.save()
-            messages.success(request, f"Password for {user.username} has been changed.")
+            messages.success(request, f"Password for {staff_user.username} has been changed.")
             return redirect('branch_management:employee-list')  # or any page you want
         return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
 
