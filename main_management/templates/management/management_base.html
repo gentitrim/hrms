@@ -26,12 +26,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'main_management:branch' %}">Branches</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'main_management:manager_list' %}">Managers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="">Reports</a>
-                        </li>
+                        
                     </ul>
 
                     <div class="d-flex align-items-center">
@@ -45,14 +40,22 @@
     </nav>
 
 
-    <div class="container-fluid ms-3 mt-3" style="height: 100vh;">
-        <div class="row" style="height:100%;">
 
-            <!-- CONTENT AREA -->
-            <div id="main-dashboard-result">
-                    {% block content %}
-                    {% endblock content %}
-                </div>
+
+    <!-- CONTENT AREA -->
+    <div class="container mt-4">
+        {% block content %}
+            {% include "branch_management/employee_list_inner.html" with employees=employees %}
+
+        {% endblock content %}
+    </div>
+
+    <!-- HTMX MODAL -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" id="modal-body">
+                <!-- Content injected by HTMX -->
+            </div>
         </div>
     </div>
 

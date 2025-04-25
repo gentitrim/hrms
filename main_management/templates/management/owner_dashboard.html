@@ -4,47 +4,49 @@
   <div class="container mt-4">
     <h1 class="text-center">Welcome to the Owner Dashboard</h1>
     <div class="row mt-5">
-      <!-- Total Orders Card -->
-      <div class="col-md-3">
-        <div class="card mb-4 shadow">
-          <div class="card-body text-center">
-            <h5 class="card-title">Total Orders</h5>
-            <p class="card-text display-6">{{ total_orders }}</p>
-            <a href="" class="btn btn-outline-primary">Details</a>
-          </div>
+        <!-- Total Orders Card -->
+        <div class="col-md-3">
+            <div class="card mb-4 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Orders</h5>
+                    <p class="card-text display-6">{{ total_orders }}</p>
+                    <a href="" class="btn btn-outline-secondary">Details</a>
+                </div>
+            </div>
         </div>
       </div>
 
-      <!-- Revenue Card -->
-      <div class="col-md-3">
-        <div class="card mb-4 shadow">
-          <div class="card-body text-center">
-            <h5 class="card-title">Total Revenue</h5>
-            <p class="card-text display-6">{{ total_revenue|floatformat:2 }} €</p>
-            <a href="" class="btn btn-outline-success">Details</a>
-          </div>
+        <!-- Revenue Card -->
+        <div class="col-md-3">
+            <div class="card mb-4 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Revenue</h5>
+                    <p class="card-text display-6">{{ total_revenue|floatformat:2  }} €</p>
+                    <a href="{% url 'main_management:branch' %}" class="btn btn-outline-secondary">Details</a>
+                </div>
+            </div>
         </div>
       </div>
 
-      <!-- Staff Members Card -->
-      <div class="col-md-3">
-        <div class="card mb-4 shadow">
-          <div class="card-body text-center">
-            <h5 class="card-title">Total Managers</h5>
-            <p class="card-text display-6">{{ total_managers }}</p>
-            <a href="" class="btn btn-outline-secondary">Details</a>
-          </div>
+        <!-- Staff Members Card -->
+        <div class="col-md-3">
+            <div class="card mb-4 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Managers</h5>
+                    <p class="card-text display-6">{{ total_managers}}</p>
+                    <a href="{% url 'main_management:manager_list' %}"t: class="btn btn-outline-secondary">Show Managers</a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card mb-4 shadow">
-          <div class="card-body text-center">
-            <h5 class="card-title">Total Staff</h5>
-            <p class="card-text display-6">{{ total_staff }}</p>
-            <a href="" class="btn btn-outline-secondary">Details</a>
-          </div>
+        <div class="col-md-3">
+            <div class="card mb-4 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Staff</h5>
+                    <p class="card-text display-6">{{ total_staff}}</p>
+                    <a href="{% url 'main_management:all_employees' %}" class="btn btn-outline-secondary">Show Staff</a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-{% endblock %}
+</div>
+{% endblock content %}
