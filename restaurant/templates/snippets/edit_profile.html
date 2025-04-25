@@ -2,34 +2,32 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-      <div class="col-md-10 col-lg-8">
-        <div class="card mb-4 shadow-sm">
-          <div class="card-header bg-secondary text-white text-center">
-            <strong>Edit your profile</strong>
-          </div>
-          <div class="card-body">
-            <form method="post">
-              {% csrf_token %}
-              {% for field in form %}
-                <div class="mb-3">
-                  <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="col-md-10 col-lg-8">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-secondary text-white text-center">
+                    <strong>Edit your profile</strong>
                 </div>
-                <div class="mb-3">
-                  {{ field }}
-                  {% if field.help_text %}
-                    <div class="form-text">{{ field.help_text }}</div>
-                  {% endif %}
-                  {% for error in field.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
+                <div class="card-body">
+                    <form method="post"
+                    action="{% url 'restaurant:dashboard' %}"
+                    hx-post="{% url 'api_restaurant:edit_profile' user.pk %}" 
+                    hx-target="#dash_result" 
+                    hx-swap="innerHTML">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                           {{user_form.as_p}}
+                        </div>
+    
+                        <div class="mb-3">
+                            {{employee_form.as_p}}
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-outline-primary px-4">Confirm Changes</button>
+                        </div>
+                    </form>
                 </div>
-              {% endfor %}
-              <div class="text-center mt-4">
-                <button type="submit" class="btn btn-outline-primary px-4">Confirm Changes</button>
-              </div>
-            </form>
-          </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>

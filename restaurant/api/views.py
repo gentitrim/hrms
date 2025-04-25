@@ -9,8 +9,11 @@ import logging
 import datetime
 
 from restaurant.models import Order_item,Order
+from restaurant.forms import EmployeeUpdateForm,UserUpdateForm
 from branch_management.models import Product,BranchStaff
 from hrms.rolemixin import RoleAccessMixin # type: ignore
+from user_authentication.models import CustomUser # type: ignore
+from django.urls import reverse_lazy # type: ignore
 
 
 logger = logging.getLogger(__name__)
@@ -97,13 +100,35 @@ class StaffProfileView(LoginRequiredMixin,RoleAccessMixin,View):
 class EditProfileView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
     allowed_roles = ['staff']
     template_name = 'snippets/edit_profile.html'
-    model = BranchStaff
+    model = CustomUser
+    fields = ['first_name','last_name']
+    success_url = reverse_lazy('api_restaurant:edit_profile')
     def get(self,request,pk):
-        staff = get_object_or_404(BranchStaff,pk = pk)
-        if staff != request.user.branchstaff:
+        staff = get_object_or_404(CustomUser,pk = pk)
+        if staff != request.user:
             return HttpResponseForbidden("You are not allowed to edit this profile.")
+        user_form = UserUpdateForm(instance=staff)
+        employee_form = EmployeeUpdateForm(instance=staff.branchstaff)
         context = {
-            'staff': staff,
+            'user_form': user_form,
+            'employee_form': employee_form,
         }
-    
-        return render(request, 'snippets/edit_profile.html', context)
+        return render(request, self.template_name, context)
+    def post(self,request,pk):
+        staff = get_object_or_404(CustomUser,pk = pk)
+        if staff != request.user:
+            return HttpResponseForbidden("You are not allowed to edit this profile.")
+        user_form = UserUpdateForm(request.POST,instance=staff)
+        employee_form = EmployeeUpdateForm(request.POST,instance=staff.branchstaff)
+        if user_form.is_valid() and employee_form.is_valid():
+            user_form.save()
+            employee_form.save()
+            return render(request, 'snippets/employee_profile.html', {'staff': staff})
+        context = {
+            'user_form': user_form,
+            'employee_form': employee_form,
+        }
+        return render(request, self.template_name, {'user_form': user_form,
+                                                    'employee_form': employee_form,
+                                                    'staff': staff,
+                                                    })

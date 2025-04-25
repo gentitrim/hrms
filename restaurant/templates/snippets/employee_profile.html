@@ -1,5 +1,5 @@
 {% load static %}
-<div class="card mb-3">
+<div class="card mb-3 mt-4">
     <div class="card-header">
         <h5 class="card-title">Your Profile</h5>
     </div>  
@@ -9,9 +9,5 @@
         <h5 class="card-title">Phone: {{ staff.phone }}</h5>
         <h5 class="card-title">Position: {{ staff.role|capfirst  }}</h5>
         <div class="d-flex justify-content-between">
-        <div class="btn-group btn-group-lg d-grid d-md-flex justify-content-md-center" role="group" aria-label="Large button group">
-            <button type="button" class="btn btn-outline-primary" hx-get="{% url 'api_restaurant:edit_profile' staff.id %}" hx-target="#dash_result" hx-swap="innerHtml">Edit Profile</button>
-            
-        </div>
     </div>
 </div>

@@ -16,7 +16,12 @@
                 hx-triger="click"
                 hx-swap="innerHtml"
                 >Profile</button>
-                <button type="button" class="btn btn-outline-primary">Manage Account</button>
+                <button type="button" class="btn btn-outline-primary"
+                hx-get="{% url 'api_restaurant:edit_profile' user.id%}"
+                hx-target="#dash_result"
+                hx-triger="click"
+                hx-swap="innerHtml"
+                >Manage Account</button>
             </div>
 
             <div >
