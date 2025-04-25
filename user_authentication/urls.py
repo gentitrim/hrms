@@ -8,7 +8,7 @@ from user_authentication.views import (UserRegistrationView,
                                        redirect_by_role)
 
 
-
+app_name ='user_authentication'
 
 urlpatterns = [
     path('user/register/',UserRegistrationView.as_view(), name='user-register' ),

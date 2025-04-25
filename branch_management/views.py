@@ -16,7 +16,7 @@ from django.utils.timezone import now
 
 class DashboardView(LoginRequiredMixin,RoleAccessMixin,View):
     allowed_roles = ['manager']
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy('user_authentication:login')
     redirect_field_name = "next"
     def get(self, request, *args, **kwargs):
         user_branch = self.request.user.branchstaff.branch

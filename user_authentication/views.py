@@ -16,7 +16,7 @@ def redirect_by_role(request):
     role = user.branchstaff.role
 
     if role == 'admin':
-        return redirect('main_management:management_dashboard')  # ✅ includes app namespace
+        return redirect('main_management:management_dashboard') 
 
     elif role == 'manager':
         return redirect('branch_management:manager-dashboard')
@@ -29,7 +29,7 @@ class UserRegistrationView(LoginRequiredMixin,CreateView):
     form_class = CustomUserRegisterForm
     model = CustomUser
     template_name = 'user_registration.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('user_authentication:login')
 
 class UserListView(LoginRequiredMixin,ListView):
     model = CustomUser
@@ -40,13 +40,13 @@ class UserUpdateView(LoginRequiredMixin,UpdateView):
     form_class = CustomUserRegisterForm
     model = CustomUser
     template_name = 'user_registration.html'
-    success_url = reverse_lazy('users')
+    success_url = reverse_lazy('user_authentication:users')
 
 
 class UserDeleteView(LoginRequiredMixin,DeleteView):
     template_name = 'user_delete.html'
     model = CustomUser
-    success_url = reverse_lazy('users')
+    success_url = reverse_lazy('user_authentication:users')
     
 
 class CustomUserLoginView(LoginView):
@@ -61,5 +61,5 @@ class CustomUserLoginView(LoginView):
 class ConfirmLogoutView(LoginRequiredMixin,LogoutView):
     def dispatch(self, request, *args, **kwargs):
         logout(request)
-        return redirect('login')
+        return redirect('user_authentication:login')
 

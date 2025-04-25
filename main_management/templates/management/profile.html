@@ -12,7 +12,7 @@
               <p class="card-text">Role: {{branchstaff.role}}</p>
               <div>
                 <a href="{%url 'main_management:edit_profile' user.id%}" class="btn btn-outline-primary">Edit Profile</a>
-                <a href="#" class="btn btn-outline-danger">Change Password</a>
+                <a href="{%url 'main_management:manager_reset_password' user.id%}" class="btn btn-outline-danger">Change Password</a>
             </div>
             </div>
           </div>

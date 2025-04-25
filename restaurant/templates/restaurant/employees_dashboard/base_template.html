@@ -35,7 +35,7 @@
             <div class="d-flex align-items-center">
                 <p class="fs-6 me-5 mb-0">Welcome, {{ user.username }}</p>
               </div>
-                <a href="{% url 'logout' %}"><button type="button" class="btn btn-outline-secondary me-4">Logout</button></a>
+                <a href="{% url 'user_authentication:logout' %}"><button type="button" class="btn btn-outline-secondary me-4">Logout</button></a>
               
             {% endif %}
 

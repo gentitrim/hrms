@@ -276,7 +276,8 @@ class ManagerDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
 class ManagerResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
     allowed_roles = ['admin']
     template_name = 'management/reset_password.html'
-
+    login_url = reverse_lazy('user_authentication:login')
+    next = reverse_lazy('lo')
     def get(self, request, pk):
         staff_user = get_object_or_404(CustomUser, pk=pk)
         form = CustomUserResetPassForm()
@@ -291,7 +292,7 @@ class ManagerResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
             staff_user.set_password(new_password)
             staff_user.save()
             messages.success(request, f"Password for {staff_user.username} has been changed.")
-            return redirect('main_management:manage_managers')  # or any page you want
+            return redirect('main_management:manager_list')  # or any page you want
         return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
 
     
@@ -360,3 +361,29 @@ class EditProfileView(LoginRequiredMixin,RoleAccessMixin,View):
                                                     'employee_form': employee_form,
                                                     'staff': staff,
                                                     })
+    
+
+class ResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['admin']
+    template_name = 'management/reset_password.html'
+    success_url = reverse_lazy('main_management:your_profile')
+    login_url = reverse_lazy('user_authentication:login')
+    redirect_field_name = "next"
+
+    def get(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm()
+        return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
+
+    def post(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm(request.POST)
+
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password']
+            staff_user.set_password(new_password)
+            staff_user.save()
+            messages.success(request, f"Password for {staff_user.username} has been changed.")
+            return redirect('user_authentication:login')  # or any page you want
+        messages.error(request, "Please complete in the correct form.") 
+        return render(request, self.success_url, {'form': form, 'staff_user': staff_user})
