@@ -218,7 +218,7 @@ class ManagerUpdateView(LoginRequiredMixin,RoleAccessMixin,View):
     def post(self, request, pk):
         manager = get_object_or_404(BranchStaff, pk=pk)
         managerform = ManagerForm(request.POST, instance=manager)
-        userform = CustomUserRegisterForm(request.POST, instance=manager.user)
+        userform = CustomManagerUpdateForm(request.POST, instance=manager.user)
         if managerform.is_valid() and userform.is_valid():
             user = userform.save()
             manager = managerform.save(commit=False)
@@ -233,8 +233,8 @@ class ManagerUpdateView(LoginRequiredMixin,RoleAccessMixin,View):
             messages.error(request,"Please complete in the correct form.")
             return render(request, self.template_name, {'managerform': managerform, 'userform': userform})
         return render(request, self.template_name, {'managerform': managerform, 
-                                                    'userform': userform, 
-                                                    'manager': manager
+                                                    'userform': userform,
+                                                    'manager': manager,
                                                     })
 
 

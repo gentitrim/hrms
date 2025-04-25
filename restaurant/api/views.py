@@ -1,19 +1,23 @@
 from django.shortcuts import render,get_object_or_404 # type: ignore
 from django.views import View # type: ignore
-from django.views.generic import ListView # type: ignore
-from restaurant.models import Order_item,Order
-from branch_management.models import Product,BranchStaff
+from django.views.generic import ListView,UpdateView # type: ignore
+
 from django.contrib.auth.mixins import LoginRequiredMixin # type: ignore
 from django.db.models import Sum # type: ignore
 from django.http import HttpResponseForbidden # type: ignore
 import logging
 import datetime
 
+from restaurant.models import Order_item,Order
+from branch_management.models import Product,BranchStaff
+from hrms.rolemixin import RoleAccessMixin # type: ignore
+
 
 logger = logging.getLogger(__name__)
 
 
-class ProductsView(ListView):
+class ProductsView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['staff']
     model = Product
     template_name = 'snippets/product_list_by_category.html'
     context_object_name = 'all_products'
@@ -22,7 +26,8 @@ class ProductsView(ListView):
         user_branch = self.request.user.branchstaff.branch
         return Product.objects.filter(branch=user_branch,category_id=self.kwargs['pk'])   
 
-class UserOrderListView(LoginRequiredMixin,ListView):
+class UserOrderListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+    allowed_roles = ['staff']
     model = Order
     template_name = 'snippets/my_order_list.html'
     context_object_name = 'orders'
@@ -44,7 +49,8 @@ class UserOrderListView(LoginRequiredMixin,ListView):
         return context
     
 
-class UserOrderDetailView(LoginRequiredMixin,View):
+class UserOrderDetailView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['staff']
     def get(self,request,pk):
         staff = get_object_or_404(BranchStaff,pk = self.request.user.branchstaff.id)
         order = get_object_or_404(Order,pk=pk)
@@ -58,7 +64,8 @@ class UserOrderDetailView(LoginRequiredMixin,View):
         return render(request, 'snippets/my_order_detail.html', context)
     
 
-class SearchByDate(LoginRequiredMixin,View):
+class SearchByDate(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['staff']
     def get(self,request):
         date = request.GET.get('search_date') or datetime.date.today()
         staff = BranchStaff.objects.get(pk = request.user.id)
@@ -75,3 +82,27 @@ class SearchByDate(LoginRequiredMixin,View):
             'total_amount': total_amount / 100,
         }
         return render(request, 'snippets/my_order_list.html', context)
+
+
+class StaffProfileView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['staff']
+    def get(self,request):
+        staff = get_object_or_404(BranchStaff,pk = request.user.branchstaff.id)
+        context = {
+            'staff': staff,
+        }
+        return render(request, 'snippets/employee_profile.html', context)
+    
+
+class EditProfileView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
+    allowed_roles = ['staff']
+    template_name = 'snippets/edit_profile.html'
+    model = BranchStaff
+    def get(self,request,pk):
+        staff = get_object_or_404(BranchStaff,pk = pk)
+        if staff != request.user.branchstaff:
+            return HttpResponseForbidden("You are not allowed to edit this profile.")
+        context = {
+            'staff': staff,
+        }
+        return render(request, 'snippets/edit_profile.html', context)
