@@ -6,7 +6,7 @@ from user_authentication.models import CustomUser
 from .forms import BranchForm,ManagerForm,CustomManagerUpdateForm
 from django.views.generic import TemplateView,ListView ,FormView, DeleteView,UpdateView,DetailView,View
 from django.urls import reverse_lazy
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseForbidden
 from django.db.models import Q,F,ExpressionWrapper,FloatField,Sum
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -15,6 +15,7 @@ from django.utils.timezone import now
 from hrms.rolemixin import RoleAccessMixin
 from restaurant.models import Order
 from user_authentication.forms import CustomUserResetPassForm
+from restaurant.forms import UserUpdateForm,EmployeeUpdateForm
 
 
 
@@ -313,3 +314,49 @@ class ProfileView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
         context['user'] = self.request.user
         context['branchstaff'] = BranchStaff.objects.filter(user=self.request.user).first()
         return context
+    
+
+class EditProfileView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['admin']
+    template_name = 'management/edit_profile.html'
+    success_url = reverse_lazy('main_management:your_profile')
+    def get(self,request,pk):
+        staff = get_object_or_404(CustomUser,pk = pk)
+        if staff != request.user:
+            return HttpResponseForbidden("You are not allowed to edit this profile.")
+        user_form = UserUpdateForm(instance=staff)
+        employee_form = EmployeeUpdateForm(instance=staff.branchstaff)
+        context = {
+            'user_form': user_form,
+            'employee_form': employee_form,
+            'staff': staff,
+        }
+        return render(request, self.template_name, context)
+    def post(self,request,pk):
+        print(request.POST)
+        staff = get_object_or_404(CustomUser,pk = pk)
+        if staff != request.user:
+            return HttpResponseForbidden("You are not allowed to edit this profile.")
+        user_form = UserUpdateForm(request.POST,instance=staff)
+        employee_form = EmployeeUpdateForm(request.POST,instance=staff.branchstaff)
+        if user_form.is_valid() and employee_form.is_valid():
+            user_form.save()
+            employee_form.save()
+            return redirect(self.success_url)
+        if user_form.invalid():
+            messages.error(request, "Please correct the errors in the form.")
+            return render(request, self.template_name, { 'user_form': user_form,
+                                                    'employee_form': employee_form,
+                                                    'staff': staff,
+                                                    })
+        if employee_form.invalid():
+            messages.error(request, "Please correct the errors in the form.")
+            return render(request, self.template_name, { 'user_form': user_form,
+                                                    'employee_form': employee_form,
+                                                    'staff': staff,
+                                                    })
+
+        return render(request, self.template_name, { 'user_form': user_form,
+                                                    'employee_form': employee_form,
+                                                    'staff': staff,
+                                                    })

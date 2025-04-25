@@ -26,7 +26,8 @@ urlpatterns = [
     path('managers/<int:pk>/', views.ManagerDetailView.as_view(), name='manager_detail'),
     path('manager/reset_password/<int:pk>/', views.ManagerResetPasswordView.as_view(), name='manager_reset_password'),
     # path('manager/<int:pk>/change_password/', views.ManagerChangePasswordView.as_view(), name='manager_change_password'),
-    path('profile,', views.ProfileView.as_view(), name='your_profile'),
+    path('profile/', views.ProfileView.as_view(), name='your_profile'),
+    path('profile/edit/<int:pk>/', views.EditProfileView.as_view(), name='edit_profile'),
     
     path('all-employees/', views.AllEmployeesListView.as_view(), name='all_employees'),
 ]
