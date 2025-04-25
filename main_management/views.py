@@ -18,6 +18,8 @@ from user_authentication.forms import CustomUserResetPassForm
 
 
 
+
+
 class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     model = Branch
     template_name = 'management/owner_dashboard.html'
@@ -156,11 +158,6 @@ class BranchDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
         return get_object_or_404(Branch, id=self.kwargs.get('pk'))
 
 
-class ManagerManagementView(LoginRequiredMixin,TemplateView):
-    def get(self,request):
-        return render(request,'management/manage_manager.html')
-
-
 class ManagerListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     allowed_roles = ['admin']
     model = BranchStaff
@@ -170,7 +167,8 @@ class ManagerListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        return BranchStaff.objects.filter(role = 'manager')
+        
+        return BranchStaff.objects.filter(role='manager')
     
 
 class CreateManagerView(LoginRequiredMixin,RoleAccessMixin,View):
@@ -292,10 +290,9 @@ class ManagerResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
             staff_user.set_password(new_password)
             staff_user.save()
             messages.success(request, f"Password for {staff_user.username} has been changed.")
-            return redirect('branch_management:employee-list')  # or any page you want
+            return redirect('main_management:manage_managers')  # or any page you want
         return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
 
-    
     
 class AllEmployeesListView(ListView):
     model = BranchStaff
@@ -307,3 +304,12 @@ class AllEmployeesListView(ListView):
         return BranchStaff.objects.select_related('user').exclude(role='admin')
 
         
+class ProfileView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
+    allowed_roles = ['admin']
+    template_name = 'management/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['branchstaff'] = BranchStaff.objects.filter(user=self.request.user).first()
+        return context
