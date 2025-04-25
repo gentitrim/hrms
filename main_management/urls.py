@@ -25,5 +25,6 @@ urlpatterns = [
     path('managers/<int:pk>/edit/', views.ManagerUpdateView.as_view(), name='edit_manager'),    
     path('managers/<int:pk>/delete/', views.ManagerDeleteView.as_view(), name='delete_manager'),
     path('managers/<int:pk>/', views.ManagerDetailView.as_view(), name='manager_detail'),
+    path('manager/reset_password/<int:pk>/', views.ManagerResetPasswordView.as_view(), name='manager_reset_password'),
     
 ]

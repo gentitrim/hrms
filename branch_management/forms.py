@@ -99,31 +99,3 @@ class CustomUserUpdateForm(forms.ModelForm):
         return first_name.title()
     
 
-class CustomUserResetPassForm(forms.Form):
-    new_password = forms.CharField(
-        label="New Password",
-        widget=forms.PasswordInput,
-        min_length=8
-    )
-     
-    confirm_password = forms.CharField(
-        label="Confirm Password",
-        widget=forms.PasswordInput
-    )
-
-    def __init__(self,*args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        for field in self.fields.values():
-            field.widget.attrs.update({
-            'class': 'form-control'
-        })
-            
-    def clean(self):
-        cleaned_data = super().clean()
-        pw1 = cleaned_data.get("new_password")
-        pw2 = cleaned_data.get("confirm_password")
-
-        if pw1 and pw2 and pw1 != pw2:
-            raise forms.ValidationError("Passwords do not match.")
-        return cleaned_data

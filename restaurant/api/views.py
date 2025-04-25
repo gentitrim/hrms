@@ -105,4 +105,5 @@ class EditProfileView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
         context = {
             'staff': staff,
         }
+    
         return render(request, 'snippets/edit_profile.html', context)

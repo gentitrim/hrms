@@ -34,3 +34,33 @@ class CustomLoginForm(AuthenticationForm):
 
 class CustomLogoutForm(forms.Form):
     pass
+
+
+class CustomUserResetPassForm(forms.Form):
+    new_password = forms.CharField(
+        label="New Password",
+        widget=forms.PasswordInput,
+        min_length=8
+    )
+     
+    confirm_password = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput
+    )
+
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update({
+            'class': 'form-control'
+        })
+            
+    def clean(self):
+        cleaned_data = super().clean()
+        pass1 = cleaned_data.get("new_password")
+        pass2 = cleaned_data.get("confirm_password")
+
+        if pass1 and pass2 and pass1 != pass2:
+            raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data

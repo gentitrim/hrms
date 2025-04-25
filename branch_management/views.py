@@ -1,8 +1,9 @@
 from .models import Branch,Product,Category,BranchStaff
 from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView,View
 from django.urls import reverse_lazy
-from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm,CustomUserResetPassForm
+from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm
 from user_authentication.models import CustomUser
+from user_authentication.forms import CustomUserResetPassForm
 from django.contrib import messages
 from user_authentication.forms import CustomUserRegisterForm
 from django.shortcuts import render, redirect , get_object_or_404
@@ -194,24 +195,25 @@ class UpdateEmployeeView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
 
 class EmployeeResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
     allowed_roles = ['manager']
-    template_name = 'branch_management/reset_employee_password.html'
+    template_name = 'management/reset_password.html'
 
     def get(self, request, pk):
-        user = get_object_or_404(CustomUser, pk=pk)
+        staff_user = get_object_or_404(CustomUser, pk=pk)
         form = CustomUserResetPassForm()
-        return render(request, self.template_name, {'form': form, 'user': user})
+        return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
 
     def post(self, request, pk):
-        user = get_object_or_404(CustomUser, pk=pk)
+        staff_user = get_object_or_404(CustomUser, pk=pk)
         form = CustomUserResetPassForm(request.POST)
 
         if form.is_valid():
             new_password = form.cleaned_data['new_password']
-            user.set_password(new_password)
-            user.save()
-            messages.success(request, f"Password for {user.username} has been changed.")
+            staff_user.set_password(new_password)
+            staff_user.save()
+            messages.success(request, f"Password for {staff_user.username} has been changed.")
             return redirect('branch_management:employee-list')  # or any page you want
-        return render(request, self.template_name, {'form': form, 'user': user})
+        return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
+
     
 
 class DeleteEmployeeView(LoginRequiredMixin,RoleAccessMixin,DeleteView):

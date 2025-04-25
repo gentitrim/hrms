@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from .models import Branch
 from branch_management.models import BranchStaff
 from user_authentication.forms import CustomUserRegisterForm
+from user_authentication.models import CustomUser
 from .forms import BranchForm,ManagerForm,CustomManagerUpdateForm
 from django.views.generic import TemplateView,ListView ,FormView, DeleteView,UpdateView,DetailView,View
 from django.urls import reverse_lazy
@@ -9,10 +10,11 @@ from django.http import HttpResponse
 from django.db.models import Q,F,ExpressionWrapper,FloatField,Sum
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from hrms.rolemixin import RoleAccessMixin
-from restaurant.models import Order
 from django.db.models import Sum,Count
 from django.utils.timezone import now
+from hrms.rolemixin import RoleAccessMixin
+from restaurant.models import Order
+from user_authentication.forms import CustomUserResetPassForm
 
 
 
@@ -194,7 +196,10 @@ class CreateManagerView(LoginRequiredMixin,RoleAccessMixin,View):
         
 
         if managerform.errors:
-            messages.error(request,"Please complete in the correct form.")
+            if managerform.errors:
+                messages.error(request, f"Manager form errors: {managerform.errors}")
+            if userform.errors:
+                messages.error(request, f"User form errors: {userform.errors}")
         if userform.errors:
             messages.error(request,"Please complete in the correct form.")
             return render(request, self.template_name, {'managerform': managerform, 'userform': userform})
@@ -266,6 +271,27 @@ class ManagerDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
     def get_object(self, queryset=None):
         return get_object_or_404(BranchStaff, id=self.kwargs.get('pk'))
        
+
+class ManagerResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
+    allowed_roles = ['admin']
+    template_name = 'management/reset_password.html'
+
+    def get(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm()
+        return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
+
+    def post(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm(request.POST)
+
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password']
+            staff_user.set_password(new_password)
+            staff_user.save()
+            messages.success(request, f"Password for {user.username} has been changed.")
+            return redirect('branch_management:employee-list')  # or any page you want
+        return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
 
     
     
