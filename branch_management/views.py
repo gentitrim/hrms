@@ -200,7 +200,7 @@ class UpdateEmployeeView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
 
 class EmployeeResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
     allowed_roles = ['manager']
-    template_name = 'management/reset_password.html'
+    template_name = 'branch_management/reset_employee_password.html'
 
     def get(self, request, pk):
         staff_user = get_object_or_404(CustomUser, pk=pk)
@@ -216,7 +216,7 @@ class EmployeeResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
             staff_user.set_password(new_password)
             staff_user.save()
             messages.success(request, f"Password for {staff_user.username} has been changed.")
-            return redirect('branch_management:employee-list')  # or any page you want
+            return redirect('branch_management:employee-list')  
         return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
 
     
