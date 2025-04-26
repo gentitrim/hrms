@@ -103,22 +103,3 @@
 </div>
 {% endblock %}
 
-<script>
-  setTimeout(function () {
-    const messages = document.querySelectorAll('.alert');
-    messages.forEach(function (msg) {
-      msg.classList.add('fade-out');
-      setTimeout(() => msg.remove(), 1000);
-    });
-  }, 2000);
-</script>
-
-<style>
-  .fade-out {
-    opacity: 0;
-    transition: opacity 1s ease-out;
-  }
-  .pagination {
-    display: flex !important; /* Forza la visibilità della paginazione */
-  }
-</style>
