@@ -40,7 +40,7 @@
                 {% if user.is_authenticated %}
                 <div class="d-flex align-items-center gap-2">
                     <p class="fs-6 mb-0 text-white">Welcome, {{ user.username }}</p>
-                    <a href="{% url 'logout' %}">
+                    <a href="{% url 'user_authentication:logout' %}">
                         <button type="button" class="btn btn-outline-light btn-sm me-4">Logout</button>
                     </a>
                 </div>
