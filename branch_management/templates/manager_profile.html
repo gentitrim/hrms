@@ -1,0 +1,20 @@
+{% extends "branch_main.html" %}
+
+{% block content %}
+        <div class="card text-center">
+            <div class="card-header bg-secondary text-white fs-4">
+              Your profile information.
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ user.first_name}} {{user.last_name}}</h5>
+              <p class="card-text">Username: {{user.username}}</p>
+              <p class="card-text">Phone: {{branchstaff.phone}}</p>
+              <p class="card-text">Role: {{branchstaff.role}}</p>
+              <div>
+                <a href="{%url 'branch_management:edit_profile' user.id%}" class="btn btn-outline-primary">Edit Profile</a>
+                {% comment %} <a href="{%url 'branch_management:manager_reset_password' user.id%}" class="btn btn-outline-danger">Change Password</a> {% endcomment %}
+            </div>
+            </div>
+          </div>
+
+{% endblock content %}

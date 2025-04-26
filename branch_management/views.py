@@ -1,7 +1,8 @@
 from .models import Branch,Product,Category,BranchStaff
 from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView,View
 from django.urls import reverse_lazy
-from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm
+from django.http import HttpResponseForbidden
+from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm,EmployeeUpdateForm
 from user_authentication.models import CustomUser
 from user_authentication.forms import CustomUserResetPassForm,CustomUserRegisterForm
 from django.contrib import messages
@@ -12,6 +13,7 @@ from restaurant.models import Order
 from django.db.models import Sum
 from django.utils.timezone import now
 
+from main_management.forms import CustomManagerUpdateForm
 
 class DashboardView(LoginRequiredMixin,RoleAccessMixin,View):
     allowed_roles = ['manager']
@@ -340,9 +342,110 @@ class CategoryDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
         return response
     
 
-class EditProfileView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
-    allowed_roles = ['manager']
-    model = CustomUser
-    form_class = CustomUserUpdateForm
-    template_name = 'branch_management/user_update.html'
-    success_url = reverse_lazy('branch_management:employee-list')
+
+class ProfileView(LoginRequiredMixin, RoleAccessMixin, TemplateView):
+    allowed_roles = ["manager"]
+    template_name = "manager_profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        context["branchstaff"] = BranchStaff.objects.filter(
+            user=self.request.user
+        ).first()
+        return context
+
+
+class EditProfileView(LoginRequiredMixin, RoleAccessMixin, View):
+    allowed_roles = ["manager"]
+    template_name = "edit_manager_profile.html"
+    success_url = reverse_lazy("branch_management:your_profile")
+
+    def get(self, request, pk):
+        staff = get_object_or_404(CustomUser, pk=pk)
+        if staff != request.user:
+            return HttpResponseForbidden("You are not allowed to edit this profile.")
+        user_form = CustomManagerUpdateForm(instance=staff)
+        employee_form = EmployeeUpdateForm(instance=staff.branchstaff)
+        context = {
+            "user_form": user_form,
+            "employee_form": employee_form,
+            "staff": staff,
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        print(request.POST)
+        staff = get_object_or_404(CustomUser, pk=pk)
+        if staff != request.user:
+            return HttpResponseForbidden("You are not allowed to edit this profile.")
+        user_form = CustomManagerUpdateForm(request.POST, instance=staff)
+        employee_form = EmployeeUpdateForm(request.POST, instance=staff.branchstaff)
+        if user_form.is_valid() and employee_form.is_valid():
+            user_form.save()
+            employee_form.save()
+            return redirect(self.success_url)
+        if user_form.invalid():
+            messages.error(request, "Please correct the errors in the form.")
+            return render(
+                request,
+                self.template_name,
+                {
+                    "user_form": user_form,
+                    "employee_form": employee_form,
+                    "staff": staff,
+                },
+            )
+        if employee_form.invalid():
+            messages.error(request, "Please correct the errors in the form.")
+            return render(
+                request,
+                self.template_name,
+                {
+                    "user_form": user_form,
+                    "employee_form": employee_form,
+                    "staff": staff,
+                },
+            )
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "user_form": user_form,
+                "employee_form": employee_form,
+                "staff": staff,
+            },
+        )
+
+
+class ResetPasswordView(LoginRequiredMixin, RoleAccessMixin, View):
+    allowed_roles = ["manager"]
+    template_name = "management/reset_password.html"
+    success_url = reverse_lazy("main_management:your_profile")
+    login_url = reverse_lazy("user_authentication:login")
+    redirect_field_name = "next"
+
+    def get(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm()
+        return render(
+            request, self.template_name, {"form": form, "staff_user": staff_user}
+        )
+
+    def post(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm(request.POST)
+
+        if form.is_valid():
+            new_password = form.cleaned_data["new_password"]
+            staff_user.set_password(new_password)
+            staff_user.save()
+            messages.success(
+                request, f"Password for {staff_user.username} has been changed."
+            )
+            return redirect("user_authentication:login")  # or any page you want
+        messages.error(request, "Please complete in the correct form.")
+        return render(
+            request, self.success_url, {"form": form, "staff_user": staff_user}
+        )
