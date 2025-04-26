@@ -39,7 +39,6 @@ class Product(models.Model):
         return self.name
     
     def update_inventory(self, quantity):
-        """Zbrit sasinë nga inventari kur porosia konfirmohet"""
         
         self.quantity -= quantity
         self.save()
