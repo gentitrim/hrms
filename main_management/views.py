@@ -11,7 +11,7 @@ from django.db.models import Q,F,ExpressionWrapper,FloatField,Sum
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum,Count
-from django.utils.timezone import now
+from django.utils.timezone import now,timedelta
 from hrms.rolemixin import RoleAccessMixin
 from restaurant.models import Order
 from user_authentication.forms import CustomUserResetPassForm
@@ -154,6 +154,27 @@ class BranchDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(Branch, id=self.kwargs.get('pk'))
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        
+        today = now().date()
+        week_start = today - timedelta(days=today.weekday())
+        week_end = week_start + timedelta(days=7)
+
+        weekly_total_revenue = Order.objects.filter(order_time__date__range=(week_start, week_end)).aggregate(Sum('total_price'))['total_price__sum'] or 0
+        
+        context['weekly_total_revenue'] = weekly_total_revenue / 100
+
+        
+        return context
+    
+
+    
+        
+
 
 
 class ManagerManagementView(LoginRequiredMixin,TemplateView):
