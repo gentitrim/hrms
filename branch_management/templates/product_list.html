@@ -11,9 +11,15 @@
         </a>
     </div>
 
+    <div class="d-flex justify-content-center mb-4">
+        <div style="width: 300px;">
+            <input type="text" id="productSearch" class="form-control rounded-pill shadow-sm text-center" placeholder="Search products..." onkeyup="filterProducts()">
+        </div>
+    </div>
+
     <!-- Product Table -->
     <div class="table-responsive rounded shadow-sm">
-        <table class="table table-hover text-center align-middle mb-0">
+        <table id="productTable" class="table table-hover text-center align-middle mb-0">
             <thead class="table-dark">
                 <tr>
                     <th>Name</th>
@@ -53,6 +59,7 @@
             </tbody>
         </table>
     </div>
+    
 
     <!-- Pagination Controls -->
     {% if is_paginated %}
@@ -94,4 +101,27 @@
     {% endif %}
 
 </div>
+
+<script>
+    function filterProducts() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("productSearch");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("productTable");
+        tr = table.getElementsByTagName("tr");
+    
+        // Loop through all table rows, except the header (index 0)
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];  // search only by product name
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = ""; // show row
+                } else {
+                    tr[i].style.display = "none"; // hide row
+                }
+            }
+        }
+    }
+</script>
 {% endblock content %}
