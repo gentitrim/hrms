@@ -3,9 +3,8 @@ from django.views.generic import TemplateView,ListView,CreateView,UpdateView,Del
 from django.urls import reverse_lazy
 from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm
 from user_authentication.models import CustomUser
-from user_authentication.forms import CustomUserResetPassForm
+from user_authentication.forms import CustomUserResetPassForm,CustomUserRegisterForm
 from django.contrib import messages
-from user_authentication.forms import CustomUserRegisterForm
 from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from hrms.rolemixin import RoleAccessMixin
@@ -64,9 +63,9 @@ class CreateProductView(LoginRequiredMixin,RoleAccessMixin,CreateView):
             
             messages.success(request, 'Product successfully created!')
             return redirect(self.success_url)
-
-        # Ensure the category field is filtered again in case of form errors
+        messages.error(request, 'Error creating product. Please check the form.')
         product_create_form.fields['category'].queryset = Category.objects.filter(branch=request.user.branchstaff.branch)
+        
         return render(request, self.template_name, {
             'product_create_form': product_create_form,
         })
@@ -102,6 +101,7 @@ class ProductDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
     allowed_roles = ['manager']
     model = Product
     template_name = 'product_confirm_delete.html'
+    success_message = "Product successfully deleted!"
     success_url = reverse_lazy('branch_management:product-list')
 
     def get_queryset(self):
@@ -142,7 +142,8 @@ class EmployeeCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
             
             messages.success(request, 'Employee successfully created!')
             return redirect(self.success_url)
-
+        messages.error(request, 'Error creating employee. Please check the form.')
+        branchstaff_form.fields['branch'].queryset = Branch.objects.filter(branch__user_id=request.user.id)
         return render(request, self.template_name, {
             'branchstaff_form': branchstaff_form,
             'user_create_form': user_create_form,
@@ -189,6 +190,7 @@ class UpdateEmployeeView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
             user_form.save()
             messages.success(request, 'Employee successfully updated!')
             return redirect(self.get_success_url())
+        messages.error(request, 'Error updating employee. Please check the form.')  
         return render(request, self.template_name, {
             'staff_form': staff_form,
             'user_form': user_form
@@ -216,7 +218,8 @@ class EmployeeResetPasswordView(LoginRequiredMixin,RoleAccessMixin,View):
             staff_user.set_password(new_password)
             staff_user.save()
             messages.success(request, f"Password for {staff_user.username} has been changed.")
-            return redirect('branch_management:employee-list')  
+            return redirect('branch_management:employee-list') 
+        messages.error(request, 'Error resetting password. Please check the form.')
         return render(request, self.template_name, {'form': form, 'staff_user': staff_user})
 
     
@@ -235,9 +238,13 @@ class DeleteEmployeeView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
         return CustomUser.objects.none()
 
     def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        messages.success(self.request, "Employee successfully deleted!")
-        return response
+        try:
+            response = super().post(request, *args, **kwargs)
+            messages.success(self.request, "Employee successfully deleted!")
+            return response
+        except Exception as e:
+            messages.error(self.request, "Error deleting employee. Please try again.")
+            return redirect(self.success_url)
 
 
 class DetailEmployeeView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
@@ -288,7 +295,7 @@ class CategoryCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
             
             messages.success(request, 'Category successfully created!')
             return redirect(self.success_url)
-
+        messages.error(request, 'Error creating category. Please check the form.')
         return render(request, self.template_name, {
             'category_create_form': category_create_form,
         })
@@ -320,28 +327,14 @@ class CategoryDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
     def get_queryset(self):
         try:
             branch = Branch.objects.get(branch__user=self.request.user)
+            messages.success(self.request, 'Category successfully deleted!')
             return Category.objects.filter(branch=branch)
         except Category.DoesNotExist:
+            messages.error(self.request, 'Category does not exist.')
             return Category.objects.none()
         
     def post(self, request, *args, **kwargs):
+
         response = super().post(request, *args, **kwargs)
         messages.success(self.request, "Category successfully deleted!")
         return response
-    
-
-
-# class TotalOrdersView(LoginRequiredMixin,RoleAccessMixin,View):
-#     allowed_roles = ['manager']
-#     def get(self, request, *args, **kwargs):
-#         user_branch = self.request.user.branchstaff.branch
-#         orders = get_object_or_404(Order,branch=user_branch)
-#         print(orders)
-#         total_amount = orders.filter(status='CONFIRMED').aggregate(Sum('total_price'))['total_price__sum'] or 0
-#         context = {
-#             'orders': orders,
-#             'total_amount': total_amount / 100,
-#             'total_orders': orders.count() or 0,
-#         }
-#         return render(request, 'manager_dashboard.html', context)
-    
