@@ -37,10 +37,7 @@ class DashboardView(LoginRequiredMixin,RoleAccessMixin,View):
         }
         return render(request, 'manager_dashboard.html', context)
 
-
-
 # Product Views
-
 class CreateProductView(LoginRequiredMixin,RoleAccessMixin,CreateView):
     allowed_roles = ['manager']
     model = Product
@@ -111,9 +108,7 @@ class ProductDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
         return Product.objects.filter(branch=user_branch) 
 
 
-
 # Employee Views
-
 class EmployeeCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
     allowed_roles = ['manager']
     template_name = 'branch_management/create_employee.html'
@@ -145,7 +140,6 @@ class EmployeeCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
             messages.success(request, 'Employee successfully created!')
             return redirect(self.success_url)
         messages.error(request, 'Error creating employee. Please check the form.')
-        branchstaff_form.fields['branch'].queryset = Branch.objects.filter(branch__user_id=request.user.id)
         return render(request, self.template_name, {
             'branchstaff_form': branchstaff_form,
             'user_create_form': user_create_form,
