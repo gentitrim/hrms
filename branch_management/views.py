@@ -338,3 +338,11 @@ class CategoryDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView):
         response = super().post(request, *args, **kwargs)
         messages.success(self.request, "Category successfully deleted!")
         return response
+    
+
+class EditProfileView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
+    allowed_roles = ['manager']
+    model = CustomUser
+    form_class = CustomUserUpdateForm
+    template_name = 'branch_management/user_update.html'
+    success_url = reverse_lazy('branch_management:employee-list')

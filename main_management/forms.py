@@ -70,3 +70,16 @@ class CustomManagerUpdateForm(forms.ModelForm):
     def clean_last_name(self):
         first_name = self.cleaned_data.get('last_name')
         return first_name.title()
+    
+
+class EmployeeUpdateForm(forms.ModelForm):
+    class Meta:
+        model = BranchStaff
+        fields = ['phone'] 
+        exclude = ['branch','role']
+    
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if not re.match(r'^\+?\d{0,14}$', phone):
+            raise forms.ValidationError("Invalid phone number format.")
+        return phone 
