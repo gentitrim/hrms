@@ -1,8 +1,8 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
+
 {% block content %}
 <main>
     <div class="container card shadow-sm p-4 mt-4">
-
         <div class="row">
             <!-- Categories Section -->
             <div class="col-md-3 mt-3">
@@ -43,7 +43,8 @@
                                 <th style="border-top-right-radius:9px">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="orderItemList" style="font-size:14px"></tbody>
+                        <tbody id="orderItemList" style="font-size:14px">
+                        </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="3" class="text-end">Total Price</td>
@@ -52,12 +53,11 @@
                         </tfoot>
                     </table>
 
-                    <!-- BOTTONI PARALLELI -->
+                    <!-- Buttons -->
                     <div class="btn-group w-100 mb-3" role="group" aria-label="Order Actions">
-                        <button id="clearSelection" type="button" class="btn btn-outline-danger rounded-pill">
+                        <button id="clearSelection" type="button" class="btn btn-outline-danger rounded-pill" onclick="clearOrder()">
                             <i class="bi bi-trash3"></i> Clear Order
                         </button>
-
                         <button id="printInvoice" type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal" data-bs-target="#confirmOrderModal">
                             Confirm Order
                         </button>
@@ -90,4 +90,75 @@
         </div>
     </div>
 </main>
+
+<!-- SCRIPT PART -->
+<script>
+    function addProductToOrder(productId, productName, productPrice) {
+        let existingRow = document.getElementById(`product-${productId}`);
+        if (existingRow) {
+            updateQuantity(productId, 'increase');
+            return;
+        }
+
+        let tbody = document.getElementById('orderItemList');
+        let newRow = `
+            <tr id="product-${productId}">
+                <td>${productName}</td>
+                <td>
+                    <div class="quantity-control" style="display: flex; align-items: center; gap: 10px;">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateQuantity(${productId}, 'increase')">+</button>
+                        <input type="text" id="quantity-${productId}" class="quantity" value="1" style="width: 40px; text-align: center;" readonly>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="updateQuantity(${productId}, 'decrease')">-</button>
+                    </div>
+                </td>
+                <td class="unit-price">${parseFloat(productPrice).toFixed(2)}</td>
+                <td class="total-price">${parseFloat(productPrice).toFixed(2)} €</td>
+                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeProduct(${productId})">Remove</button></td>
+            </tr>
+        `;
+        tbody.insertAdjacentHTML('beforeend', newRow);
+        updateOrderTotal();
+    }
+
+    function updateQuantity(productId, action) {
+        let quantityInput = document.getElementById(`quantity-${productId}`);
+        let unitPrice = parseFloat(document.querySelector(`#product-${productId} .unit-price`).textContent);
+        let totalPriceCell = document.querySelector(`#product-${productId} .total-price`);
+
+        let quantity = parseInt(quantityInput.value);
+        if (action === 'increase') {
+            quantity++;
+        } else if (action === 'decrease' && quantity > 1) {
+            quantity--;
+        }
+
+        quantityInput.value = quantity;
+        let newTotalPrice = quantity * unitPrice;
+        totalPriceCell.textContent = newTotalPrice.toFixed(2) + ' €';
+
+        updateOrderTotal();
+    }
+
+    function removeProduct(productId) {
+        let productRow = document.getElementById(`product-${productId}`);
+        if (productRow) {
+            productRow.remove();
+            updateOrderTotal();
+        }
+    }
+
+    function updateOrderTotal() {
+        let total = 0;
+        document.querySelectorAll('#selectedProductsTable .total-price').forEach(function(td) {
+            total += parseFloat(td.textContent.replace(' €', ''));
+        });
+        document.getElementById('totalPrice').textContent = total.toFixed(2) + ' €';
+    }
+
+    function clearOrder() {
+        document.getElementById('orderItemList').innerHTML = '';
+        updateOrderTotal();
+    }
+</script>
+
 {% endblock content %}

@@ -4,17 +4,12 @@
     {% for product in all_products %}
         <button 
             type="button" 
-            class="list-group-item list-group-item-action d-flex align-items-center justify-content-between add-to-order"
-            data-product-id="{{ product.id }}"
-            data-product="{{ product.name }}" 
-            data-price="{{ product.get_price_as_float }}" 
-            value="{{ product.id }}" 
-            id="add_order_{{ product.id }}"
-            hx-target="#order_result"
-            hx-swap="outerHTML">
+            class="list-group-item list-group-item-action d-flex align-items-center justify-content-between add-to-order mb-2"
+            onclick="addProductToOrder({{ product.id }}, '{{ product.name }}', {{ product.get_price_as_float }})"
+            id="add_order_{{ product.id }}">
 
             <div class="d-flex align-items-center">
-                <img src="{{ product.image.url }}" width="24" height="24" class="me-2">
+                <img src="{{ product.image.url }}" width="24" height="24" class="me-2" alt="{{ product.name }}">
                 <span>{{ product.name }}</span>
             </div>
 

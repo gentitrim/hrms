@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Delete Branch</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="card shadow-sm rounded-3">
+      <div class="card-body">
+        <h2 class="text-danger"><i class="bi bi-trash-fill"></i> Delete Branch</h2>
+        <p>Are you sure you want to delete the branch <strong class="text-primary">{{ object.name }}</strong>?</p>
+
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-check-circle-fill"></i> Yes, Delete
+          </button>
+          <a href="{{ cancel_url }}" class="btn btn-secondary">
+            <i class="bi bi-x-circle-fill"></i> Cancel
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

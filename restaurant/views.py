@@ -170,3 +170,14 @@ class ResetPasswordView(LoginRequiredMixin, RoleAccessMixin, View):
             request, self.success_url, {"form": form, "staff_user": staff_user}
         )
 
+def increase_quantity(request):
+    quantity = int(request.session.get('quantity', 1)) + 1
+    request.session['quantity'] = quantity
+    return HttpResponse(f'<input type="text" id="quantity" value="{quantity}" style="width: 40px; text-align: center;" readonly>')
+
+def decrease_quantity(request):
+    quantity = int(request.session.get('quantity', 1)) - 1
+    if quantity < 1:
+        quantity = 1
+    request.session['quantity'] = quantity
+    return HttpResponse(f'<input type="text" id="quantity" value="{quantity}" style="width: 40px; text-align: center;" readonly>')
