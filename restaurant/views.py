@@ -131,7 +131,7 @@ def confirm_order(request):
                 price=item['price'] * item["quantity"] * 100
             )
         
-        # 🔥 Kjo është pjesa e re që duhet shtuar:
+        
         order.confirm_order()
 
         return JsonResponse({'status': 'success', 'message': 'Order confirmed', 'data': items})
