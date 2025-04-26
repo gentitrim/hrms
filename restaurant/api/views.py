@@ -72,7 +72,7 @@ class SearchByDate(LoginRequiredMixin,RoleAccessMixin,View):
     allowed_roles = ['staff']
     def get(self,request):
         date = request.GET.get('search_date') or datetime.date.today()
-        staff = BranchStaff.objects.get(pk = request.user.id)
+        staff = BranchStaff.objects.get(pk = request.user.branchstaff.id)
         logger.debug(f"Raw request body: {date}")
         orders = Order.objects.filter(order_time__date=date,staff_id=staff).order_by('-order_time')
         order_items = Order_item.objects.filter(order_id__in=orders)

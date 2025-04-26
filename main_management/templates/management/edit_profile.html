@@ -1,0 +1,31 @@
+{% extends 'management/management_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-secondary text-white text-center">
+                    <strong>Edit your profile</strong>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                           {{user_form.as_p}}
+                        </div>
+    
+                        <div class="mb-3">
+                            {{employee_form.as_p}}
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-outline-primary px-4">Confirm Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -18,9 +18,12 @@ urlpatterns = [
     path('employees/resetpassword/<int:pk>/', views.EmployeeResetPasswordView.as_view(), name='reset_employee_password'),
     # path('', views.ManagerDashboardView.as_view(), name='manager_dashboard'),
 
-
     path('categories/', views.CategoryListView.as_view(), name='category-list'),
     path('categories/create/', views.CategoryCreateView.as_view(), name='category-create'),
     path('categories/update/<int:pk>', views.CategoryUpdateView.as_view(), name='category-update'),
     path('categories/delete/<int:pk>', views.CategoryDeleteView.as_view(), name='category-delete'),
+
+    path('your_profile/', views.ProfileView.as_view(), name='your_profile'),
+    path('your_profile/update/<int:pk>', views.EditProfileView.as_view(), name='edit_profile'),
+    path('your_profile/update_password/<int:pk>', views.ResetPasswordView.as_view(), name='manager_edit_password'),
 ]

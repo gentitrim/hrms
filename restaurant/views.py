@@ -11,11 +11,12 @@ from hrms.rolemixin import RoleAccessMixin
 from .models import Order, Order_item
 from branch_management.models import BranchStaff, Product, Category
 from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
 
-
-
-logger = logging.getLogger(__name__)
-
+from user_authentication.models import CustomUser
+from user_authentication.forms import CustomUserResetPassForm
+from django.views import View
+from django.shortcuts import redirect
 
 
 class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
@@ -23,7 +24,7 @@ class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
     template_name = 'restaurant/employees_dashboard/orders.html'
     model = Category
     context_object_name = "categories"
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy('user_authentication:login')
     redirect_field_name = "next"
 
     def get_queryset(self):
@@ -56,14 +57,14 @@ class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
 class DashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     allowed_roles = ['staff']
     template_name = 'restaurant/employees_dashboard/dashboard.html'
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy('user_authentication:login')
     redirect_field_name = "next"
 
 
 class CancelOrderView(LoginRequiredMixin,RoleAccessMixin, TemplateView):
     allowed_roles = ['staff']
     template_name = 'restaurant/employees_dashboard/cancel_order.html'
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy('user_authentication:login')
     redirect_field_name = "next"
 
     def post(self, request, *args, **kwargs):
@@ -98,7 +99,7 @@ class CancelOrderView(LoginRequiredMixin,RoleAccessMixin, TemplateView):
 class ShiftsView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
     allowed_roles = ['staff']
     template_name = 'restaurant/employees_dashboard/shifts.html'
-    login_url = reverse_lazy('login')
+    login_url = reverse_lazy('user_authentication:login')
     redirect_field_name = "next"
 
 
@@ -108,17 +109,13 @@ def confirm_order(request):
         return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
     try:
         raw_body = request.body.decode('utf-8')
-        logger.debug(f"Raw request body: {raw_body}")
-        print(request.user.id)
 
         data = json.loads(raw_body)
-        logger.debug(f"Parsed JSON data: {data}")
 
         if 'items' not in data or not data['items']:
             return JsonResponse({'status': 'error', 'message': 'No items provided'}, status=400)
 
         items = data['items']
-        # logger.debug(f"Received items: {items}")
 
         total_price = sum(item['total_price'] for item in items) * 100
 
@@ -133,9 +130,43 @@ def confirm_order(request):
         return JsonResponse({'status': 'success', 'message': 'Order confirmed', 'data': items})
 
     except json.JSONDecodeError as e:
-        logger.error(f"JSONDecodeError: {e}")
+        messages.error(f"JSONDecodeError: {e}")
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
 
     except Exception as e:
-        logger.error(f"Unexpected error: {e}")
+        messages.error(f"Unexpected error: {e}")
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+
+
+class ResetPasswordView(LoginRequiredMixin, RoleAccessMixin, View):
+    allowed_roles = ["staff"]
+    template_name = "snippets/reset_password_employee.html"
+    success_url = reverse_lazy("api_restaurant:my_profile")
+    login_url = reverse_lazy("user_authentication:login")
+    redirect_field_name = "next"
+
+    def get(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm()
+        return render(
+            request, self.template_name, {"form": form, "staff_user": staff_user}
+        )
+
+    def post(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm(request.POST)
+
+        if form.is_valid():
+            new_password = form.cleaned_data["new_password"]
+            staff_user.set_password(new_password)
+            staff_user.save()
+            messages.success(
+                request, f"Password for {staff_user.username} has been changed."
+            )
+            return redirect("user_authentication:login")  # or any page you want
+        messages.error(request, "Please complete in the correct form.")
+        return render(
+            request, self.success_url, {"form": form, "staff_user": staff_user}
+        )
+

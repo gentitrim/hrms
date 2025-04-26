@@ -99,3 +99,15 @@ class CustomUserUpdateForm(forms.ModelForm):
         return first_name.title()
     
 
+class EmployeeUpdateForm(forms.ModelForm):
+    class Meta:
+        model = BranchStaff
+        fields = ['phone'] 
+        exclude = ['branch','role']
+    
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if not re.match(r'^\+?\d{0,14}$', phone):
+            raise forms.ValidationError("Invalid phone number format.")
+        return phone    
+

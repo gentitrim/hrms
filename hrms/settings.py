@@ -143,7 +143,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "user_authentication.CustomUser"
 
 
-LOGIN_REDIRECT_URL = 'redirect_by_role'  # ✅ underscores, matches the name in urlpatterns
+LOGIN_REDIRECT_URL = 'user_authentication:redirect_by_role'  
 
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
 

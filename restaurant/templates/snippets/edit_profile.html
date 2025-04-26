@@ -1,3 +1,5 @@
+
+
 {% load static %}
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -42,6 +44,9 @@
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'restaurant:edit_password' user.id %}" class="btn btn-outline-danger px-4">Change Password</a>
         </div>
     </div>
 </div>
