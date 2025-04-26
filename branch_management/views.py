@@ -421,7 +421,7 @@ class EditProfileView(LoginRequiredMixin, RoleAccessMixin, View):
 
 class ResetPasswordView(LoginRequiredMixin, RoleAccessMixin, View):
     allowed_roles = ["manager"]
-    template_name = "management/reset_password.html"
+    template_name = "reset_password_manager.html"
     success_url = reverse_lazy("main_management:your_profile")
     login_url = reverse_lazy("user_authentication:login")
     redirect_field_name = "next"

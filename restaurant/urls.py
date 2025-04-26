@@ -12,4 +12,5 @@ urlpatterns = [
     path('shifts/',views.ShiftsView.as_view(),name="shifts"),
     path('confirm_order/',views.confirm_order,name='confirm_order'),
     path('cancel_order/<int:pk>/',views.CancelOrderView.as_view(),name='cancel_order'),
+    path('reset_your_password/<int:pk>/',views.ResetPasswordView.as_view(),name='edit_password'),
 ]

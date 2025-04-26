@@ -13,7 +13,10 @@ from branch_management.models import BranchStaff, Product, Category
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 
-
+from user_authentication.models import CustomUser
+from user_authentication.forms import CustomUserResetPassForm
+from django.views import View
+from django.shortcuts import redirect
 
 
 class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
@@ -133,3 +136,37 @@ def confirm_order(request):
     except Exception as e:
         messages.error(f"Unexpected error: {e}")
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+
+
+class ResetPasswordView(LoginRequiredMixin, RoleAccessMixin, View):
+    allowed_roles = ["staff"]
+    template_name = "snippets/reset_password_employee.html"
+    success_url = reverse_lazy("api_restaurant:my_profile")
+    login_url = reverse_lazy("user_authentication:login")
+    redirect_field_name = "next"
+
+    def get(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm()
+        return render(
+            request, self.template_name, {"form": form, "staff_user": staff_user}
+        )
+
+    def post(self, request, pk):
+        staff_user = get_object_or_404(CustomUser, pk=pk)
+        form = CustomUserResetPassForm(request.POST)
+
+        if form.is_valid():
+            new_password = form.cleaned_data["new_password"]
+            staff_user.set_password(new_password)
+            staff_user.save()
+            messages.success(
+                request, f"Password for {staff_user.username} has been changed."
+            )
+            return redirect("user_authentication:login")  # or any page you want
+        messages.error(request, "Please complete in the correct form.")
+        return render(
+            request, self.success_url, {"form": form, "staff_user": staff_user}
+        )
+
