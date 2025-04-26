@@ -18,8 +18,6 @@ urlpatterns = [
     path('search_branch/',views.SearchBranchView.as_view(),name = 'search_branch'),
     path('branch/<int:pk>/',views.BranchDetailView.as_view(),name = 'branch_detail'),
     
-    
-    path('manage_managers/', views.ManagerManagementView.as_view(), name='manage_managers'),
     path('managers/', views.ManagerListView.as_view(), name='manager_list'),
     path('managers/create/', views.CreateManagerView.as_view(), name='create_manager'),
     path('managers/<int:pk>/edit/', views.ManagerUpdateView.as_view(), name='edit_manager'),    
