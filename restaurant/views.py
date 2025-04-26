@@ -119,22 +119,29 @@ def confirm_order(request):
 
         total_price = sum(item['total_price'] for item in items) * 100
 
-        #For test until branch staff is created
-        staff = get_object_or_404(BranchStaff,pk=request.user.branchstaff.id)
-        order = Order.objects.create(total_price=total_price,staff_id=staff )
-        print(staff)
+        staff = get_object_or_404(BranchStaff, pk=request.user.branchstaff.id)
+        order = Order.objects.create(total_price=total_price, staff_id=staff)
+
         for item in items:
             product = Product.objects.get(pk=item['product_id'])
-            Order_item.objects.create(order_id = order,product_id=product,quantity = item['quantity'],price = item['price']*item["quantity"]*100) 
+            Order_item.objects.create(
+                order_id=order,
+                product_id=product,
+                quantity=item['quantity'],
+                price=item['price'] * item["quantity"] * 100
+            )
+        
+        # 🔥 Kjo është pjesa e re që duhet shtuar:
+        order.confirm_order()
 
         return JsonResponse({'status': 'success', 'message': 'Order confirmed', 'data': items})
 
     except json.JSONDecodeError as e:
-        messages.error(f"JSONDecodeError: {e}")
+        messages.error(request, f"JSONDecodeError: {e}")
         return JsonResponse({'status': 'error', 'message': 'Invalid JSON data'}, status=400)
 
     except Exception as e:
-        messages.error(f"Unexpected error: {e}")
+        messages.error(request, f"Unexpected error: {e}")
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
 
