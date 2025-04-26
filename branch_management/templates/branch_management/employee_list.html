@@ -4,6 +4,27 @@
 <div class="container mt-5">
     <h1 class="text-center mb-5 fw-bold">Employee List</h1>
 
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <form method="get" class="input-group shadow-sm">
+                <label for="searchInput" class="visually-hidden">Search employees</label>
+                <span class="input-group-text bg-white border-0 rounded-pill-start pe-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" id="searchInput" name="q" class="form-control border-0 rounded-pill-start" placeholder="Search by first or last name..." value="{{ search_query|default_if_none:'' }}" aria-describedby="searchButton">
+                <button type="submit" id="searchButton" class="btn btn-primary rounded-pill-end px-4" aria-label="Search employees">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Clear Search Button -->
+    {% if search_query %}
+    <div class="text-center mb-3">
+        <a href="{% url 'branch_management:employee-list' %}" class="btn btn-outline-secondary rounded-pill">Clear Search</a>
+    </div>
+    {% endif %}
+
     <div class="text-center mb-4">
         <a href="{% url 'branch_management:create_employee' %}" class="btn btn-primary btn-lg rounded-pill shadow-sm">Add New Employee</a>
     </div>
@@ -11,80 +32,115 @@
     <div class="table-responsive rounded shadow-sm">
         <table class="table table-hover text-center align-middle mb-0">
             <thead class="table-dark">
-            <tr>
-                <th>Name</th>
-                <th>Last Name</th>
-                <th>Branch</th>
-                <th>Role</th>
-                <th>Actions</th>
-                <th>Reset Password</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for employee in employees %}
-            <tr>
-                <td>{{ employee.user.first_name }}</td>
-                <td>{{ employee.user.last_name }}</td>
-                <td>{{ employee.branch.name }}</td>
-                <td>{{ employee.role | capfirst }}</td>
-                <td>
-                    <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-outline-secondary btn-sm">Edit</a>
-                    <a href="{% url 'branch_management:delete_employee' employee.user.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
-                    <a href="{% url 'branch_management:detail_employee' employee.id %}" class="btn btn-outline-info btn-sm">Details</a>
-                </td>
-                <td>
-                    <a href="{% url 'branch_management:reset_employee_password' employee.user.id %}" class="btn btn-outline-warning btn-sm">Change Password</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6" class="text-center">No employees found for this branch.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                <tr>
+                    <th>Name</th>
+                    <th>Last Name</th>
+                    <th>Branch</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                    <th>Reset Password</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.user.first_name }}</td>
+                    <td>{{ employee.user.last_name }}</td>
+                    <td>{{ employee.branch.name }}</td>
+                    <td>{{ employee.role | capfirst }}</td>
+                    <td>
+                        <a href="{% url 'branch_management:update_employee' employee.id %}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                        <a href="{% url 'branch_management:delete_employee' employee.user.id %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                        <a href="{% url 'branch_management:detail_employee' employee.id %}" class="btn btn-outline-info btn-sm">Details</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'branch_management:reset_employee_password' employee.user.id %}" class="btn btn-outline-warning btn-sm">Change Password</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">
+                        {% if search_query %}
+                            No employees found matching "{{ search_query }}".
+                        {% else %}
+                            No employees found for this branch.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <!-- Pagination Controls -->
     {% if is_paginated %}
-    <nav aria-label="Page navigation" class="mt-4">
+    <nav aria-label="Employee list pagination" class="mt-4">
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}" aria-label="Previous">
+                    <span aria-hidden="true">«</span>
                 </a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
+                <span class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">«</span>
+                </span>
             </li>
             {% endif %}
 
             {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
-            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">{{ num }}</span>
+            </li>
             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}">{{ num }}</a>
+            </li>
             {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query|urlencode }}{% endif %}" aria-label="Next">
+                    <span aria-hidden="true">»</span>
                 </a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
+                <span class="page-link" aria-label="Next">
+                    <span aria-hidden="true">»</span>
+                </span>
             </li>
             {% endif %}
         </ul>
     </nav>
     {% endif %}
 </div>
+
+<!-- Custom CSS for Search Form -->
+<style>
+    .input-group {
+        transition: box-shadow 0.2s ease-in-out;
+    }
+    .input-group:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #86b7fe;
+    }
+    .rounded-pill-start {
+        border-radius: 50px 0 0 50px !important;
+    }
+    .rounded-pill-end {
+        border-radius: 0 50px 50px 0 !important;
+    }
+    .input-group-text {
+        background: transparent;
+    }
+</style>
+
 {% endblock %}
