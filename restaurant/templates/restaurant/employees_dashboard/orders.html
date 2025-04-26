@@ -1,86 +1,93 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
 {% block content %}
-    <main>
+<main>
+    <div class="container card shadow-sm p-4 mt-4">
 
-        <!-- Menu and Order Creation Section -->
-        <h1 style="text-align: center;">Menu</h1>
-        <div class="container card">
-            <div class="row">
-                <div class="col-md-3 mt-3">
-                    <h4>Category</h4>
-                    <div class="list-group">
-                        {% for category in categories %}
-                            <button type="button" class="list-group-item list-group-item-action"
-                                    value="{{ category.name }}" id="{{ category.name }}"
-                                    hx-get="{% url 'api_restaurant:get_products' category.id %}"
-                                    hx-target="#productResult"
-                                    hx-trigger="click"
-                                    hx-swap="innerHTML">{{ category.name }}
-                            </button>
-                        {% endfor %}
-                    </div>
+        <div class="row">
+            <!-- Categories Section -->
+            <div class="col-md-3 mt-3">
+                <h4 class="text-primary">Categories</h4>
+                <div class="list-group">
+                    {% for category in categories %}
+                        <button type="button" class="list-group-item list-group-item-action rounded-pill mb-2"
+                                value="{{ category.name }}" id="{{ category.name }}"
+                                hx-get="{% url 'api_restaurant:get_products' category.id %}"
+                                hx-target="#productResult"
+                                hx-trigger="click"
+                                hx-swap="innerHTML">
+                            {{ category.name }}
+                        </button>
+                    {% endfor %}
                 </div>
+            </div>
 
-                <div class="col-md-4 mt-3">
-                    <h4>Product</h4>
-                    <div id="productResult">
-                        {% include 'snippets/product_list_by_category.html' %}
-                    </div>
+            <!-- Product Section -->
+            <div class="col-md-4 mt-3">
+                <h4 class="text-primary">Products</h4>
+                <div id="productResult">
+                    {% include 'snippets/product_list_by_category.html' %}
                 </div>
+            </div>
 
-                <div class="col-md-5 mt-3">
-                    <div class="selected-products">
-                        <h4>Current Order</h4>
-                        <table id="selectedProductsTable">
-                            <thead>
-                                <tr>
-                                    <th style="border-top-left-radius:9px">Product</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Price</th>
-                                    <th>Total</th>
-                                    <th style="border-top-right-radius:9px">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="orderItemList" style="font-size:14px"></tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3" class="total-price">Total Price</td>
-                                    <td id="totalPrice">0.00 €</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <button id="clearSelection" type="button" class="btn btn-outline-danger">
+            <!-- Order Summary Section -->
+            <div class="col-md-5 mt-3">
+                <div class="selected-products">
+                    <h4 class="text-primary">Current Order</h4>
+                    <table id="selectedProductsTable" class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="border-top-left-radius:9px">Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                                <th style="border-top-right-radius:9px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderItemList" style="font-size:14px"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end">Total Price</td>
+                                <td id="totalPrice">0.00 €</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- BOTTONI PARALLELI -->
+                    <div class="btn-group w-100 mb-3" role="group" aria-label="Order Actions">
+                        <button id="clearSelection" type="button" class="btn btn-outline-danger rounded-pill">
                             <i class="bi bi-trash3"></i> Clear Order
                         </button>
 
-                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-
-                        <button id="printInvoice" type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#confirmOrderModal">
+                        <button id="printInvoice" type="button" class="btn btn-outline-success rounded-pill" data-bs-toggle="modal" data-bs-target="#confirmOrderModal">
                             Confirm Order
                         </button>
+                    </div>
 
-                        <div class="modal fade" id="confirmOrderModal" tabindex="-1" aria-labelledby="confirmOrderModal" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Order Confirmation</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure you want to proceed with this order?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" id="confirmOrder" data-bs-dismiss="modal">Confirm Order</button>
-                                    </div>
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+                    <!-- Modal for Order Confirmation -->
+                    <div class="modal fade" id="confirmOrderModal" tabindex="-1" aria-labelledby="confirmOrderModal" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Order Confirmation</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to proceed with this order?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary rounded-pill" id="confirmOrder" data-bs-dismiss="modal">Confirm Order</button>
                                 </div>
                             </div>
                         </div>
-
-                        <div id="response"></div>
                     </div>
+
+                    <div id="response"></div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 {% endblock content %}

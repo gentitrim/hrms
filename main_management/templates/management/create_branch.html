@@ -5,12 +5,13 @@
     <div class="row justify-content-center">
       <div class="col-md-10 col-lg-8">
         <div class="card mb-4 shadow-sm">
-          <div class="card-header bg-secondary text-white text-center">
+          <div class="card-header bg-secondary text-white text-center py-3">
             <strong>Create New Branch</strong>
           </div>
-          <div class="card-body">
+          <div class="card-body p-4">
             <form method="post">
               {% csrf_token %}
+              
               {% for field in form %}
                 <div class="mb-3">
                   <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -18,15 +19,16 @@
                 <div class="mb-3">
                   {{ field }}
                   {% if field.help_text %}
-                    <div class="form-text">{{ field.help_text }}</div>
+                    <div class="form-text text-muted">{{ field.help_text }}</div>
                   {% endif %}
                   {% for error in field.errors %}
                     <div class="text-danger small">{{ error }}</div>
                   {% endfor %}
                 </div>
               {% endfor %}
+              
               <div class="text-center mt-4">
-                <button type="submit" class="btn btn-outline-primary px-4">Create Branch</button>
+                <button type="submit" class="btn btn-outline-primary px-4 py-2">Create Branch</button>
               </div>
             </form>
           </div>

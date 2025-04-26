@@ -1,18 +1,28 @@
 {% extends "branch_main.html" %}
 
-{%block content%}
-<div class="container mt-3">
-    <h2 class='text-center'>Edit Product</h2>
-    <form method="post">
-        {% csrf_token %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Edit Product</h2>
 
-        {{form.as_p}}
-
-        <div class="button-group">
-            <button type="submit" class="btn btn-outline-success">Confirm</button>
-            <a href="{% url 'branch_management:product-list' %}" class="btn btn-outline-danger">Cancel</a>
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">Product Details</div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.as_p }}
+                    {% if form.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="submit" class="btn btn-success">Confirm</button>
+                    <a href="{% url 'branch_management:product-list' %}" class="btn btn-outline-danger">Cancel</a>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
-
-{%endblock content%}
+{% endblock %}

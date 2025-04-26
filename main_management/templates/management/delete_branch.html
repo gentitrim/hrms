@@ -1,18 +1,19 @@
 {% extends 'management/management_base.html' %}
 
 {% block content %}
-
-  <div class="container col-md-10 col-lg-8">
-    <div class="card text-center">
-      <div class="card-header bg-danger">
-        <p class="fs-4">Are you sure to delete this Branch??</p>
+  <div class="container col-md-10 col-lg-8 mt-5">
+    <div class="card text-center shadow-sm">
+      <div class="card-header bg-danger text-white">
+        <p class="fs-4 mb-0">Are you sure you want to delete this Branch?</p>
       </div>
       <div class="card-body">
-        <h5 class="card-title mb-5 mt-5">{{ object.name }} {{ object.address }}</h5>
-        <form method="post" class="mb-5">
+        <h5 class="card-title mb-4">{{ object.name }} - {{ object.address }}</h5>
+        <form method="post">
           {% csrf_token %}
-          <a href="{% url 'main_management:branch' %}" class="btn btn-secondary">Cancel</a>
-          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+          <div class="d-flex justify-content-center">
+            <a href="{% url 'main_management:branch' %}" class="btn btn-secondary me-3">Cancel</a>
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+          </div>
         </form>
       </div>
     </div>

@@ -1,22 +1,28 @@
 {% extends "branch_main.html" %}
 
-{%block content%}
-<div class = 'container'>   
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Create New Category</h2>
 
-    <h1>Create Category</h1>
-
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">          
-        {{ category_create_form.as_p }}
-        {{category_create_form.errors}}
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">Category Details</div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ category_create_form.as_p }}
+                    {% if category_create_form.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{ category_create_form.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="submit" class="btn btn-success">Create</button>
+                    <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-danger">Cancel</a>
+                </div>
+            </form>
         </div>
-        <div class="button-group">
-            <button type="submit" class="btn btn-outline-success"> Create New Category</button>
-            <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-danger">Cancel</a>
-        </div>
-    </form>
-    
-    
+    </div>
 </div>
 {% endblock %}

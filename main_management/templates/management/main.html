@@ -1,7 +1,20 @@
 {% extends 'management/management_base.html' %}
 
 {% block content %}
-  <div class="col-10">
-    <div id="main-dashboard-result"></div>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-10">
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white text-center">
+            <strong>Dashboard</strong>
+          </div>
+          <div class="card-body">
+            <div id="main-dashboard-result">
+              <!-- Qui puoi caricare i dati dinamicamente o mostrare altre informazioni -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}

@@ -1,35 +1,36 @@
 {% extends "management/management_base.html" %}
 
-{%block content%}
-    <div class="container mt-5">
-        <h1 class='text-center'>Employee List</h1>
-        
-            <table class="table table-striped mt-4">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Last Name</th>
-                        <th>Branch</th>
-                        <th>Role</th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for employee in employees %}
-                    <tr>
-                        <td>{{ employee.user.first_name }}</td> 
-                        <td>{{ employee.user.last_name }}</td>
-                        <td>{{ employee.branch.name }}</td>
-                        <td>{{ employee.role | capfirst }}</td>
-                        
-                        
-                    </tr>
-                    {% empty %}
-                    <p>No employees found for this branch.</p>
-                    {% endfor %}
-                </tbody>
-            </table>
-    </div>
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Employee List</h1>
 
-    
+    {% if employees %}
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Last Name</th>
+                    <th>Branch</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.user.first_name }}</td> 
+                    <td>{{ employee.user.last_name }}</td>
+                    <td>{{ employee.branch.name }}</td>
+                    <td>{{ employee.role|capfirst }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+        No employees found for this branch.
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

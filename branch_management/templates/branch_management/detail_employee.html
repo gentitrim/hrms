@@ -1,41 +1,48 @@
 {% extends "branch_main.html" %}
 
-{%block content%}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Employee Info</h2>
 
-<p class='fs-4 text-center mt-3'>Employee Info<p>
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">Employee Details</div>
+        <div class="card-body">
+            <table class="table table-hover table-striped text-center">
+                <thead>
+                    <tr class="table-light">
+                        <th>Field</th>
+                        <th>Information</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr>
+                        <td><strong>Username</strong></td>
+                        <td>{{ employee.user.username }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td>{{ employee.user.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Last Name</strong></td>
+                        <td>{{ employee.user.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Branch</strong></td>
+                        <td>{{ employee.branch.name }} - {{ employee.branch.address }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Role</strong></td>
+                        <td>{{ employee.role }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contact</strong></td>
+                        <td>{{ employee.phone }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
-<div class="container mt-4">   
-    <table class="table table-hover table-striped text-center">
-        <thead>
-            <tr class="table-light">
-                <th>Username</th>
-                <th>{{employee.user}}</th>
-            </tr>
-        </thead>
-        <tbody class='table-group-divider'>
-            <tr>
-                <td>Name</td> 
-                <td>{{employee.user.first_name}}</td>
-            </tr>
-            <tr>
-                <td>Last Name</td> 
-                <td>{{employee.user.last_name}}</td>
-            </tr>
-            <tr>
-                <td>Branch</td> 
-                <td>{{employee.branch.name}} - {{employee.branch.address}}</td>
-            </tr>
-            <tr>
-                <td>Role</td> 
-                <td>{{employee.role}}</td>
-            </tr>
-            <tr>
-                <td>Contact</td> 
-                <td>{{employee.phone}}</td>
-            </tr>
-        </tbody>
-    </table>      
-
-
-{% endblock content %}
+{% endblock %}
