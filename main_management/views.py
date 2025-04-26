@@ -11,14 +11,11 @@ from django.db.models import Q,F,ExpressionWrapper,FloatField,Sum
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum,Count
-from django.utils.timezone import now
+from django.utils.timezone import now,timedelta
 from hrms.rolemixin import RoleAccessMixin
 from restaurant.models import Order
 from user_authentication.forms import CustomUserResetPassForm
-from restaurant.forms import UserUpdateForm,EmployeeUpdateForm
-
-
-
+import calendar
 
 
 class OwnerDashboardView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
@@ -157,6 +154,36 @@ class BranchDetailView(LoginRequiredMixin,RoleAccessMixin,DetailView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(Branch, id=self.kwargs.get('pk'))
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        
+        today = now().date()
+        week_start = today - timedelta(days=today.weekday())
+        week_end = week_start + timedelta(days=7)
+
+        weekly_total_revenue = Order.objects.filter(order_time__date__range=(week_start, week_end)).aggregate(Sum('total_price'))['total_price__sum'] or 0
+        
+        context['weekly_total_revenue'] = weekly_total_revenue / 100
+
+        month_start = today.replace(day=1)
+        last_day = calendar.monthrange(today.year,today.month)[1]
+        month_end  = today.replace(day=last_day)
+
+        monthly_total_revenue = Order.objects.filter(
+            order_time__date__range=(month_start, month_end)
+            ).aggregate(Sum('total_price'))['total_price__sum'] or 0
+        
+        context['monthly_total_revenue'] = monthly_total_revenue / 100
+        
+        return context
+    
+
+    
+        
+
 
 
 class ManagerListView(LoginRequiredMixin,RoleAccessMixin,ListView):

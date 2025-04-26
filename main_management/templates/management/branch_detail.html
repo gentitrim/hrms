@@ -17,7 +17,14 @@
         <strong>Phone Number:</strong> {{ branch.phone }}
       </p>
       <p>
-        <strong>Email:</strong> {{ brnach.email }}
+        <strong>Email:</strong>  {{ branch.email }}
+      </p>
+      <p>
+        <strong>Weekly Revenue: </strong> {{ weekly_total_revenue|default:'0.00' }} €
+
+      </p>
+      <p> 
+        <strong>Month Revenue: </strong> {{ monthly_total_revenue |default:'0.00' }} €
       </p>
     </div>
   </div>

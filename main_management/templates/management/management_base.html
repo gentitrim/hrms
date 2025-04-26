@@ -46,9 +46,6 @@
     </nav>
 
 
-
-
-    <!-- CONTENT AREA -->
     <div class="container mt-4">
         {% block content %}
             {% include "branch_management/employee_list_inner.html" with employees=employees %}
@@ -56,11 +53,11 @@
         {% endblock content %}
     </div>
 
-    <!-- HTMX MODAL -->
+
     <div class="modal fade" id="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content" id="modal-body">
-                <!-- Content injected by HTMX -->
+                <!-- Content by HTMX -->
             </div>
         </div>
     </div>
