@@ -38,5 +38,12 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
+    def update_inventory(self, quantity):
+        """Zbrit sasinë nga inventari kur porosia konfirmohet"""
+        
+        self.quantity -= quantity
+        self.save()
+        
+    
 class Shift(models.Model):
     pass
