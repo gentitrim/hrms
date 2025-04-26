@@ -1,30 +1,46 @@
 {% extends "branch_main.html" %}
 
-{%block content%}
-<div class="container mt-5">
-    <h1>Create New Employee</h1>
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Create New Employee</h2>
 
-
-    <!-- Form per creare un dipendente -->
-    <form method="post" class="mt-4">
+    <form method="post">
         {% csrf_token %}
 
-        <!-- Form per l'utente (CustomUserCreationForm) -->
-        <h3>User Information</h3>
-        <div class="mb-3">
-            {{ user_create_form.as_p }}
+        <!-- User Information Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">User Information</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ user_create_form.as_p }}
+                    {% if user_create_form.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{ user_create_form.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
-        <!-- Form per i dettagli del dipendente (CreateBranchStaff) -->
-        <h3>Employee Details</h3>
-        <div class="mb-3">
-            {{ branchstaff_form.as_p }}
+        <!-- Employee Details Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">Employee Details</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ branchstaff_form.as_p }}
+                    {% if branchstaff_form.errors %}
+                        <div class="alert alert-danger mt-2">
+                            {{ branchstaff_form.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
-        <!-- Pulsanti di submit e cancel -->
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Create Employee</button>
-            <a href="{% url 'branch_management:employee-list' %}" class="btn btn-secondary">Cancel</a>
+        <!-- Submit and Cancel Buttons -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <button type="submit" class="btn btn-success">Create Employee</button>
+            <a href="{% url 'branch_management:employee-list' %}" class="btn btn-outline-danger">Cancel</a>
         </div>
     </form>
 </div>

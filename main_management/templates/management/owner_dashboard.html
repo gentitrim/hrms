@@ -2,53 +2,53 @@
 
 {% block content %}
   <div class="container mt-4">
-    <h1 class="text-center">Welcome to the Owner Dashboard</h1>
+    <h1 class="text-center mb-5">Welcome to the Owner Dashboard</h1>
     
-    <!-- KARTA HORIZONTALE -->
+    <!-- Horizontal Cards -->
     <div class="row mt-5">
         <!-- Total Orders Card -->
         <div class="col-md-3">
-            <div class="card mb-4 shadow">
+            <div class="card mb-4 shadow-sm border-light rounded">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Orders</h5>
                     <p class="card-text display-6">{{ total_orders }}</p>
-                    <a href="" class="btn btn-outline-secondary">Details</a>
+                    <a href="" class="btn btn-outline-secondary btn-sm">Details</a>
                 </div>
             </div>
         </div>
 
         <!-- Revenue Card -->
         <div class="col-md-3">
-            <div class="card mb-4 shadow">
+            <div class="card mb-4 shadow-sm border-light rounded">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Revenue</h5>
                     <p class="card-text display-6">{{ total_revenue|floatformat:2 }} €</p>
-                    <a href="{% url 'main_management:branch' %}" class="btn btn-outline-secondary">Details</a>
+                    <a href="{% url 'main_management:branch' %}" class="btn btn-outline-secondary btn-sm">Details</a>
                 </div>
             </div>
         </div>
 
         <!-- Staff Members Card -->
         <div class="col-md-3">
-            <div class="card mb-4 shadow">
+            <div class="card mb-4 shadow-sm border-light rounded">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Managers</h5>
                     <p class="card-text display-6">{{ total_managers }}</p>
-                    <a href="{% url 'main_management:manager_list' %}" class="btn btn-outline-secondary">Show Managers</a>
+                    <a href="{% url 'main_management:manager_list' %}" class="btn btn-outline-secondary btn-sm">Show Managers</a>
                 </div>
             </div>
         </div>
 
         <!-- Total Staff Card -->
         <div class="col-md-3">
-            <div class="card mb-4 shadow">
+            <div class="card mb-4 shadow-sm border-light rounded">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Staff</h5>
                     <p class="card-text display-6">{{ total_staff }}</p>
-                    <a href="{% url 'main_management:all_employees' %}" class="btn btn-outline-secondary">Show Staff</a>
+                    <a href="{% url 'main_management:all_employees' %}" class="btn btn-outline-secondary btn-sm">Show Staff</a>
                 </div>
             </div>
         </div>
     </div>
   </div>
-{% endblock content %}
+{% endblock %}

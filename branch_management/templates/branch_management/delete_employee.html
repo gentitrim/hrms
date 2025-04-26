@@ -1,18 +1,21 @@
 {% extends "branch_main.html" %}
 
-{%block content%}
-
+{% block content %}
 <div class="container mt-4">
-  <div class='text-center'>
-    <h2>Confirm Deletion</h2>
-    <p>Are you sure you want to delete employee <strong>{{ employee.user.first_name }} {{ employee.user.last_name }}</strong>?</p>
-  </div>
+    <h2 class="text-center mb-4">Confirm Deletion</h2>
 
-    <form method="post" class='text-center mt-5'>
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Yes, Delete</button>
-      <a href="{% url 'branch_management:employee-list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
-  </div>
-
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">Delete Employee</div>
+        <div class="card-body text-center">
+            <p>Are you sure you want to delete employee <strong>{{ employee.user.first_name }} {{ employee.user.last_name }}</strong>?</p>
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-success">Yes, Delete</button>
+                    <a href="{% url 'branch_management:employee-list' %}" class="btn btn-outline-danger">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

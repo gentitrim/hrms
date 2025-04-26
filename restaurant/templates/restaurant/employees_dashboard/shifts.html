@@ -1,10 +1,12 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
 {% block content %}
 
-    <main>
-        <div class="container">
-            <h1>Your Shifts</h1>
-            <!-- Shifts from Monday to Sunday -->
+<main>
+    <div class="container">
+        <h1 class="mb-4">Your Shifts</h1>
+
+        <!-- Shifts from Monday to Sunday -->
+        <div class="shift-card-container">
             <div class="shift-card">
                 <div class="shift-info">
                     <h3>Monday - Morning (AM)</h3>
@@ -14,6 +16,7 @@
                     <span class="status confirmed">Confirmed</span>
                 </div>
             </div>
+
             <div class="shift-card">
                 <div class="shift-info">
                     <h3>Tuesday - Afternoon (PM)</h3>
@@ -23,6 +26,7 @@
                     <span class="status confirmed">Confirmed</span>
                 </div>
             </div>
+
             <div class="shift-card">
                 <div class="shift-info">
                     <h3>Wednesday - Morning (AM)</h3>
@@ -32,6 +36,7 @@
                     <span class="status pending">Pending</span>
                 </div>
             </div>
+
             <div class="shift-card">
                 <div class="shift-info">
                     <h3>Thursday - Afternoon (PM)</h3>
@@ -41,6 +46,7 @@
                     <span class="status confirmed">Confirmed</span>
                 </div>
             </div>
+
             <div class="shift-card">
                 <div class="shift-info">
                     <h3>Friday - Morning (AM)</h3>
@@ -50,6 +56,7 @@
                     <span class="status confirmed">Confirmed</span>
                 </div>
             </div>
+
             <div class="shift-card">
                 <div class="shift-info">
                     <h3>Saturday - Afternoon (PM)</h3>
@@ -59,6 +66,7 @@
                     <span class="status cancelled">Cancelled</span>
                 </div>
             </div>
+
             <div class="shift-card">
                 <div class="shift-info">
                     <h3>Sunday - Morning (AM)</h3>
@@ -69,9 +77,7 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
 {% endblock content %}
-
-
-    

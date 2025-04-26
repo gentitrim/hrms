@@ -1,15 +1,20 @@
 {% extends "branch_main.html" %}
 
-{%block content%}
-    <h2 class='text-center mt-4 mb-5'>Are you sure you want to delete the category "{{ category.name }}"?</h2>
-    <div class="container text-center mt-5">
-        <form method="post">
-            {% csrf_token %}
-            <div class="button-group">
-                <button type="submit" class="btn btn-outline-success">Confirm</button>
-                <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-danger">Cancel</a>
-            </div>
-        </form>
-        
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">Delete Category</div>
+        <div class="card-body text-center">
+            <h2 class="mb-4">Delete Category</h2>
+            <p class="fs-5">Are you sure you want to delete the category <strong>"{{ category.name }}"</strong>?</p>
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-success">Confirm</button>
+                    <a href="{% url 'branch_management:category-list' %}" class="btn btn-outline-danger">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 {% endblock %}

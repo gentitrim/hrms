@@ -1,37 +1,41 @@
 {% extends "restaurant/employees_dashboard/base_template.html" %}
+
 {% block content %}
 
-    <div class="container mt-5 justify-content-center">
+  <div class="container mt-5">
 
-            <div class="btn-group btn-group-lg d-grid d-md-flex justify-content-md-center" role="group" aria-label="Large button group">
-                <button type="button" class="btn btn-outline-primary"
-                hx-get="{% url 'api_restaurant:my_orders'%}"
-                            hx-target="#dash_result"
-                            hx-triger="click"
-                            hx-swap="innerHtml"
-                >My Orders</button>
-                <button type="button" class="btn btn-outline-primary"
-                hx-get="{% url 'api_restaurant:my_profile' %}"
-                hx-target="#dash_result"
-                hx-triger="click"
-                hx-swap="innerHtml"
-                >Profile</button>
-                <button type="button" class="btn btn-outline-primary"
-                hx-get="{% url 'api_restaurant:edit_profile' user.id%}"
-                hx-target="#dash_result"
-                hx-triger="click"
-                hx-swap="innerHtml"
-                >Manage Account</button>
-            </div>
-
-            <div >
-                <ul class="list-group mt-3" id='dash_result'>
-                
-                </ul>
-            </div>
-          
-        
+    <!-- Pulsanti (Gruppo) -->
+    <div class="btn-group btn-group-lg d-flex flex-column flex-md-row justify-content-md-center gap-3" role="group" aria-label="Large button group">
+      <button type="button" class="btn btn-outline-primary rounded-pill shadow-sm" 
+        hx-get="{% url 'api_restaurant:my_orders' %}"
+        hx-target="#dash_result"
+        hx-trigger="click"
+        hx-swap="innerHTML">
+        My Orders
+      </button>
+      <button type="button" class="btn btn-outline-primary rounded-pill shadow-sm"
+        hx-get="{% url 'api_restaurant:my_profile' %}"
+        hx-target="#dash_result"
+        hx-trigger="click"
+        hx-swap="innerHTML">
+        Profile
+      </button>
+      <button type="button" class="btn btn-outline-primary rounded-pill shadow-sm"
+        hx-get="{% url 'api_restaurant:edit_profile' user.id %}"
+        hx-target="#dash_result"
+        hx-trigger="click"
+        hx-swap="innerHTML">
+        Manage Account
+      </button>
     </div>
 
+    <!-- Lista Risultati -->
+    <div>
+      <ul class="list-group mt-4" id="dash_result">
+        <!-- Risultati dinamici verranno caricati qui -->
+      </ul>
+    </div>
+
+  </div>
 
 {% endblock content %}

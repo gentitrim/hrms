@@ -1,12 +1,12 @@
 {% load static %}
 
 <!-- Card Container for Total and Date Filter -->
-<div class="card shadow-sm mb-3">
+<div class="card shadow-sm mb-3 bg-light border-0">
   <div class="card-body">
     <div class="d-flex align-items-center justify-content-between">
-      <h5 class="mb-0 fw-bold">Total: {{ total_amount }} €</h5>
+      <h5 class="mb-0 fw-bold text-dark">Total: {{ total_amount }} €</h5>
       <form class="d-flex align-items-center gap-2">
-        <label for="date-search" class="form-label mb-0">Filter by Date:</label>
+        <label for="date-search" class="form-label mb-0 text-dark">Filter by Date:</label>
         <input
           type="date"
           class="form-control form-control-sm w-auto"
@@ -24,9 +24,9 @@
 </div>
 
 <!-- Card Container for Orders Table -->
-<div class="card shadow-sm">
+<div class="card shadow-sm mb-3 bg-light border-0">
   <!-- Table Header -->
-  <div class="card-header bg-primary text-white">
+  <div class="card-header bg-dark text-white">
     <div class="row g-0 text-center">
       <div class="col-2 fw-bold">Order ID</div>
       <div class="col-2 fw-bold">Order Time</div>
@@ -88,7 +88,7 @@
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content bg-dark text-white">
           <div class="modal-header">
             <h5 class="modal-title" id="cancelOrderModalLabel_{{ order.id }}">Cancel Order {{ order.id }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -121,7 +121,7 @@
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+        <div class="modal-content bg-dark text-white">
           <div class="modal-header">
             <h5 class="modal-title" id="orderDetailsModalLabel_{{ order.id }}">Order {{ order.id }} Details</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -138,70 +138,70 @@
     <div class="text-center text-muted py-4">No orders found.</div>
     {% endfor %}
 
-<!-- Pagination Section -->
-{% if is_paginated %}
-<nav aria-label="Page navigation" class="mt-4">
-  <ul class="pagination justify-content-center">
-    {% if page_obj.has_previous %}
-    <li class="page-item">
-      <a class="page-link" 
-         hx-get="{% url 'api_restaurant:my_orders' %}?page={{ page_obj.previous_page_number }}"
-         hx-target="#dash_result"
-         hx-trigger="click"
-         hx-swap="innerHtml"
-         aria-label="Previous">
-        <span aria-hidden="true">«</span>
-      </a>
-    </li>
-    {% else %}
-    <li class="page-item disabled">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">«</span>
-      </a>
-    </li>
-    {% endif %}
+    <!-- Pagination Section -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" 
+             hx-get="{% url 'api_restaurant:my_orders' %}?page={{ page_obj.previous_page_number }}"
+             hx-target="#dash_result"
+             hx-trigger="click"
+             hx-swap="innerHtml"
+             aria-label="Previous">
+            <span aria-hidden="true">«</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">«</span>
+          </a>
+        </li>
+        {% endif %}
 
-    {% for num in page_obj.paginator.page_range %}
-      {% if page_obj.number == num %}
-      <li class="page-item active">
-        <a class="page-link" href="#">{{ num }}</a>
-      </li>
-      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-      <li class="page-item">
-        <a class="page-link" 
-           hx-get="{% url 'api_restaurant:my_orders' %}?page={{ num }}"
-           hx-target="#dash_result"
-           hx-trigger="click"
-           hx-swap="innerHtml">
-          {{ num }}
-        </a>
-      </li>
-      {% endif %}
-    {% endfor %}
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+          <li class="page-item active">
+            <a class="page-link" href="#">{{ num }}</a>
+          </li>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li class="page-item">
+            <a class="page-link" 
+               hx-get="{% url 'api_restaurant:my_orders' %}?page={{ num }}"
+               hx-target="#dash_result"
+               hx-trigger="click"
+               hx-swap="innerHtml">
+              {{ num }}
+            </a>
+          </li>
+          {% endif %}
+        {% endfor %}
 
-    {% if page_obj.has_next %}
-    <li class="page-item">
-      <a class="page-link" 
-         hx-get="{% url 'api_restaurant:my_orders' %}?page={{ page_obj.next_page_number }}"
-         hx-target="#dash_result"
-         hx-trigger="click"
-         hx-swap="innerHtml"
-         aria-label="Next">
-        <span aria-hidden="true">»</span>
-      </a>
-    </li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" 
+             hx-get="{% url 'api_restaurant:my_orders' %}?page={{ page_obj.next_page_number }}"
+             hx-target="#dash_result"
+             hx-trigger="click"
+             hx-swap="innerHtml"
+             aria-label="Next">
+            <span aria-hidden="true">»</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">»</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
     {% else %}
-    <li class="page-item disabled">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">»</span>
-      </a>
-    </li>
+    <p class="text-muted text-center mt-3">Nessuna paginazione necessaria (una sola pagina).</p>
     {% endif %}
-  </ul>
-</nav>
-{% else %}
-<p class="text-muted text-center mt-3">Nessuna paginazione necessaria (una sola pagina).</p>
-{% endif %}
 
   </div>
 </div>

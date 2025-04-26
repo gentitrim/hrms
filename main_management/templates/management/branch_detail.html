@@ -1,24 +1,16 @@
 {% load static %}
 
 {% block content %}
-  <div class="card mx-auto" style="max-width: 600px;" id="manager-detail-card">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <span>Branch Detail</span>
-      <button class="btn btn-sm btn-light text-danger" onclick="document.getElementById('branch-detail-container').innerHTML = '';">&times;</button>
-    </div>
-    <div class="card-body">
-      <p>
-        <strong>Name:</strong> {{ branch.name }}
-      </p>
-      <p>
-        <strong>Address:</strong> {{ branch.address }}
-      </p>
-      <p>
-        <strong>Phone Number:</strong> {{ branch.phone }}
-      </p>
-      <p>
-        <strong>Email:</strong> {{ brnach.email }}
-      </p>
-    </div>
+<div class="card mx-auto" style="max-width: 600px;" id="branch-detail-card">
+  <div class="card-header bg-light text-dark d-flex justify-content-between align-items-center">
+    <span>Branch Details</span>
+    <button class="btn btn-sm btn-outline-danger" onclick="document.getElementById('branch-detail-container').innerHTML = '';">&times;</button>
   </div>
+  <div class="card-body p-4">
+    <p><strong>Name:</strong> <span class="text-muted">{{ branch.name }}</span></p>
+    <p><strong>Address:</strong> <span class="text-muted">{{ branch.address }}</span></p>
+    <p><strong>Phone:</strong> <span class="text-muted">{{ branch.phone }}</span></p>
+    <p><strong>Email:</strong> <span class="text-muted">{{ branch.email }}</span></p>
+  </div>
+</div>
 {% endblock %}

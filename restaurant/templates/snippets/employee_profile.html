@@ -1,13 +1,34 @@
 {% load static %}
-<div class="card mb-3 mt-4">
-    <div class="card-header">
-        <h5 class="card-title">Your Profile</h5>
-    </div>  
+<div class="card mt-4 shadow-sm bg-light border-0">
+    <div class="card-header bg-dark text-white text-center">
+        <h5 class="mb-0">Profile Information</h5>
+    </div>
     <div class="card-body">
-        <h5 class="card-title">Name: {{ user.first_name }} {{ user.last_name }}</h5>
-        <h5 class="card-title">Email: {{ staff.user.email }}</h5>
-        <h5 class="card-title">Phone: {{ staff.phone }}</h5>
-        <h5 class="card-title">Position: {{ staff.role|capfirst  }}</h5>
-        <div class="d-flex justify-content-between">
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <td class="fw-semibold">Name:</td>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-semibold">Email:</td>
+                    <td>{{ staff.user.email }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-semibold">Phone:</td>
+                    <td>{{ staff.phone }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-semibold">Position:</td>
+                    <td>{{ staff.role|capfirst }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'restaurant:dashboard' %}" class="btn btn-success rounded-pill px-4 shadow-sm">
+                Edit Profile
+            </a>
+        </div>
     </div>
 </div>
