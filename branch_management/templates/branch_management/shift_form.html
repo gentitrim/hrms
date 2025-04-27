@@ -1,0 +1,31 @@
+{% extends 'branch_main.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center">{{ title }}</h1>
+    
+    <!-- Form Container -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">{{ action }} Shift</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Form Fields -->
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'branch_management:shift_list' %}" class="btn btn-secondary">Back to Shifts</a>
+                    <button type="submit" class="btn btn-success">{{ button_text }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

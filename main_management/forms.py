@@ -82,4 +82,4 @@ class EmployeeUpdateForm(forms.ModelForm):
         phone = self.cleaned_data.get('phone')
         if not re.match(r'^\+?\d{0,14}$', phone):
             raise forms.ValidationError("Invalid phone number format.")
-        return phone 
+        return phone

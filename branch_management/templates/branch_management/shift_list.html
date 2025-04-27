@@ -1,0 +1,55 @@
+{% extends 'branch_main.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Shift List</h1>
+    <a href="{% url 'branch_management:shift_create' %}" class="btn btn-primary mb-4">
+        <i class="bi bi-plus-circle"></i> Create New Shift
+    </a>
+
+    <!-- Card for the Shift Table -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Shifts Overview</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Day</th>
+                        <th>Shift Type</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shift in shifts %}
+                    <tr>
+                        <td>{{ shift.employee }}</td>
+                        <td>{{ shift.day }}</td>
+                        <td>{{ shift.shift_type }}</td>
+                        <td>{{ shift.start_time }}</td>
+                        <td>{{ shift.end_time }}</td>
+                        <td class="d-flex">
+                            <!-- Edit and Delete buttons with icons -->
+                            <a href="{% url 'branch_management:shift_update' pk=shift.pk %}" class="btn btn-warning btn-sm me-2">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a href="{% url 'branch_management:shift_delete' pk=shift.pk %}" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No shifts available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

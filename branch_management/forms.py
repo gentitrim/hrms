@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Category,Product,BranchStaff
+from .models import Category,Product,BranchStaff,Shift
 import re
 from django.core.exceptions import ValidationError
 from user_authentication.models import CustomUser
@@ -111,3 +111,16 @@ class EmployeeUpdateForm(forms.ModelForm):
             raise forms.ValidationError("Invalid phone number format.")
         return phone    
 
+class ShiftForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        branch = kwargs.pop('branch', None)
+        super().__init__(*args, **kwargs)
+        if branch:
+            self.fields['employee'].queryset = BranchStaff.objects.filter(branch=branch, role='staff')
+
+    class Meta:
+        model = Shift
+        fields = ['employee', 'day', 'shift_type', 'start_time', 'end_time', 'status']
+        widgets = {
+            'start_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+            'end_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),}

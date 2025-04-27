@@ -1,8 +1,8 @@
-from .models import Branch,Product,Category,BranchStaff
+from .models import Branch,Product,Category,BranchStaff,Shift
 from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView,View
 from django.urls import reverse_lazy
 from django.http import HttpResponseForbidden
-from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm,EmployeeUpdateForm
+from branch_management.forms import ProductCreateForm,CategoryCreateForm,CreateBranchStaff,CustomUserUpdateForm,EmployeeUpdateForm,ShiftForm
 from user_authentication.models import CustomUser
 from user_authentication.forms import CustomUserResetPassForm,CustomUserRegisterForm
 from django.contrib import messages
@@ -471,3 +471,56 @@ class ResetPasswordView(LoginRequiredMixin, RoleAccessMixin, View):
         return render(
             request, self.success_url, {"form": form, "staff_user": staff_user}
         )
+class ShiftListView(ListView):
+    model = Shift
+    template_name = 'branch_management/shift_list.html'
+    context_object_name = 'shifts'
+
+    def get_queryset(self):
+        # Supponiamo che ogni shift sia legato a un ramo che l'utente gestisce
+        return Shift.objects.filter(employee__user=self.request.user).order_by('day', 'start_time')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user  # Aggiungi l'utente al contesto se serve
+        return context
+
+class ShiftCreateView(CreateView):
+    model = Shift
+    fields = ['employee', 'day', 'shift_type', 'start_time', 'end_time']
+    template_name = 'branch_management/shift_form.html'
+
+    def form_valid(self, form):
+        # Determina il ramo dal quale l'utente proviene, per esempio
+        branch = Branch.objects.first()  # Puoi anche usare un altro criterio per il ramo
+        form.instance.branch = branch
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('shift_list')
+    
+
+class ShiftUpdateView(UpdateView):
+    model = Shift
+    fields = ['employee', 'day', 'shift_type', 'start_time', 'end_time']
+    template_name = 'branch_management/shift_form.html'
+
+    def form_valid(self, form):
+        # Il form è valido, quindi salviamo l'oggetto
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('shift_list')
+    
+class ShiftDeleteView(DeleteView):
+    model = Shift
+    template_name = 'branch_management/shift_confirm_delete.html'
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        messages.success(self.request, 'Shift deleted successfully.')
+        return redirect('shift_list')
+
+    def get_success_url(self):
+        return reverse_lazy('shift_list')
