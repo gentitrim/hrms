@@ -71,6 +71,9 @@ class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
 
     def get_queryset(self):
         today = now().date()
+        search_query = self.request.GET.get('search', '')
+        
+        # Base queryset with annotations
         branches = Branch.objects.annotate(
             raw_turnover=Sum(
                 "branch__order__total_price",
@@ -80,10 +83,21 @@ class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
                 ),
             ),
             daily_turnover=ExpressionWrapper(
-                F("raw_turnover") / 100.0, output_field=FloatField()
+                F("raw_turnover") / 100.0, 
+                output_field=FloatField()
             ),
         ).order_by("name")
 
+        # Apply search filter if search query exists
+        if search_query:
+            branches = branches.filter(
+                Q(name__icontains=search_query) |
+                Q(address__icontains=search_query) |
+                Q(phone__icontains=search_query) |
+                Q(email__icontains=search_query)
+            )
+
+        # Add manager information to each branch
         for branch in branches:
             manager = (
                 BranchStaff.objects.filter(branch=branch, role="manager")
@@ -93,6 +107,12 @@ class BranchListView(LoginRequiredMixin, RoleAccessMixin, ListView):
             branch.manager = manager
 
         return branches
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Pass the search query back to template to maintain the search term in input
+        context['search_query'] = self.request.GET.get('search', '')
+        return context
 
 
 class CreateBranchView(LoginRequiredMixin, RoleAccessMixin, FormView):
@@ -214,15 +234,30 @@ class BranchDetailView(LoginRequiredMixin, RoleAccessMixin, DetailView):
 
 
 class ManagerListView(LoginRequiredMixin, RoleAccessMixin, ListView):
-    allowed_roles = ["admin"]
+    allowed_roles = ['admin']
     model = BranchStaff
-
-    template_name = "management/manage_manager.html"
-    context_object_name = "managers"
+    template_name = 'management/manage_manager.html'
+    context_object_name = 'managers'
     paginate_by = 5
 
     def get_queryset(self):
-        return BranchStaff.objects.filter(role="manager")
+        search_query = self.request.GET.get('search', '')
+        queryset = BranchStaff.objects.filter(role='manager').select_related('user', 'branch')
+        
+        if search_query:
+            queryset = queryset.filter(
+                Q(user__first_name__icontains=search_query) |
+                Q(user__last_name__icontains=search_query) |
+                Q(branch__name__icontains=search_query) |
+                Q(user__email__icontains=search_query)
+            )
+        
+        return queryset.order_by('user__last_name')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('search', '')
+        return context
 
 
 class CreateManagerView(LoginRequiredMixin, RoleAccessMixin, View):

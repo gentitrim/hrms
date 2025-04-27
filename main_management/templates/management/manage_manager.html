@@ -2,24 +2,49 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Managers List</h2>
+    <h2 class="mb-4">Manager List</h2>
+
+    <!-- Search Form -->
+    <form class="d-flex mb-3 justify-content-end position-relative" 
+          method="GET" 
+          action="{% url 'main_management:manager_list' %}" 
+          role="search">
+        <div class="input-group" style="width: 300px;">
+            <input 
+                id="searchBar"
+                name="search"
+                class="form-control border-end-0 rounded-start shadow-sm" 
+                type="search" 
+                placeholder="Search Manager" 
+                aria-label="Search"
+                value="{{ search_query }}"
+                style="transition: all 0.3s ease-in-out; border-width: 2px; border-color: #007bff;"
+                onfocus="this.style.boxShadow='0 0 5px 3px rgba(0,123,255,0.75)';"
+                onblur="this.style.boxShadow='none';"
+            />
+            <button 
+                class="btn btn-outline-success rounded-end shadow-sm" 
+                type="submit" 
+                style="border-left: none; border-width: 2px; border-color: #007bff; transition: all 0.3s ease-in-out;">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </div>
+    </form>
 
     <!-- Manager detail injected by HTMX -->
     <div id="manager-detail-container" class="mt-4"></div>
 
-    <!-- Total found -->
-    <p class="text-muted">Trovati {{ managers|length }} manager(s).</p>
 
     <!-- Managers Table -->
     <div class="table-responsive">
         <table class="table table-bordered table-striped align-middle">
             <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Branch</th>
-                    <th>Actions</th>
-                    <th>Password</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Branch</th>
+                    <th scope="col">Actions</th>
+                    <th scope="col">Password</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,22 +58,36 @@
                             <button class="btn btn-info btn-sm" 
                                     hx-get="{% url 'main_management:manager_detail' manager.pk %}" 
                                     hx-target="#manager-detail-container" 
-                                    hx-swap="innerHTML">
+                                    hx-swap="innerHTML"
+                                    aria-label="View details of {{ manager.user.first_name }} {{ manager.user.last_name }}">
                                 View
                             </button>
-                            <a href="{% url 'main_management:edit_manager' manager.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                            <a href="{% url 'main_management:delete_manager' manager.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="{% url 'main_management:edit_manager' manager.pk %}" 
+                               class="btn btn-warning btn-sm"
+                               aria-label="Edit {{ manager.user.first_name }} {{ manager.user.last_name }}">
+                                Edit
+                            </a>
+                            <a href="{% url 'main_management:delete_manager' manager.pk %}" 
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Are you sure you want to delete {{ manager.user.first_name }} {{ manager.user.last_name }}?')"
+                               aria-label="Delete {{ manager.user.first_name }} {{ manager.user.last_name }}">
+                                Delete
+                            </a>
                         </div>
                     </td>
                     <td>
-                        <a href="{% url 'main_management:manager_reset_password' manager.pk %}" class="btn btn-outline-danger btn-sm">
+                        <a href="{% url 'main_management:manager_reset_password' manager.pk %}" 
+                           class="btn btn-outline-danger btn-sm"
+                           aria-label="Reset password for {{ manager.user.first_name }} {{ manager.user.last_name }}">
                             Reset Password
                         </a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">There is no manager registered yet.</td>
+                    <td colspan="5" class="text-center py-4">
+                        <div class="alert alert-info">No managers registered.</div>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -66,13 +105,15 @@
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
+                <a class="page-link" 
+                   href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                   aria-label="Previous">
+                    <span aria-hidden="true">«</span>
                 </a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <span class="page-link" aria-hidden="true">&laquo;</span>
+                <span class="page-link" aria-hidden="true">«</span>
             </li>
             {% endif %}
 
@@ -83,26 +124,29 @@
                 </li>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    <a class="page-link" 
+                       href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
                 </li>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
+                <a class="page-link" 
+                   href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                   aria-label="Next">
+                    <span aria-hidden="true">»</span>
                 </a>
             </li>
             {% else %}
             <li class="page-item disabled">
-                <span class="page-link" aria-hidden="true">&raquo;</span>
+                <span class="page-link" aria-hidden="true">»</span>
             </li>
             {% endif %}
         </ul>
     </nav>
     {% else %}
-    <p class="text-muted text-center">Nessuna paginazione necessaria (una sola pagina).</p>
+    <p class="text-muted text-center">No pagination needed (single page).</p>
     {% endif %}
 </div>
 {% endblock %}

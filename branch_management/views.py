@@ -12,7 +12,7 @@ from hrms.rolemixin import RoleAccessMixin
 from restaurant.models import Order
 from django.db.models import Sum
 from django.utils.timezone import now
-
+from django.db.models import Q 
 from main_management.forms import CustomManagerUpdateForm
 
 class DashboardView(LoginRequiredMixin,RoleAccessMixin,View):
@@ -79,7 +79,16 @@ class ProductListView(LoginRequiredMixin,RoleAccessMixin,ListView):
 
     def get_queryset(self):
         user_branch = self.request.user.branchstaff.branch
-        return Product.objects.filter(branch=user_branch)   
+        queryset = Category.objects.filter(branch=user_branch)
+        search_query = self.request.GET.get('q', '').strip()
+        if search_query:
+            queryset = queryset.filter(name__icontains=search_query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        return context  
     
 
 class ProductUpdateView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
@@ -146,7 +155,7 @@ class EmployeeCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):
         })   
 
 
-class EmployeeListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+class EmployeeListView(LoginRequiredMixin, RoleAccessMixin, ListView):
     allowed_roles = ['manager']
     model = BranchStaff
     template_name = 'branch_management/employee_list.html'
@@ -155,9 +164,19 @@ class EmployeeListView(LoginRequiredMixin,RoleAccessMixin,ListView):
 
     def get_queryset(self):
         branch = Branch.objects.filter(branch__user_id=self.request.user.id).first()
-        if branch:
-            return BranchStaff.objects.filter(branch=branch).exclude(user=self.request.user)
-        return BranchStaff.objects.none()
+        search_query = self.request.GET.get('q', '').strip()
+
+        queryset = BranchStaff.objects.filter(branch=branch).exclude(user=self.request.user)
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(user__first_name__icontains=search_query) |
+                Q(user__last_name__icontains=search_query) |
+                Q(role__icontains=search_query)
+            )
+
+        return queryset
+
 
 
 class UpdateEmployeeView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
@@ -257,7 +276,7 @@ class DetailEmployeeView(LoginRequiredMixin,RoleAccessMixin,TemplateView):
 
 #Category Views
 
-class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
+class CategoryListView(LoginRequiredMixin, RoleAccessMixin, ListView):
     allowed_roles = ['manager']
     model = Category
     template_name = 'branch_management/category_list.html'
@@ -266,7 +285,16 @@ class CategoryListView(LoginRequiredMixin,RoleAccessMixin,ListView):
 
     def get_queryset(self):
         user_branch = self.request.user.branchstaff.branch
-        return Category.objects.filter(branch=user_branch) 
+        queryset = Category.objects.filter(branch=user_branch)
+        search_query = self.request.GET.get('q', '').strip()
+        if search_query:
+            queryset = queryset.filter(name__icontains=search_query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        return context
 
 
 class CategoryCreateView(LoginRequiredMixin,RoleAccessMixin,CreateView):

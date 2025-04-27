@@ -3,18 +3,33 @@
 {% block content %}
 <div class="container py-5">
 
-    <h2 class="text-center mb-5 fw-bold"> Product Management</h2>
+    <h2 class="text-center mb-5 fw-bold">Product Management</h2>
+
+    <!-- Search Form for Categories -->
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <form method="get" class="input-group shadow-sm">
+                <label for="searchInput" class="visually-hidden">Search categories</label>
+                <span class="input-group-text bg-white border-0 rounded-pill-start pe-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" id="searchInput" name="q" class="form-control border-0 rounded-pill-start" placeholder="Search categories..." value="{{ request.GET.q|default_if_none:'' }}" aria-describedby="searchButton">
+                <button type="submit" id="searchButton" class="btn btn-primary rounded-pill-end px-4" aria-label="Search categories">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Clear Search Button -->
+    {% if request.GET.q %}
+    <div class="text-center mb-3">
+        <a href="{% url 'branch_management:product-list' %}" class="btn btn-outline-secondary rounded-pill">Clear Search</a>
+    </div>
+    {% endif %}
 
     <div class="text-center mb-5 fw-bold">
         <a href="{% url 'branch_management:create-product' %}" class="btn btn-primary btn-lg rounded-pill shadow-sm">
              Add New Product
         </a>
-    </div>
-
-    <div class="d-flex justify-content-center mb-4">
-        <div style="width: 300px;">
-            <input type="text" id="productSearch" class="form-control rounded-pill shadow-sm text-center" placeholder="Search products..." onkeyup="filterProducts()">
-        </div>
     </div>
 
     <!-- Product Table -->
@@ -67,7 +82,7 @@
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">«</a>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">«</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -82,14 +97,14 @@
                     </li>
                 {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">»</a>
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">»</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -102,26 +117,26 @@
 
 </div>
 
-<script>
-    function filterProducts() {
-        var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("productSearch");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("productTable");
-        tr = table.getElementsByTagName("tr");
-    
-        // Loop through all table rows, except the header (index 0)
-        for (i = 1; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];  // search only by product name
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = ""; // show row
-                } else {
-                    tr[i].style.display = "none"; // hide row
-                }
-            }
-        }
+
+<style>
+    .input-group {
+        transition: box-shadow 0.2s ease-in-out;
     }
-</script>
+    .input-group:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #86b7fe;
+    }
+    .rounded-pill-start {
+        border-radius: 50px 0 0 50px !important;
+    }
+    .rounded-pill-end {
+        border-radius: 0 50px 50px 0 !important;
+    }
+    .input-group-text {
+        background: transparent;
+    }
+</style>
 {% endblock content %}

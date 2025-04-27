@@ -1,98 +1,203 @@
 {% extends 'management/management_base.html' %}
 
 {% block content %}
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <!-- Bottone per creare un nuovo branch -->
-    <button class="btn btn-primary shadow-sm mb-3" onclick="window.open('{% url 'main_management:new_branch' %}', '_self')">+ New Branch</button>
+<div class="container mt-4">
 
-    <!-- Form di ricerca -->
-    <form class="d-flex mb-3 me-5 justify-content-end position-relative" role="search">
+  <!-- Header: New Branch + Search Bar -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <button 
+      class="btn btn-primary shadow-sm mb-3" 
+      onclick="window.location.href='{% url 'main_management:new_branch' %}'"
+      aria-label="New Branch">
+      New Branch
+    </button>
+
+    <form 
+      class="d-flex mb-3 me-5 justify-content-end position-relative" 
+      method="GET" 
+      action="{% url 'main_management:branch' %}" 
+      role="search">
       <div class="input-group" style="width: 300px;">
         <input 
           id="searchBar"
+          name="search"
           class="form-control border-end-0 rounded-start shadow-sm" 
           type="search" 
-          placeholder="Search Product" 
-          aria-label="Search" 
-          onkeyup="searchProduct()"
-          style="transition: all 0.3s ease-in-out; border-width: 2px; border-color: #007bff;" 
+          placeholder="Search Branch" 
+          aria-label="Search Branch"
+          value="{{ search_query|default:'' }}"
+          style="transition: all 0.3s ease-in-out; border-width: 2px; border-color: #007bff;"
           onfocus="this.style.boxShadow='0 0 5px 3px rgba(0,123,255,0.75)';"
           onblur="this.style.boxShadow='none';"
         />
-        <button class="btn btn-outline-success rounded-end shadow-sm" type="submit" style="border-left: none; border-width: 2px; border-color: #007bff; transition: all 0.3s ease-in-out;">
+        <button 
+          class="btn btn-outline-success rounded-end shadow-sm" 
+          type="submit" 
+          aria-label="Search">
           <i class="bi bi-search"></i> Search
         </button>
       </div>
     </form>
   </div>
 
-  <!-- Lista dei Branch -->
-  <ul class="list-group mb-4">
+  <!-- Branch Detail Container -->
+  <div id="branch-detail-container" class="mt-4"></div>
+
+  <!-- Branch List -->
+  <ul class="list-group mb-4" role="list">
     {% for branch in page_obj %}
       {% if branch.id != user.branchstaff.branch.id %}
-        <li class="list-group-item bg-light border-bottom rounded-lg shadow-sm mb-3" id="{{ branch.id }}">
-          <div id="branch-detail-container" class="mt-4"></div>
+        <li 
+          class="list-group-item bg-light border-bottom rounded-lg shadow-sm mb-3" 
+          id="branch-{{ branch.id }}"
+          role="listitem">
           <div class="row">
             <div class="col-md-8">
               <h5 class="card-title">{{ branch.name }}</h5>
               <p class="card-text"><strong>Address:</strong> {{ branch.address }}</p>
               <p class="card-text"><strong>Phone:</strong> {{ branch.phone }}</p>
-              <p class="card-text"><strong>Email:</strong> {{ branch.email }}</p>
+              <p class="card-text"><strong>Email:</strong> {{ branch.email|default:"N/A" }}</p>
               <p class="card-text">
-                <strong>Manager:</strong> {% if branch.manager %}
+                <strong>Manager:</strong> 
+                {% if branch.manager %}
                   {{ branch.manager.user.first_name }} {{ branch.manager.user.last_name }}
                 {% else %}
                   No Manager Assigned
                 {% endif %}
               </p>
               <p><strong>Revenue:</strong> {{ branch.daily_turnover|default:'0'|floatformat:2 }} €</p>
-              <p><strong>Weekly Revenue:</strong> {{ branch.weekly_turnover|default:'0.00' }} €</p>
+              <p><strong>Weekly Revenue:</strong> {{ branch.weekly_turnover|default:'0.00'|floatformat:2 }} €</p>
             </div>
-            <div class="col-md-4 d-flex justify-content-end align-items-center">
-              <!-- Pulsante per visualizzare i dettagli -->
-              <button class="btn btn-info btn-sm me-2" hx-get="{% url 'main_management:branch_detail' branch.pk %}" hx-target="#branch-detail-container" hx-swap="innerHTML">View</button>
-              <!-- Pulsante per modificare il branch -->
-              <a href="{% url 'main_management:update_branch' branch.pk %}" class="btn btn-warning btn-sm me-2">Edit</a>
-              <!-- Pulsante per eliminare il branch -->
-              <a href="{% url 'main_management:delete_branch' branch.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            <div class="col-md-4 d-flex justify-content-end align-items-center gap-2">
+              <button 
+                class="btn btn-info btn-sm position-relative" 
+                hx-get="{% url 'main_management:branch_detail' branch.pk %}" 
+                hx-target="#branch-detail-container" 
+                hx-swap="innerHTML"
+                hx-indicator=".htmx-indicator"
+                aria-label="View details of {{ branch.name }}">
+                View
+                <span class="htmx-indicator"></span>
+              </button>
+              <a 
+                href="{% url 'main_management:update_branch' branch.pk %}" 
+                class="btn btn-warning btn-sm"
+                aria-label="Edit {{ branch.name }}">
+                Edit
+              </a>
+              <a 
+                href="{% url 'main_management:delete_branch' branch.pk %}" 
+                class="btn btn-danger btn-sm"
+                onclick="return confirm('Are you sure you want to delete the branch {{ branch.name }}?')"
+                aria-label="Delete {{ branch.name }}">
+                Delete
+              </a>
             </div>
           </div>
         </li>
       {% endif %}
+    {% empty %}
+      <li class="list-group-item text-center py-4" role="listitem">
+        <div class="alert alert-info">No branches found.</div>
+      </li>
     {% endfor %}
   </ul>
 
-  <!-- Paginazione -->
-  <div class="d-flex justify-content-center mb-5">
-    <p class="text-secondary">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
-  </div>
-
-  <div class="d-flex justify-content-between">
+  <!-- Pagination -->
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="d-flex justify-content-center">
     <nav aria-label="Page navigation">
       <ul class="pagination">
         {% if page_obj.has_previous %}
           <li class="page-item">
-            <a class="page-link text-secondary" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            <a 
+              class="page-link" 
+              href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}"
+              aria-label="Previous">
+              <span aria-hidden="true">«</span>
+            </a>
           </li>
-          <li class="page-item">
-            <a class="page-link text-secondary" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">«</span>
           </li>
         {% endif %}
 
-        <li class="page-item">
-          <span class="page-link text-primary">{{ page_obj.number }}</span>
-        </li>
+        {% for num in page_obj.paginator.page_range %}
+          {% if num == page_obj.number %}
+            <li class="page-item active">
+              <span class="page-link bg-primary border-primary text-white">{{ num }}</span>
+            </li>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+              <a 
+                class="page-link" 
+                href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}"
+              >
+                {{ num }}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
 
         {% if page_obj.has_next %}
           <li class="page-item">
-            <a class="page-link text-secondary" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+            <a 
+              class="page-link" 
+              href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}"
+              aria-label="Next">
+              <span aria-hidden="true">»</span>
+            </a>
           </li>
-          <li class="page-item">
-            <a class="page-link text-secondary" href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">»</span>
           </li>
         {% endif %}
       </ul>
     </nav>
   </div>
+  {% else %}
+    <p class="text-muted text-center">No pagination needed (single page).</p>
+  {% endif %}
 
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  setTimeout(function () {
+    const messages = document.querySelectorAll('.alert');
+    messages.forEach(function (msg) {
+      msg.classList.add('fade-out');
+      setTimeout(() => msg.remove(), 1000);
+    });
+  }, 2000);
+</script>
+
+<style>
+  .fade-out {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+  }
+  .htmx-indicator {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
+  .htmx-request .htmx-indicator {
+    display: inline-block;
+  }
+  @keyframes spin {
+    to { transform: translateY(-50%) rotate(360deg); }
+  }
+</style>
 {% endblock %}
