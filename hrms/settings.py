@@ -144,8 +144,8 @@ AUTH_USER_MODEL = "user_authentication.CustomUser"
 
 
 LOGIN_REDIRECT_URL = 'user_authentication:redirect_by_role'  
-
-LOGOUT_REDIRECT_URL = reverse_lazy('login')
+LOGIN_URL = reverse_lazy('user_authentication:login')
+LOGOUT_REDIRECT_URL = reverse_lazy('user_authentication:login')
 
 
 #for auto logout after 15 minutes of inactivity
