@@ -79,7 +79,7 @@ class ProductListView(LoginRequiredMixin,RoleAccessMixin,ListView):
 
     def get_queryset(self):
         user_branch = self.request.user.branchstaff.branch
-        queryset = Category.objects.filter(branch=user_branch)
+        queryset = Product.objects.filter(branch=user_branch)
         search_query = self.request.GET.get('q', '').strip()
         if search_query:
             queryset = queryset.filter(name__icontains=search_query)
