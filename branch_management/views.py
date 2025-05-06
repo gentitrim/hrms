@@ -471,3 +471,5 @@ class ResetPasswordView(LoginRequiredMixin, RoleAccessMixin, View):
         return render(
             request, self.success_url, {"form": form, "staff_user": staff_user}
         )
+
+

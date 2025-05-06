@@ -111,3 +111,13 @@ class EmployeeUpdateForm(forms.ModelForm):
             raise forms.ValidationError("Invalid phone number format.")
         return phone    
 
+class AddProductQuantity(forms.Form):
+    product_id = forms.IntegerField(widget=forms.HiddenInput())
+    quantity_to_add = forms.IntegerField(min_value=1, label="Quantity to add")
+    def clean_quantity_to_add(self):
+        quantity_to_add = self.cleaned_data.get('quantity_to_add')
+        if quantity_to_add < 1:
+            raise forms.ValidationError("Quantity must be at least 1.")
+        return quantity_to_add
+    
+    
