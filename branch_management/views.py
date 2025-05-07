@@ -14,6 +14,9 @@ from django.db.models import Sum
 from django.utils.timezone import now
 from django.db.models import Q 
 from main_management.forms import CustomManagerUpdateForm
+from django.http import HttpResponseBadRequest
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 class DashboardView(LoginRequiredMixin,RoleAccessMixin,View):
     allowed_roles = ['manager']
@@ -104,6 +107,17 @@ class ProductUpdateView(LoginRequiredMixin,RoleAccessMixin,UpdateView):
         user_branch = self.request.user.branchstaff.branch
         return Product.objects.filter(branch=user_branch) 
     
+    def form_valid(self, form):
+        add_quantity = form.cleaned_data.get('add_quantity')
+        product = form.save(commit=False)
+        product.quantity += add_quantity
+        product.save()
+        if add_quantity > 0:
+
+            messages.success(self.request, f"Product quantity updated by {add_quantity}.")
+        else:
+            messages.success(self.request, "Product successfully updated!")
+        return super().form_valid(form)
 
 class ProductDeleteView(LoginRequiredMixin,RoleAccessMixin,DeleteView): 
     allowed_roles = ['manager']
@@ -473,3 +487,9 @@ class ResetPasswordView(LoginRequiredMixin, RoleAccessMixin, View):
         )
 
 
+
+
+        
+    
+
+            
