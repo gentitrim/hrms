@@ -31,6 +31,13 @@ class CategoryCreateForm(ModelForm):
 
 
 class ProductCreateForm(ModelForm):
+    add_quantity = forms.IntegerField(
+        required=False,
+        label='Add Quantity',
+        widget = forms.NumberInput(attrs={'class': 'form-control'})
+    )
+
+
     class Meta:
         model = Product
         fields = '__all__'
@@ -111,3 +118,6 @@ class EmployeeUpdateForm(forms.ModelForm):
             raise forms.ValidationError("Invalid phone number format.")
         return phone    
 
+
+    
+    

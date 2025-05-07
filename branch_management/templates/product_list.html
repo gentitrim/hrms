@@ -47,7 +47,7 @@
             
             <tbody class="table-light">
                 {% for product in products %}
-                <tr>
+                <tr id="productRow{{ product.id }}">
                     <td class="fw-semibold">{{ product.name }}</td>
                     <td>{{ product.category.name }}</td>
                     <td>{{ product.quantity }}</td>
@@ -60,6 +60,8 @@
                             <a href="{% url 'branch_management:delete-product' product.id %}" class="btn btn-outline-danger btn-sm rounded-pill">
                                  Delete
                             </a>
+
+                            
                         </div>
                     </td>
                 </tr>
@@ -73,6 +75,8 @@
                 {% endfor %}
             </tbody>
         </table>
+             
+
     </div>
     
 
@@ -139,4 +143,20 @@
         background: transparent;
     }
 </style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var addQuantityModal = document.getElementById('addQuantityModal');
+      addQuantityModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var productId = button.getAttribute('data-product-id');
+        var productName = button.getAttribute('data-product-name');
+    
+        var modalTitle = addQuantityModal.querySelector('.modal-title');
+        var modalProductId = addQuantityModal.querySelector('#modalProductId');
+    
+        modalTitle.textContent = 'Add Quantity to "' + productName + '"';
+        modalProductId.value = productId;
+      });
+    });
+</script>
 {% endblock content %}
